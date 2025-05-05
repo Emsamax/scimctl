@@ -31,8 +31,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.worldline.mts</groupId>
+            <artifactId>secevent-base-lib</artifactId>
+            <version>1.0.0-develop-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-picocli</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
