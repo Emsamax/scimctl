@@ -17,7 +17,7 @@ import java.security.KeyStore;
 @Unremovable
 public class SchemaService {
 
-    private static final String SCHEMA_URL = "http://localhost:8080/base/scim/v2";
+    private static final String BASE_URL = "http://localhost:8080/base/scim/v2";
 
     @Inject
     public SchemaService() {
@@ -35,7 +35,7 @@ public class SchemaService {
                 .hostnameVerifier((s, sslSession) -> true)
                 .build();
 
-        try (ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(SCHEMA_URL, scimClientConfig)) {
+        try (ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(BASE_URL, scimClientConfig)) {
             String endpointPath = EndpointPaths.SCHEMAS;
             ServerResponse<Schema> response = scimRequestBuilder.get(Schema.class, endpointPath, "urn:ietf:params:scim:schemas:core:2.0:Group").sendRequest();
             return response.getResource();
