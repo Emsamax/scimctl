@@ -1,7 +1,7 @@
 package cli;
 
 import GetRessource.GetCommand;
-import io.quarkus.picocli.runtime.annotations.TopCommand;
+import createCommand.CreateCommand;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
@@ -12,7 +12,7 @@ import schemaCommand.ScimSchema;
 @CommandLine.Command(
         name = "scim-ctl",
         mixinStandardHelpOptions = true,
-        subcommands = {ScimSchema.class, GetCommand.class}
+        subcommands = {ScimSchema.class, GetCommand.class, CreateCommand.class}
 )
 //TODO : faire marcher GetResources
 //TODO : global base url(remplace baseUrl by --target) and ScimClientConfig
