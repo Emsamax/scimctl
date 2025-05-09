@@ -1,0 +1,9 @@
+{
+  "userName": "jdoe",
+  "name": {
+    "familyName": "doe",
+    "givenName": "John",
+    "honorificPrefix": "M."
+  },
+  "displayName": "John Doe"
+}
