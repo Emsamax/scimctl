@@ -7,7 +7,8 @@ import picocli.CommandLine;
 
 import java.io.File;
 
-// TODO : lire user depuis fichier et spécifier chemin dans la commande
+//TODO : plain text
+//TODO : check file extension
 @CommandLine.Command(name = "create")
 public class CreateCommand implements Runnable {
     @Inject
@@ -19,7 +20,7 @@ public class CreateCommand implements Runnable {
             required = true)
     private ResourceType resourceType;
 
-    @CommandLine.Option(names = {"--data"},
+    @CommandLine.Option(names = {"--data", "-d"},
             description = "JSON file for the resource",
             required = true)
     private File file;

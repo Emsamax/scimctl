@@ -1,0 +1,154 @@
+[
+  {
+    "userName": "jdoe",
+    "name": {
+      "familyName": "Doe",
+      "givenName": "John",
+      "honorificPrefix": "M."
+    },
+    "displayName": "John Doe",
+    "emails": [
+      {
+        "value": "jdoe@example.com",
+        "type": "work",
+        "primary": true
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678901",
+        "type": "mobile"
+      }
+    ],
+    "active": true,
+    "roles": [
+      {
+        "value": "user",
+        "display": "User"
+      }
+    ]
+  },
+  {
+    "userName": "asmith",
+    "name": {
+      "familyName": "Smith",
+      "givenName": "Alice",
+      "honorificPrefix": "Ms."
+    },
+    "displayName": "Alice Smith",
+    "emails": [
+      {
+        "value": "asmith@example.com",
+        "type": "work",
+        "primary": true
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678902",
+        "type": "mobile"
+      }
+    ],
+    "active": true,
+    "roles": [
+      {
+        "value": "admin",
+        "display": "Administrator"
+      }
+    ]
+  },
+  {
+    "userName": "rjohnson",
+    "name": {
+      "familyName": "Johnson",
+      "givenName": "Robert",
+      "honorificPrefix": "Mr."
+    },
+    "displayName": "Robert Johnson",
+    "emails": [
+      {
+        "value": "rjohnson@example.com",
+        "type": "work",
+        "primary": true
+      },
+      {
+        "value": "rjohnson.personal@example.com",
+        "type": "home"
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678903",
+        "type": "home"
+      }
+    ],
+    "active": true,
+    "roles": [
+      {
+        "value": "user",
+        "display": "User"
+      },
+      {
+        "value": "manager",
+        "display": "Manager"
+      }
+    ]
+  },
+  {
+    "userName": "ljones",
+    "name": {
+      "familyName": "Jones",
+      "givenName": "Laura",
+      "honorificPrefix": "Ms."
+    },
+    "displayName": "Laura Jones",
+    "emails": [
+      {
+        "value": "ljones@example.com",
+        "type": "work"
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678904",
+        "type": "mobile"
+      }
+    ],
+    "active": false,
+    "roles": [
+      {
+        "value": "user",
+        "display": "User"
+      }
+    ]
+  },
+  {
+    "userName": "mwhite",
+    "name": {
+      "familyName": "White",
+      "givenName": "Michael",
+      "honorificPrefix": "Dr."
+    },
+    "displayName": "Dr. Michael White",
+    "emails": [
+      {
+        "value": "mwhite@example.com",
+        "type": "work",
+        "primary": true
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678905",
+        "type": "work"
+      }
+    ],
+    "active": true,
+    "roles": [
+      {
+        "value": "user",
+        "display": "User"
+      }
+    ]
+  }
+]
