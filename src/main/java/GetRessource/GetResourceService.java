@@ -21,13 +21,11 @@ import java.util.List;
 public class GetResourceService {
 
     @Inject
-    ClientConfig clientConfig;
-
-    private static final String BASE_URL = "http://localhost:8080/base/scim/v2";
+    ClientConfig config;
 
     public User getUserResource(String value) {
-        var scimClientConfig = clientConfig.getScimClientConfig();
-        try (ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(BASE_URL, scimClientConfig)) {
+        var scimClientConfig = config.getScimClientConfig();
+        try (ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), scimClientConfig)) {
             String endpointPath = EndpointPaths.USERS;
             ServerResponse<User> response = scimRequestBuilder.get(User.class, endpointPath, value).sendRequest();
             if (response.isSuccess()) {
@@ -39,7 +37,7 @@ public class GetResourceService {
                 // the response was not an error response as described in RFC7644
                 throw new BadRequestException("no user found  :" + response.getResponseBody());
             } else {
-                throw new BadRequestException(response.getResponseBody());
+                throw new BadRequestException("Id does not exist" + response.getResponseBody());
             }
         } catch (BadRequestException e) {
             System.err.println(e.getMessage());
@@ -51,8 +49,8 @@ public class GetResourceService {
     public List<User> getUserResource() {
         List<User> users = null;
         String endpointPath = EndpointPaths.USERS;
-        var scimClientConfig = clientConfig.getScimClientConfig();
-        try (ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(BASE_URL, scimClientConfig)) {
+        var scimClientConfig = config.getScimClientConfig();
+        try (ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), scimClientConfig)) {
             var response = scimRequestBuilder.list(User.class, endpointPath).count(50).get().sendRequest();
             if(response.isSuccess()) {
                 return response.getResource().getListedResources();

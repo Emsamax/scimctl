@@ -1,9 +1,9 @@
 package createCommand;
 
 import cli.ClientConfig;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
@@ -16,20 +16,24 @@ import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @ApplicationScoped
 public class CreateResourceService {
 
     @Inject
-    ClientConfig client;
+    ClientConfig config;
 
-    private static final String BASE_URL = "http://localhost:8080/base/scim/v2";
-
+    /**
+     * <p> and send a create request to the scim server </p>
+     * @param data JSON file
+     * @throws RuntimeException if error isn't specified in norm RFC7644
+     * @throws IOException if error while reading the file
+     */
+    //TODO : if many users send a bulk request
     public void createUser(File data) throws RuntimeException, IOException {
         var user = validateUser(data);
         String endpointPath = EndpointPaths.USERS;
-        try (var scimRequestBuilder = new ScimRequestBuilder(BASE_URL, client.getScimClientConfig())) {
+        try (var scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig())) {
             ServerResponse<User> response = scimRequestBuilder.create(User.class, endpointPath).setResource(user).sendRequest();
             if (response.isSuccess()) {
                 System.out.println("User created successfully");
@@ -51,7 +55,7 @@ public class CreateResourceService {
 
     /**
      * Parse json data and validate it
-     * if valid return user
+     * if valid return a group
      *
      * @param data json data
      */
@@ -59,36 +63,21 @@ public class CreateResourceService {
         return null;
     }
 
+    /**
+     * Parse json data and validate it
+     * if valid return user
+     *
+     * @param data json data
+     */
+    //TODO : read multiple users in the file
     private User validateUser(File data) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(new File(data.toURI()));
-        User user = User.builder().build();
-        jsonNode.fieldNames().forEachRemaining(entry -> {
-            JsonNode value = jsonNode.get(entry);
-            switch (entry) {
-                //TODO : addapter au schema user
-                case "userName" -> user.setUserName(value.asText());
-                case "displayName" -> user.setDisplayName(value.asText());
-                case "name" -> {
-                    if (value.isObject()) {
-                        var nameBuilder = new Name.NameBuilder();
-                        if (value.has("formatted"))
-                            nameBuilder.formatted(value.get("formatted").asText());
-                        if (value.has("familyName"))
-                            nameBuilder.familyName(value.get("familyName").asText());
-                        if (value.has("givenName"))
-                            nameBuilder.givenName(value.get("givenName").asText());
-                        if (value.has("middleName"))
-                            nameBuilder.middlename(value.get("middleName").asText());
-                        if (value.has("honorificPrefix"))
-                            nameBuilder.honorificPrefix(value.get("honorificPrefix").asText());
-                        if (value.has("honorificSuffix"))
-                            nameBuilder.honorificSuffix(value.get("honorificSuffix").asText());
-                        user.setName(nameBuilder.build());
-                    }
-                }
-            }
-        });
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(User.class, new UserDeserializer());
+        mapper.registerModule(module);
+        var user = mapper.readValue(new File(data.toURI()), User.class);
+        //JsonNode jsonNode = mapper.readTree(new File(data.toURI()));
+
         System.out.println(user.toPrettyString());
         return user;
     }

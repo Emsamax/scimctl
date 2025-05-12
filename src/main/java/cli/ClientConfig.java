@@ -5,6 +5,7 @@ import de.captaingoldfish.scim.sdk.server.endpoints.authorize.Authorization;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +19,20 @@ import java.util.Set;
  *  used to instantiate a ScimClientConfig object
  */
 public class ClientConfig implements Authorization {
+
+    @ConfigProperty(name = "scim.base.url")
+    String BASE_URL;
+
+    @ConfigProperty(name = "scim.schema.id")
+    String SCHEMA_ID;
+
+    public String getBASE_URL() {
+        return BASE_URL;
+    }
+
+    public String getSCHEMA_ID() {
+        return SCHEMA_ID;
+    }
 
     public ClientConfig() {
     }
