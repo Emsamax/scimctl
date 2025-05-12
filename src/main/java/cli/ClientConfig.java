@@ -56,10 +56,4 @@ public class ClientConfig implements Authorization {
         return true;
     }
 
-
-    /*public ScimService getScimService() {
-        Client client = ClientBuilder.newClient().register(OAuth2ClientSupport.feature("..bearerToken.."));
-        WebTarget target = client.target("http://localhost:8080/base/scim/v2");
-        return new ScimService(target);
-    }*/
 }

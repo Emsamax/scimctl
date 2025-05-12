@@ -15,9 +15,9 @@ import schemaCommand.ScimSchema;
         subcommands = {ScimSchema.class, GetCommand.class, CreateCommand.class}
 )
 
-//TODO : global base url(remplace baseUrl by --target) and ScimClientConfig
-//TODO : config global var for --target, oidc clientid/secret
-//TODO : logger + gestion des exceptions
+//TODO : script configuration des variables ENV
+//TODO : logger + revoir gestion des exceptions
+//TODO : ne pas utiliser la concaténation (dangereux)
 public class ScimCtl implements QuarkusApplication {
     @Inject
     CommandLine.IFactory factory;

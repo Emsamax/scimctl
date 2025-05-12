@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//TODO : manages duplicate user
+//TO NOT DO : manages duplicate user pas à moi de le faire
 @ApplicationScoped
 public class CreateResourceService {
 
@@ -42,7 +42,6 @@ public class CreateResourceService {
      * @throws RuntimeException if error isn't specified in norm RFC7644
      * @throws IOException      if error while reading the file
      */
-    //TODO : if many users.json send a bulk request
     public void createUser(File data) throws RuntimeException, IOException {
         var user = validateUser(data);
         System.out.println("==============================" + user.size());

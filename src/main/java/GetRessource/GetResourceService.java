@@ -1,7 +1,6 @@
 package GetRessource;
 
 import cli.ClientConfig;
-import de.captaingoldfish.scim.sdk.client.ScimClientConfig;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
@@ -12,7 +11,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
 
-import javax.swing.*;
 import java.util.List;
 
 @ApplicationScoped
