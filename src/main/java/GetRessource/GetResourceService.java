@@ -35,8 +35,7 @@ public class GetResourceService {
             }
             return response.getResource();
         } else if (response.getErrorResponse() == null) {
-            // the response was not an error response as described in RFC7644
-            throw new BadRequestException("no user found  :" + response.getResponseBody());
+            throw new BadRequestException(" response was not an error response as described in RFC7644  :" + response.getResponseBody());
         } else {
             throw new IllegalArgumentException("id does not exist" + response.getResponseBody());
         }
@@ -58,6 +57,8 @@ public class GetResourceService {
         }
     }
 
+    //TODO : env var for the various nodes that can be used to search users
+    //TODO : one function that can differentiate which node to use
     public List<User> getUserWithName(String name) throws BadRequestException {
         System.out.println(name);
         var requestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());
@@ -81,6 +82,8 @@ public class GetResourceService {
         return null;
     }
 
+
+    //TODO
     public List<Group> getGroups() {
         return null;
     }

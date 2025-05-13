@@ -31,25 +31,24 @@ public class GetCommand implements Runnable {
      * Force the user to specify either the id or the username of the user to get.
      */
     @CommandLine.ArgGroup(heading = "User search options:%n")
-    ExclusiveOptions exclusiveOptions;
+    GetExclusiveOptions getExclusiveOptions;
 
     @Override
     public void run() {
         try {
-            if (resourceType.equals(ResourceType.USER) && exclusiveOptions != null) {
-                if (exclusiveOptions.id != null) {
-                    LOGGER.info("get USER : `{}`", service.getUserWithId(exclusiveOptions.id));
-                } else if (exclusiveOptions.userName != null) {
-                    LOGGER.info("get USER(S) : `{}`", service.getUserWithName(exclusiveOptions.userName));
+            if (resourceType.equals(ResourceType.USER) && getExclusiveOptions != null) {
+                if (getExclusiveOptions.id != null) {
+                    LOGGER.info("get USER : `{}`", service.getUserWithId(getExclusiveOptions.id));
+                } else if (getExclusiveOptions.userName != null) {
+                    LOGGER.info("get filtered USER(S) : `{}`", service.getUserWithName(getExclusiveOptions.userName));
                 } else {
-                    LOGGER.info("get USER(S) : " + service.getUsers());
+                    LOGGER.info("get USER(S) : `{}`", service.getUsers());
                 }
-            } else if (resourceType.equals(ResourceType.GROUP) && exclusiveOptions != null) {
-                LOGGER.info("get GROUP : `{}`" + service.getGroupWithName(exclusiveOptions.userName));
+            } else if (resourceType.equals(ResourceType.GROUP) && getExclusiveOptions != null) {
+                LOGGER.info("get GROUP : `{}`", service.getGroupWithName(getExclusiveOptions.userName));
             } else {
-                LOGGER.info("get GROUP(S) : " + service.getGroups());
+                LOGGER.info("get GROUP(S) :` {}` ", service.getGroups());
             }
-
         } catch (BadRequestException e) {
             LOGGER.error("bad request : `{}`", e.getMessage());
             System.err.println(e.getMessage());

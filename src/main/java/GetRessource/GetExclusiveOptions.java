@@ -2,7 +2,7 @@ package GetRessource;
 
 import picocli.CommandLine;
 
-public class ExclusiveOptions {
+public class GetExclusiveOptions {
     @CommandLine.Option(names = {"--id"}, description = "User or Group id")
     String id;
 

@@ -1,7 +1,6 @@
 package schemaCommand;
 
 import cli.ClientConfig;
-import de.captaingoldfish.scim.sdk.client.ScimClientConfig;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
@@ -11,8 +10,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @ApplicationScoped
@@ -27,7 +24,7 @@ public class SchemaService {
     @Inject
     ClientConfig config;
 
-    public Schema getSchema() throws RuntimeException, BadRequestException {
+    public Schema getSchema() throws BadRequestException {
         ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());
         String endpointPath = EndpointPaths.SCHEMAS;
         ServerResponse<Schema> response = scimRequestBuilder.get(Schema.class, endpointPath, config.getSCHEMA_ID()).sendRequest();

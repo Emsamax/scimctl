@@ -17,7 +17,6 @@ import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Member;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,22 +28,22 @@ import java.util.UUID;
 
 //TO NOT DO : manages duplicate user pas à moi de le faire
 @ApplicationScoped
-public class CreateResourceService {
+public class CreateService {
 
     @Inject
     ClientConfig config;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreateResourceService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreateService.class);
 
     /**
      * <p> and send a create request to the scim server </p>
      *
-     * @param data JSON file
+     * @param path to JSON file
      * @throws RuntimeException if error isn't specified in norm RFC7644
      * @throws IOException      if error while reading the file
      */
-    public void createUser(File data) throws RuntimeException, IOException {
-        var user = validateUser(data);
+    public void createUser(String path) throws RuntimeException, IOException {
+        var user = validateUser(path);
         if (user.size() == 1) {
             sendRequest(user.getFirst());
         } else if (user.size() > 1) {
@@ -52,17 +51,17 @@ public class CreateResourceService {
         }
     }
 
-    public void createGroup(File data) {
-        validateGroup(data);
+    public void createGroup(String path) {
+        validateGroup(path);
     }
 
     /**
      * Parse json data and validate it
      * if valid return a group
      *
-     * @param data json data
+     * @param path to json data
      */
-    private Group validateGroup(File data) {
+    private Group validateGroup(String path) {
         return null;
     }
 
@@ -70,14 +69,14 @@ public class CreateResourceService {
      * Parse json data and validate it
      * if valid return user
      *
-     * @param data json data
+     * @param path to  json data
      */
-    private List<User> validateUser(File data) throws IOException {
+    private List<User> validateUser(String path) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(User.class, new UserDeserializer());
         mapper.registerModule(module);
-        var users = mapper.readValue(new File(data.toURI()), new TypeReference<List<User>>() {
+        var users = mapper.readValue(new File(path), new TypeReference<List<User>>() {
         });
         users.forEach(user -> {
             System.out.println(user.toPrettyString());

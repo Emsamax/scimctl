@@ -7,15 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
-import java.io.File;
 import java.io.IOException;
 
 //TODO : plain text
-//TODO : check file extension
+//TODO : check file extension if not json throw exception
 @CommandLine.Command(name = "create")
 public class CreateCommand implements Runnable {
     @Inject
-    CreateResourceService service;
+    CreateService service;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateCommand.class);
 
@@ -25,23 +24,23 @@ public class CreateCommand implements Runnable {
             required = true)
     private ResourceType resourceType;
 
-    @CommandLine.Option(names = {"--data", "-d"},
-            description = "JSON file for the resource",
-            required = true)
-    private File file;
+    /**
+     * Force the user to specify either the path to the JSON file or write the JSON data directly into the console.
+     */
+    @CommandLine.ArgGroup(heading = "Resource creation options:%n")
+    CreateExclusiveOptions exclusiveOptions;
 
     @Override
     public void run() {
-        System.out.println("Dans la commande create");
         try {
             switch (resourceType) {
                 case USER -> {
-                    LOGGER.info("create USER from file path : `{}`", file);
-                    service.createUser(file);
+                    LOGGER.info("create USER from file path : `{}`", exclusiveOptions.path);
+                    service.createUser(exclusiveOptions.path);
                 }
                 case GROUP -> {
-                    LOGGER.info("create GROUP from file path : `{}`", file);
-                    service.createGroup(file);
+                    LOGGER.info("create GROUP from file path : `{}`", exclusiveOptions.path);
+                    service.createGroup(exclusiveOptions.path);
                 }
             }
         } catch (JsonProcessingException e) {
