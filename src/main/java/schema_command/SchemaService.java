@@ -1,6 +1,7 @@
-package schemaCommand;
+package schema_command;
 
 import cli.ClientConfig;
+import common.CommonOptions;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
@@ -10,6 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
+import picocli.CommandLine;
 
 
 @ApplicationScoped
@@ -23,6 +25,9 @@ public class SchemaService {
 
     @Inject
     ClientConfig config;
+
+    @CommandLine.ArgGroup(multiplicity = "1")
+    CommonOptions commonOptions;
 
     public Schema getSchema() throws BadRequestException {
         ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());

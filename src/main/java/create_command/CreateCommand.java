@@ -1,11 +1,16 @@
-package createCommand;
+package create_command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import common.CommonOptions;
+import common.IOCommonOpions;
+import common.SearchCommonOption;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
+import resource_type.ResourceType;
+import resource_type.ResourceTypeConverter;
 
 import java.io.IOException;
 
@@ -27,20 +32,20 @@ public class CreateCommand implements Runnable {
     /**
      * Force the user to specify either the path to the JSON file or write the JSON data directly into the console.
      */
-    @CommandLine.ArgGroup(heading = "Resource creation options:%n")
-    CreateExclusiveOptions exclusiveOptions;
+    @CommandLine.ArgGroup(heading = "Resource creation options:%n", multiplicity = "1")
+    IOCommonOpions Options;
 
     @Override
     public void run() {
         try {
             switch (resourceType) {
                 case USER -> {
-                    LOGGER.info("create USER from file path : `{}`", exclusiveOptions.path);
-                    service.createUser(exclusiveOptions.path);
+                    LOGGER.info("create USER from file path : `{}`", Options.path);
+                    service.createUser(Options.path);
                 }
                 case GROUP -> {
-                    LOGGER.info("create GROUP from file path : `{}`", exclusiveOptions.path);
-                    service.createGroup(exclusiveOptions.path);
+                    LOGGER.info("create GROUP from file path : `{}`", Options.path);
+                    service.createGroup(Options.path);
                 }
             }
         } catch (JsonProcessingException e) {

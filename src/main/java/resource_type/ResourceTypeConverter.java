@@ -1,4 +1,4 @@
-package createCommand;
+package resource_type;
 
 import picocli.CommandLine;
 

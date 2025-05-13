@@ -1,12 +1,12 @@
 package cli;
 
-import GetRessource.GetCommand;
-import createCommand.CreateCommand;
+import get_command.GetCommand;
+import create_command.CreateCommand;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
-import schemaCommand.ScimSchema;
+import schema_command.ScimSchema;
 
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 )
 
 //TODO : script configuration des variables ENV
-//TODO : logger + revoir gestion des exceptionsn ne pas utiliser la concatenation
 public class ScimCtl implements QuarkusApplication {
     @Inject
     CommandLine.IFactory factory;

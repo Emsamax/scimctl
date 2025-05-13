@@ -1,14 +1,11 @@
-package schemaCommand;
+package schema_command;
 
-import GetRessource.GetCommand;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
-
-import java.util.logging.LogManager;
 
 @ApplicationScoped
 @CommandLine.Command(name = "schema")

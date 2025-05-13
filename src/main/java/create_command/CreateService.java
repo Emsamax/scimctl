@@ -1,4 +1,4 @@
-package createCommand;
+package create_command;
 
 import cli.ClientConfig;
 import com.fasterxml.jackson.core.type.TypeReference;

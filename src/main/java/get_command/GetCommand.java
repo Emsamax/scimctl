@@ -1,7 +1,8 @@
-package GetRessource;
+package get_command;
 
-import createCommand.ResourceType;
-import createCommand.ResourceTypeConverter;
+import common.SearchCommonOption;
+import resource_type.ResourceType;
+import resource_type.ResourceTypeConverter;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
@@ -9,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
-
+//TODO : see service
 @CommandLine.Command(name = "get")
 public class GetCommand implements Runnable {
 
@@ -21,31 +22,25 @@ public class GetCommand implements Runnable {
     @Inject
     GetResourceService getResourceService;
 
-    @CommandLine.Option(names = {"--resource-type", "-t"},
-            description = "Resource type",
-            converter = ResourceTypeConverter.class,
-            required = true)
-    private ResourceType resourceType;
-
     /**
      * Force the user to specify either the id or the username of the user to get.
      */
-    @CommandLine.ArgGroup(heading = "User search options:%n")
-    GetExclusiveOptions getExclusiveOptions;
+    @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false, multiplicity = "1")
+    SearchCommonOption options;
 
     @Override
     public void run() {
         try {
-            if (resourceType.equals(ResourceType.USER) && getExclusiveOptions != null) {
-                if (getExclusiveOptions.id != null) {
-                    LOGGER.info("get USER : `{}`", service.getUserWithId(getExclusiveOptions.id));
-                } else if (getExclusiveOptions.userName != null) {
-                    LOGGER.info("get filtered USER(S) : `{}`", service.getUserWithName(getExclusiveOptions.userName));
+            if (options.resourceType.equals(ResourceType.USER)) {
+                if (options.id != null) {
+                    LOGGER.info("get USER : `{}`", service.getUserWithId(options.id));
+                } else if (options.userName != null) {
+                    LOGGER.info("get filtered USER(S) : `{}`", service.getUserWithName(options.userName));
                 } else {
                     LOGGER.info("get USER(S) : `{}`", service.getUsers());
                 }
-            } else if (resourceType.equals(ResourceType.GROUP) && getExclusiveOptions != null) {
-                LOGGER.info("get GROUP : `{}`", service.getGroupWithName(getExclusiveOptions.userName));
+            } else if (options.equals(ResourceType.GROUP)) {
+                LOGGER.info("get GROUP : `{}`", service.getGroupWithName(options.userName));
             } else {
                 LOGGER.info("get GROUP(S) :` {}` ", service.getGroups());
             }

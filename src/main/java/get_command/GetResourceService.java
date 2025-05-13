@@ -1,4 +1,4 @@
-package GetRessource;
+package get_command;
 
 import cli.ClientConfig;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
@@ -40,7 +40,6 @@ public class GetResourceService {
             throw new IllegalArgumentException("id does not exist" + response.getResponseBody());
         }
     }
-
 
     public List<User> getUsers() throws BadRequestException {
         String endpointPath = EndpointPaths.USERS;

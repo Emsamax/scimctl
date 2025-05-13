@@ -1,4 +1,4 @@
-package createCommand;
+package create_command;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationContext;
