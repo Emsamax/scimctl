@@ -17,7 +17,7 @@ public class CreateCommand implements Runnable {
     @Inject
     CreateResourceService service;
 
-    Logger LOGGER = LoggerFactory.getLogger(CreateCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreateCommand.class);
 
     @CommandLine.Option(names = {"--resource-type", "-t"},
             description = "Resource type (USER or GROUP)",

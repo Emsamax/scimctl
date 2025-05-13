@@ -1,6 +1,8 @@
 package createCommand;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -19,7 +21,7 @@ import java.util.Optional;
 
 public class UserDeserializer extends StdDeserializer<User> {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(UserDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDeserializer.class);
 
     public UserDeserializer() {
         this(null);
@@ -37,7 +39,10 @@ public class UserDeserializer extends StdDeserializer<User> {
             JsonNode node = mapper.readTree(parser);
             User.UserBuilder userBuilder = new User.UserBuilder();
             //user entity
-            Optional.ofNullable(node.get("userName")).map(JsonNode::asText).ifPresent(userBuilder::userName);
+            if (node.get("userName") != null) {
+                userBuilder.userName(node.get("userName").asText());
+            } else throw new JsonParseException("userName is mandatory");
+
             Optional.ofNullable(node.get("displayName")).map(JsonNode::asText).ifPresent(userBuilder::displayName);
             Optional.ofNullable(node.get("nickName")).map(JsonNode::asText).ifPresent(userBuilder::nickName);
             Optional.ofNullable(node.get("profileUrl")).map(JsonNode::asText).ifPresent(userBuilder::profileUrl);
@@ -57,7 +62,7 @@ public class UserDeserializer extends StdDeserializer<User> {
                     .build();
 
         } catch (IOException e) {
-            LOGGER.error("error parsing JSON data `{}`",  e.getMessage());
+            LOGGER.error("error parsing JSON data `{}`", e.getMessage());
         }
         return user;
     }

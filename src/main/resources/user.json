@@ -1,9 +1,11 @@
-{
-  "userName": "jdoe",
-  "name": {
-    "familyName": "doe",
-    "givenName": "John",
-    "honorificPrefix": "M."
-  },
-  "displayName": "John Doe"
-}
+[
+  {
+    "userName": "jdoe_deuxieme_du_nom",
+    "name": {
+      "familyName": "doee",
+      "givenName": "Johnn",
+      "honorificPrefix": "M."
+    },
+    "displayName": "John Doe"
+  }
+]
