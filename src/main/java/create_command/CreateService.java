@@ -4,6 +4,7 @@ import cli.ClientConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import common.UserDeserializer;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.builder.BulkBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
@@ -32,6 +33,9 @@ public class CreateService {
 
     @Inject
     ClientConfig config;
+
+    @Inject
+    ObjectMapper objectMapper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateService.class);
 
@@ -70,8 +74,13 @@ public class CreateService {
      * if valid return user
      *
      * @param path to  json data
+     *
+     *             JSON stream
      */
     private List<User> validateUser(String path) throws IOException {
+        // TODO : var json = "{}";
+        // var user = objectMapper.readValue(json, User.class);
+
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(User.class, new UserDeserializer());
@@ -98,7 +107,7 @@ public class CreateService {
 
     private void sendRequest(List<User> users) throws BadRequestException, RuntimeException {
         var scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());
-        BulkBuilder builder = scimRequestBuilder.bulk();
+        var builder = scimRequestBuilder.bulk();
         List<Member> groupMembers = new ArrayList<>();
 
         for (User user : users) {

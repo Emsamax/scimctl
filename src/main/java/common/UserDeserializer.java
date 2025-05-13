@@ -1,4 +1,4 @@
-package create_command;
+package common;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -32,6 +32,7 @@ public class UserDeserializer extends StdDeserializer<User> {
 
     @Override
     public User deserialize(JsonParser parser, DeserializationContext context) {
+        var objectMapper =
         User user = null;
         try {
             ObjectMapper mapper = (ObjectMapper) parser.getCodec();

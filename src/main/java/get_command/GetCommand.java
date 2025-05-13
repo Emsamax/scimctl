@@ -25,7 +25,7 @@ public class GetCommand implements Runnable {
     /**
      * Force the user to specify either the id or the username of the user to get.
      */
-    @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false, multiplicity = "1")
+    @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false, multiplicity = "0")
     SearchCommonOption options;
 
     @Override

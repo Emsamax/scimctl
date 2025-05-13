@@ -14,7 +14,10 @@ public class UpdadeCommand implements Runnable{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UpdadeCommand.class);
 
-    @CommandLine.ArgGroup(heading = "Update options:%n")
+    /**
+     * force the user to specify either the id and user.json .
+     */
+    @CommandLine.ArgGroup(heading = "Update options:%n", multiplicity = "1")
     SearchCommonOption options;
 
     @Override

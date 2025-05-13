@@ -4,7 +4,7 @@ import picocli.CommandLine;
 
 /**
  * needs to be used with exclusive = true (default) and multiciplity = 0 (only one option required)
- * cant search by id if username is specified
+ * can't search by id if username is specified
  */
 public class IOCommonOpions {
     @CommandLine.Option(names = {"--file", "-f"},
