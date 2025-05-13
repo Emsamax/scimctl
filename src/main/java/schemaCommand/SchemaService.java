@@ -10,13 +10,15 @@ import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.ws.rs.BadRequestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @ApplicationScoped
 @Named("schemaService")
 @Unremovable
 public class SchemaService {
-
 
     @Inject
     public SchemaService() {
@@ -25,13 +27,18 @@ public class SchemaService {
     @Inject
     ClientConfig config;
 
-    public Schema getSchema() {
-        try (ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig())) {
-            String endpointPath = EndpointPaths.SCHEMAS;
-            ServerResponse<Schema> response = scimRequestBuilder.get(Schema.class, endpointPath, config.getSCHEMA_ID()).sendRequest();
+    public Schema getSchema() throws RuntimeException, BadRequestException {
+        ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());
+        String endpointPath = EndpointPaths.SCHEMAS;
+        ServerResponse<Schema> response = scimRequestBuilder.get(Schema.class, endpointPath, config.getSCHEMA_ID()).sendRequest();
+        if (response.isSuccess()) {
             return response.getResource();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } else if (response.getErrorResponse() == null) {
+            // the response was not an error response as described in RFC7644
+            throw new BadRequestException("error isn't describe in RFC7644 :" + response.getResponseBody());
+        } else {
+            throw new BadRequestException(response.getResponseBody());
         }
     }
 }
+

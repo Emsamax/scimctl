@@ -18,6 +18,8 @@ import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +34,7 @@ public class CreateResourceService {
     @Inject
     ClientConfig config;
 
-    @Named
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CreateResourceService.class);
 
     /**
      * <p> and send a create request to the scim server </p>
@@ -44,10 +45,9 @@ public class CreateResourceService {
      */
     public void createUser(File data) throws RuntimeException, IOException {
         var user = validateUser(data);
-        System.out.println("==============================" + user.size());
         if (user.size() == 1) {
             sendRequest(user.getFirst());
-        } else {
+        } else if (user.size() > 1) {
             sendRequest(user);
         }
     }
@@ -72,13 +72,11 @@ public class CreateResourceService {
      *
      * @param data json data
      */
-    //TODO : read multiple users.json in the file
     private List<User> validateUser(File data) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(User.class, new UserDeserializer());
         mapper.registerModule(module);
-
         var users = mapper.readValue(new File(data.toURI()), new TypeReference<List<User>>() {
         });
         users.forEach(user -> {
@@ -87,68 +85,55 @@ public class CreateResourceService {
         return users;
     }
 
-
-    private void sendRequest(User user) {
-        try (var scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig())) {
-            ServerResponse<User> response = scimRequestBuilder.create(User.class, EndpointPaths.USERS).setResource(user).sendRequest();
-            if (response.isSuccess()) {
-                System.out.println("User created successfully");
-            } else if (response.getErrorResponse() == null) {
-                throw new RuntimeException("no response body, error not in RFC7644");
-            } else {
-                throw new BadRequestException("bad request : " + response.getErrorResponse());
-            }
-        } catch (BadRequestException e) {
-            System.err.println("Error requesting the server : " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+    private void sendRequest(User user) throws BadRequestException {
+        var scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());
+        ServerResponse<User> response = scimRequestBuilder.create(User.class, EndpointPaths.USERS).setResource(user).sendRequest();
+        if (response.isSuccess()) {
+            System.out.println("User created successfully");
+        } else if (response.getErrorResponse() == null) {
+            throw new RuntimeException("no response body, error not in RFC7644");
+        } else {
+            throw new BadRequestException("Error requesting the server : " + response.getErrorResponse());
         }
-
     }
 
+    private void sendRequest(List<User> users) throws BadRequestException, RuntimeException {
+        var scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());
+        BulkBuilder builder = scimRequestBuilder.bulk();
+        List<Member> groupMembers = new ArrayList<>();
 
-    private void sendRequest(List<User> users) {
-        try (var scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig())) {
-            BulkBuilder builder = scimRequestBuilder.bulk();
-            List<Member> groupMembers = new ArrayList<>();
+        for (User user : users) {
+            String userBulkId = UUID.randomUUID().toString();
 
-            for (User user : users) {
-                String userBulkId = UUID.randomUUID().toString();
-
-                if (user.getName().isEmpty()) {
-                    throw new RuntimeException("User must have a name for bulk request: " + user);
-                }
-                builder.bulkRequestOperation(EndpointPaths.USERS).method(HttpMethod.POST).data(user).bulkId(userBulkId).next();
-                groupMembers.add(Member.builder().value("bulkId:" + userBulkId).type(ResourceTypeNames.USER).build());
+            if (user.getName().isEmpty()) {
+                throw new RuntimeException("User must have a name for bulk request: " + user);
             }
-            Group finalGroup = Group.builder().displayName("finalGroup").members(groupMembers).build();
-
-            ServerResponse<BulkResponse> response = builder
-                    .bulkRequestOperation(EndpointPaths.GROUPS)
-                    .method(HttpMethod.POST)
-                    .bulkId(UUID.randomUUID().toString())
-                    .data(finalGroup)
-                    .sendRequest();
-
-            if (response.isSuccess()) {
-                BulkResponse bulkResponse = response.getResource();
-                System.out.println("Bulk Response: " + bulkResponse);
-                System.out.println("Failed Operations: " + bulkResponse.getFailedOperations());
-                System.out.println("HTTP Status: " + bulkResponse.getHttpStatus());
-            } else if (response.getErrorResponse() == null && response.getResource() == null) {
-                throw new RuntimeException("no response body, error not in RFC7644 : " + response.getResponseBody());
-            } else if (response.getErrorResponse() == null) {
-                BulkResponse bulkResponse = response.getResource();
-                throw new RuntimeException("bulk error : " + response.getResponseBody());
-            } else {
-                throw new BadRequestException("bad request : " + response.getErrorResponse());
-            }
-        } catch (BadRequestException e) {
-            System.err.println("Error requesting the server : " + e.getMessage());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
+            builder.bulkRequestOperation(EndpointPaths.USERS).method(HttpMethod.POST).data(user).bulkId(userBulkId).next();
+            groupMembers.add(Member.builder().value("bulkId:" + userBulkId).type(ResourceTypeNames.USER).build());
         }
+        Group finalGroup = Group.builder().displayName("finalGroup").members(groupMembers).build();
 
+        ServerResponse<BulkResponse> response = builder
+                .bulkRequestOperation(EndpointPaths.GROUPS)
+                .method(HttpMethod.POST)
+                .bulkId(UUID.randomUUID().toString())
+                .data(finalGroup)
+                .sendRequest();
+
+        if (response.isSuccess()) {
+            BulkResponse bulkResponse = response.getResource();
+            LOGGER.info("Bulk Response: `{}`", bulkResponse);
+            LOGGER.info("Failed Operations: `{}`", bulkResponse.getFailedOperations());
+            LOGGER.info("Successful Operations: `{}`", bulkResponse.getSuccessfulOperations());
+            LOGGER.info("HTTP Status: `{}`",bulkResponse.getHttpStatus());
+        } else if (response.getErrorResponse() == null && response.getResource() == null) {
+            throw new RuntimeException("no response body, error not in RFC7644 : " + response.getResponseBody());
+        } else if (response.getErrorResponse() == null) {
+            BulkResponse bulkResponse = response.getResource();
+            throw new RuntimeException("bulk error : " + response.getResponseBody());
+        } else {
+            throw new BadRequestException("bad request : " + response.getErrorResponse());
+        }
     }
 }
 

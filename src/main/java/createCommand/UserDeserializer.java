@@ -10,12 +10,16 @@ import de.captaingoldfish.scim.sdk.common.resources.complex.Name;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Address;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Email;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.PhoneNumber;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class UserDeserializer extends StdDeserializer<User> {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(UserDeserializer.class);
 
     public UserDeserializer() {
         this(null);
@@ -53,7 +57,7 @@ public class UserDeserializer extends StdDeserializer<User> {
                     .build();
 
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            LOGGER.error("error parsing JSON data `{}`",  e.getMessage());
         }
         return user;
     }

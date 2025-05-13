@@ -8,6 +8,9 @@ import jakarta.inject.Inject;
 import picocli.CommandLine;
 import schemaCommand.ScimSchema;
 
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 @QuarkusMain
 @CommandLine.Command(
         name = "scim-ctl",
@@ -16,14 +19,16 @@ import schemaCommand.ScimSchema;
 )
 
 //TODO : script configuration des variables ENV
-//TODO : logger + revoir gestion des exceptions
-//TODO : ne pas utiliser la concaténation (dangereux)
+//TODO : logger + revoir gestion des exceptionsn ne pas utiliser la concatenation
 public class ScimCtl implements QuarkusApplication {
     @Inject
     CommandLine.IFactory factory;
 
+    private static final Logger LOGGER = LogManager.getLogManager().getLogger("scim-ctl");
+
     @Override
     public int run(String... args) {
-       return new CommandLine(this, factory).execute(args);
+        LOGGER.info("Start the CLI");
+        return new CommandLine(this, factory).execute(args);
     }
 }
