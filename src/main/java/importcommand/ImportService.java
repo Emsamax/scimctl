@@ -21,6 +21,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.ServiceUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,9 @@ public class ImportService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImportService.class);
     @Inject
     ClientConfig config;
+
+    @Inject
+    ServiceUtils utils;
 
     /**
      * <p> and send a create request to the scim server </p>
@@ -80,16 +84,8 @@ public class ImportService {
     private List<User> validateUser(String path) throws IOException {
         // TODO : var json = "{}";
         // var user = objectMapper.readValue(json, User.class);
-        var mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(User.class, new UserDeserializer());
-        mapper.registerModule(module);
-        var users = mapper.readValue(new File(path), new TypeReference<List<User>>() {
-        });
-        users.forEach(user -> {
-            System.out.println(user.toPrettyString());
-        });
-        return users;
+        var users = utils.createResource(new File(path), User.class);
+        return users.toList();
 
     }
 
@@ -106,6 +102,7 @@ public class ImportService {
     }
 
     private void sendRequest(List<User> users) throws RuntimeException {
+        // TODO cast impossible, pourquoi ?
         var scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
         var builder = scimRequestBuilder.bulk();
         List<Member> groupMembers = new ArrayList<>();
@@ -116,6 +113,7 @@ public class ImportService {
             if (user.getName().isEmpty()) {
                 throw new RuntimeException("User must have a name for bulk request: " + user);
             }
+            //error ici (data)
             builder.bulkRequestOperation(EndpointPaths.USERS).method(HttpMethod.POST).data(user).bulkId(userBulkId).next();
             groupMembers.add(Member.builder().value("bulkId:" + userBulkId).type(ResourceTypeNames.USER).build());
         }

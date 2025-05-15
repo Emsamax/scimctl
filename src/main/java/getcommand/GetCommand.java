@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 
-//TODO : see service
 @CommandLine.Command(name = "get")
 public class GetCommand implements Runnable {
 

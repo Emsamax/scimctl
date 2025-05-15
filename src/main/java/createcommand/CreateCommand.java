@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import common.ResourceType;
 import common.ResourceTypeConverter;
+import utils.ServiceUtils;
 
 import java.io.IOException;
 
@@ -18,6 +19,7 @@ import java.io.IOException;
 public class CreateCommand implements Runnable {
     @Inject
     CreateService service;
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateCommand.class);
 

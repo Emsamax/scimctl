@@ -47,8 +47,8 @@ public class ImportCommand implements Runnable {
                 }
             }
         } catch (JsonProcessingException e) {
-            LOGGER.error("error parsing JSON data `{}`", e.getMessage());
-            System.err.println("error parsing JSON data :" + e.getMessage());
+            LOGGER.error("error parsing data `{}`", e.getMessage());
+            System.err.println("error parsing data :" + e.getMessage());
         } catch (BadRequestException e) {
             LOGGER.error("bad request : `{}`", e.getMessage());
             System.err.println("error :" + e.getMessage());

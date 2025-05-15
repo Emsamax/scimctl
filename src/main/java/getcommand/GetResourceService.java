@@ -56,8 +56,6 @@ public class GetResourceService {
         }
     }
 
-    //TODO : env var for the various nodes that can be used to search users
-    //TODO : one function that can differentiate which node to use
     public List<User> getUserWithName(String name) throws BadRequestException {
         System.out.println(name);
         var requestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
