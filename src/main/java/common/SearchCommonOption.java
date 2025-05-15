@@ -10,6 +10,4 @@ public class SearchCommonOption extends CommonOptions{
     @CommandLine.Option(names = {"--id"}, description = "User or Group id")
     public String id;
 
-    @CommandLine.Option(names = {"--name", "-u"}, description = "search the User(s) with the corresponding name")
-    public String userName;
 }

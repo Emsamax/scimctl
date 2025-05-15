@@ -2,6 +2,7 @@ package cli;
 
 import get_command.GetCommand;
 import create_command.CreateCommand;
+import importcommand.ImportCommand;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
 @CommandLine.Command(
         name = "scim-ctl",
         mixinStandardHelpOptions = true,
-        subcommands = {ScimSchema.class, GetCommand.class, CreateCommand.class}
+        subcommands = {ScimSchema.class, GetCommand.class, CreateCommand.class, ImportCommand.class}
 )
 
 //TODO : script configuration des variables ENV

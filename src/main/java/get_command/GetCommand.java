@@ -1,5 +1,6 @@
 package get_command;
 
+import common.FilterCommonOptions;
 import common.SearchCommonOption;
 import common.ResourceType;
 import jakarta.inject.Inject;
@@ -24,28 +25,51 @@ public class GetCommand implements Runnable {
     @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false, multiplicity = "1")
     SearchCommonOption options;
 
+    @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false)
+    FilterCommonOptions filter;
+
+
     @Override
     public void run() {
         try {
-            if (options.resourceType.equals(ResourceType.USER)) {
-                if (options.id != null) {
-                    LOGGER.info("get USER : `{}`", service.getUserWithId(options.id));
-                } else if (options.userName != null) {
-                    LOGGER.info("get filtered USER(S) : `{}`", service.getUserWithName(options.userName));
-                } else {
-                    LOGGER.info("get USER(S) : `{}`", service.getUsers());
-                }
-            } else if (options.equals(ResourceType.GROUP)) {
-                LOGGER.info("get GROUP : `{}`", service.getGroupWithName(options.userName));
-            } else {
-                LOGGER.info("get GROUP(S) :` {}` ", service.getGroups());
-            }
+            handleRequest();
         } catch (BadRequestException e) {
-            LOGGER.error("bad request : `{}`", e.getMessage());
-            System.err.println(e.getMessage());
+            LOGGER.error("bad request `{}`", e);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("id does not exist : `{}`", e.getMessage());
-            System.err.println(e.getMessage());
+            LOGGER.error("id does not exist `{}`", e);
+        }
+    }
+
+    public void handleRequest() {
+        if (filter == null) {
+            handleResource();
+        } else {
+           handleResource(filter.userName);
+        }
+    }
+
+    public void handleResource() {
+        String result;
+        if (options.id != null) {
+            result = service.getUserWithId(options.id).toString();
+            LOGGER.info("get USER : `{}`", result);
+        } else {
+            result = service.getUsers().toString();
+            LOGGER.info("get USER(S) : `{}`", result);
+        }
+    }
+
+    private void handleResource(String filter) {
+        String result;
+        if (options.id != null) {
+            result = service.getUserWithId(options.id).toString();
+            LOGGER.info("get USER : `{}`", result);
+        } else if (filter != null && !filter.isBlank()) {
+            result = service.getUserWithName(filter).toString();
+            LOGGER.info("get filtered USER(S) : `{}`", result);
+        } else {
+            result = service.getUsers().toString();
+            LOGGER.info("get USER(S) : `{}`", result);
         }
     }
 
