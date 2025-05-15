@@ -1,4 +1,4 @@
-package update_command;
+package updatecommand;
 
 import cli.ClientConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @ApplicationScoped
 @Named("UpdateService")
@@ -46,9 +47,9 @@ public class UpdateService {
         SimpleModule module = new SimpleModule();
         module.addDeserializer(User.class, new UserDeserializer());
         mapper.registerModule(module);
-        var user = mapper.readValue(new File(path), new TypeReference<User>() {});
-        System.out.println(user.toPrettyString());
-        return user;
+        var user = mapper.readValue(new File(path), new TypeReference<List<User>>() {});
+        System.out.println(user.getFirst().toPrettyString());
+        return user.getFirst();
     }
 
     private void sendRequest(String id, User user) throws BadRequestException {

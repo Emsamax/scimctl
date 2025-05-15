@@ -1,4 +1,4 @@
-package create_command;
+package createcommand;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import common.IOCommonOptions;
@@ -31,19 +31,19 @@ public class CreateCommand implements Runnable {
      * Force the user to specify either the path to the JSON file or write the JSON data directly into the console.
      */
     @CommandLine.ArgGroup(heading = "Resource creation options:%n", multiplicity = "1")
-    IOCommonOptions Options;
+    IOCommonOptions options;
 
     @Override
     public void run() {
         try {
             switch (resourceType) {
                 case USER -> {
-                    LOGGER.info("create USER from file path : `{}`", Options.path);
-                    service.createUser(Options.path);
+                    LOGGER.info("create USER from file path : `{}`", options.path);
+                    service.createUser(options.path);
                 }
                 case GROUP -> {
-                    LOGGER.info("create GROUP from file path : `{}`", Options.path);
-                    service.createGroup(Options.path);
+                    LOGGER.info("create GROUP from file path : `{}`", options.path);
+                    service.createGroup(options.path);
                 }
             }
         } catch (JsonProcessingException e) {

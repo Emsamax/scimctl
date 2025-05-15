@@ -1,4 +1,4 @@
-package get_command;
+package getcommand;
 
 import cli.ClientConfig;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;

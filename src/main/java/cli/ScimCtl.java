@@ -1,13 +1,15 @@
 package cli;
 
-import get_command.GetCommand;
-import create_command.CreateCommand;
+import deletcommand.DeleteCommand;
+import getcommand.GetCommand;
+import createcommand.CreateCommand;
 import importcommand.ImportCommand;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
-import schema_command.ScimSchema;
+import schemacommand.ScimSchema;
+import updatecommand.UpdateCommand;
 
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -16,10 +18,11 @@ import java.util.logging.Logger;
 @CommandLine.Command(
         name = "scim-ctl",
         mixinStandardHelpOptions = true,
-        subcommands = {ScimSchema.class, GetCommand.class, CreateCommand.class, ImportCommand.class}
+        subcommands = {ScimSchema.class, GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class}
 )
 
 //TODO : script configuration des variables ENV
+
 public class ScimCtl implements QuarkusApplication {
     @Inject
     CommandLine.IFactory factory;

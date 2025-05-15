@@ -1,4 +1,4 @@
-package schema_command;
+package schemacommand;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

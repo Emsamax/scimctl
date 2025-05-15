@@ -1,10 +1,8 @@
-package get_command;
+package getcommand;
 
 import common.FilterCommonOptions;
 import common.SearchCommonOption;
-import common.ResourceType;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

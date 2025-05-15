@@ -1,4 +1,4 @@
-package update_command;
+package updatecommand;
 
 import common.IOCommonOptions;
 import common.SearchCommonOption;
@@ -9,7 +9,7 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 
-@CommandLine.Command
+@CommandLine.Command(name = "update")
 public class UpdateCommand implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UpdateCommand.class);

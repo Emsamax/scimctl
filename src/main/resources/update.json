@@ -1,0 +1,31 @@
+[
+  {
+    "userName": "King James",
+    "name": {
+      "familyName": "james",
+      "givenName": "Lebron",
+      "honorificPrefix": "Mr."
+    },
+    "displayName": "goat",
+    "emails": [
+      {
+        "value": "asmith@example.com",
+        "type": "work",
+        "primary": true
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678902",
+        "type": "mobile"
+      }
+    ],
+    "active": true,
+    "roles": [
+      {
+        "value": "admin",
+        "display": "Administrator"
+      }
+    ]
+  }
+]
