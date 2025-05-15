@@ -19,6 +19,5 @@ public class UpdateService {
     ClientConfig config;
 
     public void updateUser(String id, String path) {
-        User newUser =
     }
 }

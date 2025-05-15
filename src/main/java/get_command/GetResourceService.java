@@ -17,7 +17,7 @@ import jakarta.ws.rs.BadRequestException;
 import java.util.List;
 
 @ApplicationScoped
-@Named("resourceService")
+@Named("GetResourceService")
 @Unremovable
 public class GetResourceService {
 
@@ -26,7 +26,7 @@ public class GetResourceService {
 
     public User getUserWithId(String id) throws BadRequestException, IllegalArgumentException {
         var scimClientConfig = config.getScimClientConfig();
-        ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), scimClientConfig);
+        ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), scimClientConfig);
         String endpointPath = EndpointPaths.USERS;
         ServerResponse<User> response = scimRequestBuilder.get(User.class, endpointPath, id).sendRequest();
         if (response.isSuccess()) {
@@ -44,7 +44,7 @@ public class GetResourceService {
     public List<User> getUsers() throws BadRequestException {
         String endpointPath = EndpointPaths.USERS;
         var scimClientConfig = config.getScimClientConfig();
-        ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), scimClientConfig);
+        ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), scimClientConfig);
         var response = scimRequestBuilder.list(User.class, endpointPath).count(50).get().sendRequest();
         if (response.isSuccess()) {
             return response.getResource().getListedResources();
@@ -60,7 +60,7 @@ public class GetResourceService {
     //TODO : one function that can differentiate which node to use
     public List<User> getUserWithName(String name) throws BadRequestException {
         System.out.println(name);
-        var requestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());
+        var requestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
         ServerResponse<ListResponse<User>> response = requestBuilder.list(User.class, EndpointPaths.USERS)
                 .count(50)
                 .filter("userName", Comparator.CO, name)

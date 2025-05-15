@@ -20,19 +20,12 @@ import picocli.CommandLine;
 public class SchemaService {
 
     @Inject
-    public SchemaService() {
-    }
-
-    @Inject
     ClientConfig config;
 
-    @CommandLine.ArgGroup(multiplicity = "1")
-    CommonOptions commonOptions;
-
     public Schema getSchema() throws BadRequestException {
-        ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBASE_URL(), config.getScimClientConfig());
+        ScimRequestBuilder scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
         String endpointPath = EndpointPaths.SCHEMAS;
-        ServerResponse<Schema> response = scimRequestBuilder.get(Schema.class, endpointPath, config.getSCHEMA_ID()).sendRequest();
+        ServerResponse<Schema> response = scimRequestBuilder.get(Schema.class, endpointPath, config.getSchemaId()).sendRequest();
         if (response.isSuccess()) {
             return response.getResource();
         } else if (response.getErrorResponse() == null) {

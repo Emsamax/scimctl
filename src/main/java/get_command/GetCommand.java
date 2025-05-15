@@ -1,8 +1,7 @@
 package get_command;
 
 import common.SearchCommonOption;
-import resource_type.ResourceType;
-import resource_type.ResourceTypeConverter;
+import common.ResourceType;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
@@ -18,14 +17,11 @@ public class GetCommand implements Runnable {
     GetResourceService service;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GetCommand.class);
-    @Named("resourceService")
-    @Inject
-    GetResourceService getResourceService;
 
     /**
      * Force the user to specify either the id or the username of the user to get.
      */
-    @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false, multiplicity = "0")
+    @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false, multiplicity = "1")
     SearchCommonOption options;
 
     @Override

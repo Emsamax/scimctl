@@ -1,12 +1,12 @@
 package common;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import de.captaingoldfish.scim.sdk.common.resources.User;
-import com.fasterxml.jackson.core.JsonParser;
 import de.captaingoldfish.scim.sdk.common.resources.complex.Name;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Address;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Email;
@@ -32,7 +32,6 @@ public class UserDeserializer extends StdDeserializer<User> {
 
     @Override
     public User deserialize(JsonParser parser, DeserializationContext context) {
-        var objectMapper =
         User user = null;
         try {
             ObjectMapper mapper = (ObjectMapper) parser.getCodec();

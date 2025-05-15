@@ -1,4 +1,4 @@
-package create_command;
+package importcommand;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import common.IOCommonOptions;
@@ -12,14 +12,14 @@ import common.ResourceTypeConverter;
 
 import java.io.IOException;
 
-//TODO : plain text
-//TODO : check file extension if not json throw exception
-@CommandLine.Command(name = "create")
-public class CreateCommand implements Runnable {
-    @Inject
-    CreateService service;
+import static common.ResourceType.USER;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreateCommand.class);
+@CommandLine.Command(name = "import")
+public class ImportCommand implements Runnable {
+    @Inject
+    ImportService service;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImportCommand.class);
 
     @CommandLine.Option(names = {"--resource-type", "-t"},
             description = "Resource type (USER or GROUP)",
@@ -38,12 +38,12 @@ public class CreateCommand implements Runnable {
         try {
             switch (resourceType) {
                 case USER -> {
-                    LOGGER.info("create USER from file path : `{}`", Options.path);
-                    service.createUser(Options.path);
+                    LOGGER.info("import USER from file path : `{}`", Options.path);
+                    service.importUser(Options.path);
                 }
                 case GROUP -> {
-                    LOGGER.info("create GROUP from file path : `{}`", Options.path);
-                    service.createGroup(Options.path);
+                    LOGGER.info("import GROUP from file path : `{}`", Options.path);
+                    service.importGroup(Options.path);
                 }
             }
         } catch (JsonProcessingException e) {

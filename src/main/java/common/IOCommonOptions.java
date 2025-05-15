@@ -6,7 +6,7 @@ import picocli.CommandLine;
  * needs to be used with exclusive = true (default) and multiciplity = 0 (only one option required)
  * can't search by id if username is specified
  */
-public class IOCommonOpions {
+public class IOCommonOptions {
     @CommandLine.Option(names = {"--file", "-f"},
             description = "JSON file for the resource")
     public String path;

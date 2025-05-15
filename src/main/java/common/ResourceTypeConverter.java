@@ -1,4 +1,4 @@
-package resource_type;
+package common;
 
 import picocli.CommandLine;
 

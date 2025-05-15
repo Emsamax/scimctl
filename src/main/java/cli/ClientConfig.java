@@ -21,17 +21,17 @@ import java.util.Set;
 public class ClientConfig implements Authorization {
 
     @ConfigProperty(name = "scim.base.url")
-    String BASE_URL;
+    String baseUrl;
 
     @ConfigProperty(name = "scim.schema.id")
-    String SCHEMA_ID;
+    String schemaId;
 
-    public String getBASE_URL() {
-        return BASE_URL;
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
-    public String getSCHEMA_ID() {
-        return SCHEMA_ID;
+    public String getSchemaId() {
+        return schemaId;
     }
 
     public ClientConfig() {

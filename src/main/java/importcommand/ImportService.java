@@ -1,4 +1,4 @@
-package create_command;
+package importcommand;
 
 import cli.ClientConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import common.UserDeserializer;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
-import de.captaingoldfish.scim.sdk.client.builder.BulkBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
 import de.captaingoldfish.scim.sdk.common.constants.ResourceTypeNames;
@@ -16,8 +15,10 @@ import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Member;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
+import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,17 +28,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//TO NOT DO : manages duplicate user pas à moi de le faire
+@Named("importService")
+@Unremovable
 @ApplicationScoped
-public class CreateService {
+public class ImportService {
+    //TO NOT DO : manages duplicate user pas à moi de le faire
 
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImportService.class);
     @Inject
     ClientConfig config;
-
-    @Inject
-    ObjectMapper objectMapper;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CreateService.class);
 
     /**
      * <p> and send a create request to the scim server </p>
@@ -46,7 +46,7 @@ public class CreateService {
      * @throws RuntimeException if error isn't specified in norm RFC7644
      * @throws IOException      if error while reading the file
      */
-    public void createUser(String path) throws RuntimeException, IOException {
+    public void importUser(String path) throws RuntimeException, IOException {
         var user = validateUser(path);
         if (user.size() == 1) {
             sendRequest(user.getFirst());
@@ -55,7 +55,7 @@ public class CreateService {
         }
     }
 
-    public void createGroup(String path) {
+    public void importGroup(String path) throws IOException {
         validateGroup(path);
     }
 
@@ -74,14 +74,13 @@ public class CreateService {
      * if valid return user
      *
      * @param path to  json data
-     *
+     *             <p>
      *             JSON stream
      */
     private List<User> validateUser(String path) throws IOException {
         // TODO : var json = "{}";
         // var user = objectMapper.readValue(json, User.class);
-
-        ObjectMapper mapper = new ObjectMapper();
+        var mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addDeserializer(User.class, new UserDeserializer());
         mapper.registerModule(module);
@@ -91,6 +90,7 @@ public class CreateService {
             System.out.println(user.toPrettyString());
         });
         return users;
+
     }
 
     private void sendRequest(User user) throws BadRequestException {
@@ -105,7 +105,7 @@ public class CreateService {
         }
     }
 
-    private void sendRequest(List<User> users) throws BadRequestException, RuntimeException {
+    private void sendRequest(List<User> users) throws RuntimeException {
         var scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
         var builder = scimRequestBuilder.bulk();
         List<Member> groupMembers = new ArrayList<>();
@@ -133,7 +133,7 @@ public class CreateService {
             LOGGER.info("Bulk Response: `{}`", bulkResponse);
             LOGGER.info("Failed Operations: `{}`", bulkResponse.getFailedOperations());
             LOGGER.info("Successful Operations: `{}`", bulkResponse.getSuccessfulOperations());
-            LOGGER.info("HTTP Status: `{}`",bulkResponse.getHttpStatus());
+            LOGGER.info("HTTP Status: `{}`", bulkResponse.getHttpStatus());
         } else if (response.getErrorResponse() == null && response.getResource() == null) {
             throw new RuntimeException("no response body, error not in RFC7644 : " + response.getResponseBody());
         } else if (response.getErrorResponse() == null) {
@@ -144,7 +144,4 @@ public class CreateService {
         }
     }
 }
-
-
-
 
