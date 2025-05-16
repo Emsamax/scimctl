@@ -2,6 +2,7 @@ package importcommand;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import common.IOCommonOptions;
+import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class ImportCommand implements Runnable {
             switch (resourceType) {
                 case USER -> {
                     LOGGER.info("import USER from file path : `{}`", Options.path);
-                    service.importUser(Options.path);
+                    service.importResource(Options.path, USER);
                 }
                 case GROUP -> {
                     LOGGER.info("import GROUP from file path : `{}`", Options.path);

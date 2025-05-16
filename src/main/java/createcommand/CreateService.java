@@ -31,10 +31,7 @@ public class CreateService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateService.class);
     @Inject
     ClientConfig config;
-    @Inject
-    ObjectMapper objectMapper;
-    @Inject
-    ServiceUtils utils;
+
 
     /**
      * <p> and send a create request to the scim server </p>
@@ -88,8 +85,9 @@ public class CreateService {
             System.out.println(user.toPrettyString());
         });*/
 
-        var users = utils.createResource(new File(path), User.class);
-        return users.toList();
+        //var users = utils.createResource(new File(path), User.class);
+        //return users.toList();
+        return null;
     }
 
     private void sendRequest(User user) throws BadRequestException {

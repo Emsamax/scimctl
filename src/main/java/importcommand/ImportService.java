@@ -2,8 +2,10 @@ package importcommand;
 
 import cli.ClientConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import common.ResourceType;
 import common.UserDeserializer;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
@@ -21,6 +23,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.RequestUtils;
 import utils.ServiceUtils;
 
 import java.io.File;
@@ -41,7 +44,10 @@ public class ImportService {
     ClientConfig config;
 
     @Inject
-    ServiceUtils utils;
+    ServiceUtils serviceUtils;
+
+    @Inject
+    RequestUtils requestUtils;
 
     /**
      * <p> and send a create request to the scim server </p>
@@ -50,12 +56,11 @@ public class ImportService {
      * @throws RuntimeException if error isn't specified in norm RFC7644
      * @throws IOException      if error while reading the file
      */
-    public void importUser(String path) throws RuntimeException, IOException {
-        var user = validateUser(path);
-        if (user.size() == 1) {
-            sendRequest(user.getFirst());
-        } else if (user.size() > 1) {
-            sendRequest(user);
+    public void importResource(String path, ResourceType type) throws RuntimeException, IOException {
+        if(type == ResourceType.USER){
+            requestUtils.createResourcesRequest(serviceUtils.createResource(new File(path), User.class), User.class);
+        }else if (type == ResourceType.GROUP){
+            requestUtils.createResourcesRequest(serviceUtils.createResource(new File(path), Group.class), Group.class);
         }
     }
 
@@ -84,9 +89,9 @@ public class ImportService {
     private List<User> validateUser(String path) throws IOException {
         // TODO : var json = "{}";
         // var user = objectMapper.readValue(json, User.class);
-        var users = utils.createResource(new File(path), User.class);
-        return users.toList();
-
+        //var users = utils.createResource(new File(path), User.class);
+        //return users.toList();
+        return null;
     }
 
     private void sendRequest(User user) throws BadRequestException {
@@ -103,17 +108,17 @@ public class ImportService {
 
     private void sendRequest(List<User> users) throws RuntimeException {
         // TODO cast impossible, pourquoi ?
+        // JSON NODE A LA PLACE DE L'OBJET
         var scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
         var builder = scimRequestBuilder.bulk();
         List<Member> groupMembers = new ArrayList<>();
-
-        for (User user : users) {
+        System.out.println(users);
+        for (JsonNode user : users) {
             String userBulkId = UUID.randomUUID().toString();
 
-            if (user.getName().isEmpty()) {
-                throw new RuntimeException("User must have a name for bulk request: " + user);
-            }
-            //error ici (data)
+            //if (user.getName().isEmpty()) {
+            //    throw new RuntimeException("User must have a name for bulk request: " + user);
+            //}
             builder.bulkRequestOperation(EndpointPaths.USERS).method(HttpMethod.POST).data(user).bulkId(userBulkId).next();
             groupMembers.add(Member.builder().value("bulkId:" + userBulkId).type(ResourceTypeNames.USER).build());
         }
