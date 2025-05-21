@@ -35,24 +35,17 @@ public class DeleteCommand implements Runnable {
   private void handleRequest() {
     switch (options.resourceType) {
       case USER -> {
-        if (options == null) {
+        if (options.id != null) {
           throw new BadRequestException("no resource specified");
         }
-        if (options.id != null) {
-          service.deletUser(options.id, User.class);
-        }
+        service.deletUser(options.id, User.class);
       }
       case GROUP -> {
-        if (options == null) {
+        if (options.id != null) {
           throw new BadRequestException("no resource specified");
         }
-        if (options.id != null) {
-          service.deletUser(options.id, Group.class);
-        }
-
+        service.deletUser(options.id, Group.class);
       }
     }
-
-
   }
 }
