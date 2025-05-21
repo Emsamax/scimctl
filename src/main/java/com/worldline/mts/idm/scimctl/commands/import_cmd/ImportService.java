@@ -28,8 +28,6 @@ public class ImportService {
   @Inject
   ResourceStreamBuilder streamBuilder;
 
-  @Inject
-  ResourceStreamConverter streamConverter;
 
   @Inject
   RequestUtils requestUtils;

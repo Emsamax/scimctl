@@ -6,6 +6,7 @@ import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
 import de.captaingoldfish.scim.sdk.common.constants.ResourceTypeNames;
+import de.captaingoldfish.scim.sdk.common.constants.enums.Comparator;
 import de.captaingoldfish.scim.sdk.common.constants.enums.HttpMethod;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
@@ -82,7 +83,7 @@ public class RequestUtils {
   }
 
   //TODO : list from 1 resource + filter
-  public <T extends ResourceNode> List<T> getFilteredResources(Class<T> clazz, String... filters) {
+  public <T extends ResourceNode> List<T> getFilteredResources(Class<T> clazz, String filter) {
     if (!isUser(clazz) && !isGroup(clazz)) {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
@@ -91,9 +92,10 @@ public class RequestUtils {
     var scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), scimClientConfig);
     ServerResponse<ListResponse<T>> response = scimRequestBuilder
       .list(clazz, path)
-      .filter()
+      .filter("userName", Comparator.CO, filter)
       .build()
-      .post().getAll();
+      .post()
+      .getAll();
 
     if (response.isSuccess()) {
       return response.getResource().getListedResources();
