@@ -51,8 +51,8 @@ public class GetCommand implements Runnable {
             result = service.getUserWithId(options.id).toString();
             LOGGER.info("get USER : `{}`", result);
         } else {
-            result = service.getUsers().toString();
-            LOGGER.info("get USER(S) : `{}`", result);
+          LOGGER.info("get USER(S) :");
+          service.getUsers().forEach(u -> LOGGER.info("{}", u.toPrettyString()));
         }
     }
 

@@ -1,31 +1,24 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.worldline.mts.idm.scimctl.common.JacksonConfig;
-import com.worldline.mts.idm.scimctl.common.deserializer.ResourceNodeDeserializer;
-import com.worldline.mts.idm.scimctl.common.deserializer.ScimJacksonModule;
-import de.captaingoldfish.scim.sdk.common.resources.Group;
-import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
-import de.captaingoldfish.scim.sdk.common.resources.User;
+import com.worldline.mts.idm.scimctl.utils.JsonUtils;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.container.ResourceInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.annotation.Inherited;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.groupingBy;
 
 
 @Unremovable
@@ -38,38 +31,40 @@ public class ResourceStreamBuilder {
   CsvMapper mapper;
 
   @Inject
-  ObjectMapper objectMapper;
+  JsonUtils jsonUtils;
 
-  @Inject
-  JacksonConfig jacksonConfig;
+  private File file;
 
-  //TODO : use stream to bulk -> using stream.toList to create bulk, not smart;
+  private Stream<JsonNode> currentStream;
+
+  public ResourceStreamBuilder fromFile(File file) {
+    this.file = file;
+    return this;
+  }
 
   /**
-   * @param file contains the data you want to create. The file must be in csv format.
-   * @param <T>  scim User or Group resource type
    * @return stream of the created resource. You can use it to request bulk create resources.
    */
-  public <T extends JsonNode> Stream<T> build(File file) throws IOException {
+  public ResourceStreamBuilder build() throws IOException {
+    if (this.file == null) {
+      throw new IllegalStateException("File must be set before build()");
+    }
     var schema = CsvSchema.builder()
       .setUseHeader(true)
       .setColumnSeparator(',')
       .setQuoteChar('"')
       .setArrayElementSeparator("/")
       .build();
-
     var iterator = mapper
       .enable(CsvParser.Feature.SKIP_EMPTY_LINES)
       .enable(CsvParser.Feature.TRIM_SPACES)
       .enable(CsvParser.Feature.WRAP_AS_ARRAY)
       .readerFor(JsonNode.class)
       .with(schema)
-      .readValues(file);
-    return Stream.generate(() -> {
+      .readValues(this.file);
+    this.currentStream = Stream.generate(() -> {
         if (iterator.hasNext()) {
-          var node = iterator.next();
-          return (T) node;
-
+          return (JsonNode) iterator.next();
         }
         return null;
       })
@@ -82,28 +77,27 @@ public class ResourceStreamBuilder {
           throw new UncheckedIOException(e);
         }
       });
+    return this;
   }
 
-  //TODO : test if working
+  public ResourceStreamBuilder convert() {
+    if (this.currentStream == null) {
+      throw new IllegalStateException("call build before convert");
+    }
+    this.currentStream = this.currentStream.map(flatNode -> jsonUtils.flatToNestedNode(flatNode));
+    return this;
+  }
 
   /**
-   * @param data  contains the data you want to create. The data must be in csv format.
-   * @param clazz is the Object.Class you want to create from the data. User.class or Group.Class for example.
-   * @param <T>   scim User or Group resource type
-   * @return the created resource. You can use it to send create resource.
+   * Create as many chunk as possible with the specified chunk size
+   * @param chunkSize
+   * @return
    */
-  public <T> T createResource(String data, Class<T> clazz) throws IOException {
-    T resource = null;
-    try (var mapper = new CsvMapper().readerFor(clazz).readValues(data)) {
-      return objectMapper.convertValue(mapper.nextValue(), clazz);
-    } catch (UncheckedIOException e) {
-      LOGGER.error("Error while creating resource from data : `{}`", e.getMessage());
+  public Collection<List<JsonNode>> chunk(int chunkSize) {
+    if (this.currentStream == null) {
+      throw new IllegalStateException("Chunk must be called after build and convert");
     }
-    return resource;
-  }
-
-  private void initModule() {
-    ScimJacksonModule modules = new ScimJacksonModule();
-    jacksonConfig.getcsvMapper().registerModule(modules);
+    AtomicInteger counter = new AtomicInteger();
+    return this.currentStream.collect(groupingBy(x -> counter.getAndIncrement() / chunkSize)).values();
   }
 }

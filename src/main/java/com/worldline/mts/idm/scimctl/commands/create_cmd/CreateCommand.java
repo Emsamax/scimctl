@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.common.IOCommonOptions;
+import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
@@ -22,7 +23,6 @@ public class CreateCommand implements Runnable {
     @Inject
     CreateService service;
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CreateCommand.class);
 
     @CommandLine.Option(names = {"--resource-type", "-t"},
@@ -37,13 +37,15 @@ public class CreateCommand implements Runnable {
     @CommandLine.ArgGroup(heading = "Resource creation options:%n", multiplicity = "1")
     IOCommonOptions options;
 
+    //TODO : pourquoi faire ça si pas dans les specs ?
+    /*
     private ResourceNode resolveReourceNodeFromName(String name) {
         return switch (name) {
             case "user" -> new User();
             case "group"-> new de.captaingoldfish.scim.sdk.common.resources.Group();
             default -> throw new RuntimeException("resource type not found");
         };
-    }
+    }*/
 
     @Override
     public void run() {
@@ -58,12 +60,12 @@ public class CreateCommand implements Runnable {
         try {
             switch (resourceType) {
                 case USER -> {
-                    LOGGER.info("create USER from file path : `{}`", options.path);
-                    service.createUser(options.path);
+                    LOGGER.info("create USER from file path : `{}`", options.text);
+                    service.createResource(options.text, User.class);
                 }
                 case GROUP -> {
-                    LOGGER.info("create GROUP from file path : `{}`", options.path);
-                    service.createGroup(options.path);
+                    LOGGER.info("create GROUP from file path : `{}`", options.text);
+                    service.createResource(options.text, Group.class);
                 }
             }
         } catch (JsonProcessingException e) {

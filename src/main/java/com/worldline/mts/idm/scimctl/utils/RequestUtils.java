@@ -1,23 +1,17 @@
 package com.worldline.mts.idm.scimctl.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worldline.mts.idm.scimctl.config.ClientConfig;
 import com.fasterxml.jackson.databind.JsonNode;
-import de.captaingoldfish.scim.sdk.client.ScimClientConfig;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
-import de.captaingoldfish.scim.sdk.client.builder.BulkBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
 import de.captaingoldfish.scim.sdk.common.constants.ResourceTypeNames;
 import de.captaingoldfish.scim.sdk.common.constants.enums.HttpMethod;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
-import de.captaingoldfish.scim.sdk.common.resources.ServiceProvider;
 import de.captaingoldfish.scim.sdk.common.resources.User;
-import de.captaingoldfish.scim.sdk.common.resources.complex.Meta;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Member;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
-import de.captaingoldfish.scim.sdk.common.response.ErrorResponse;
 import de.captaingoldfish.scim.sdk.common.response.ListResponse;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -28,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -36,18 +29,17 @@ import java.util.stream.Stream;
 @Named("requestUtils")
 @Unremovable
 @ApplicationScoped
-//TODO : custom split iterator pr opérations sur le stream pr bulk requests
-public class RequestUtils {
 
-  @Inject
-  ObjectMapper mapper;
+//TODO : métohde vérify pour 1 objet,
+// métohde de gestion des serverResponse
+public class RequestUtils {
 
   @Inject
   ClientConfig config;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RequestUtils.class);
 
-  public <T extends ResourceNode> T getResourceRequest(String id, Class<T> clazz) throws BadRequestException, IllegalArgumentException, ClassCastException {
+  public <T extends ResourceNode> T getResource(String id, Class<T> clazz) throws BadRequestException, IllegalArgumentException, ClassCastException {
     var path = getEndPointPath(clazz);
     var scimClientConfig = config.getScimClientConfig();
     var scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), scimClientConfig);
@@ -67,7 +59,7 @@ public class RequestUtils {
 
 
   //TODO : list from 1 resource
-  public <T extends ResourceNode> List<T> getResourcesRequest(Class<T> clazz) {
+  public <T extends ResourceNode> List<T> getResources(Class<T> clazz) {
     if (!isUser(clazz) && !isGroup(clazz)) {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
@@ -90,7 +82,7 @@ public class RequestUtils {
   }
 
   //TODO : list from 1 resource + filter
-  public <T extends ResourceNode> List<T> getFilteredResourcesRequest(Class<T> clazz, String... filters) {
+  public <T extends ResourceNode> List<T> getFilteredResources(Class<T> clazz, String... filters) {
     if (!isUser(clazz) && !isGroup(clazz)) {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
@@ -113,9 +105,24 @@ public class RequestUtils {
     throw new BadRequestException(response.getResponseBody());
   }
 
-  //TODO : create 1 resource
-  public <T> void createResourceRequest(Class<T> clazz) {
 
+  public <T extends ResourceNode> void createResource(JsonNode node, Class<T> clazz) {
+    var path = getEndPointPath(clazz);
+    try (var requestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig())) {
+      if (!node.has("userName") || node.get("userName").asText().isEmpty()) {
+        throw new RuntimeException("Resource must have a userName : " + node);
+      }
+      var response = requestBuilder.create(clazz, path).setResource(node).sendRequest();
+      if (response.isSuccess()) {
+        LOGGER.info("Resource created successfully : {}", response.getResource());
+      } else if (response.getErrorResponse() == null && response.getResource() == null) {
+        LOGGER.error("Error not if RFC7644 : {}", response.getResource());
+        throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
+      } else {
+        LOGGER.error("Bad request: {}", response.getResource());
+        throw new BadRequestException("Bad request: " + response.getErrorResponse());
+      }
+    }
   }
 
   /**
@@ -129,54 +136,29 @@ public class RequestUtils {
    * @throws ClassCastException if the provided class type is neither User nor Group
    */
   //TODO utiliser le userDeserialize en attendant
-  public <T extends JsonNode> void createResourcesRequest(List<JsonNode> chunk, Class<T> clazz) {
+  public <T extends JsonNode> void createResources(List<JsonNode> chunk, Class<T> clazz) {
     String path = getEndPointPath(clazz);
     String resourceType = getResourceType(clazz);
     var scimRequestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
     var builder = scimRequestBuilder.bulk();
 
-    // Liste pour stocker les membres du groupe
     List<Member> groupMembers = new ArrayList<>();
 
-    // Traiter chaque JsonNode dans le chunk
     for (JsonNode node : chunk) {
-      // Vérifier que le userName existe
       if (!node.has("userName") || node.get("userName").asText().isEmpty()) {
         throw new RuntimeException("Resource must have a userName for bulk request: " + node);
       }
-
-      // Générer un bulkId unique pour cette opération
       String bulkId = UUID.randomUUID().toString();
-
-      // Ajouter l'opération au bulk request
-      builder.bulkRequestOperation(path)
-        .method(HttpMethod.POST)
-        .data(node)
-        .bulkId(bulkId)
-        .next();
-
-      // Ajouter le membre au groupe
-      groupMembers.add(Member.builder()
-        .value("bulkId:" + bulkId)
-        .type(resourceType)
-        .build());
+      builder.bulkRequestOperation(path).method(HttpMethod.POST).data(node).bulkId(bulkId).next();
+      groupMembers.add(Member.builder().value("bulkId:" + bulkId).type(resourceType).build());
     }
 
-    // Créer le groupe final avec tous les membres du chunk
-    Group finalGroup = Group.builder()
-      .displayName("chunk-group-" + UUID.randomUUID())
-      .members(groupMembers)
-      .build();
-
-    // Ajouter le groupe au bulk request
-    ServerResponse<BulkResponse> response = builder
-      .bulkRequestOperation(EndpointPaths.GROUPS)
+    Group finalGroup = Group.builder().displayName("chunk-group-" + UUID.randomUUID()).members(groupMembers).build();
+    ServerResponse<BulkResponse> response = builder.bulkRequestOperation(EndpointPaths.GROUPS)
       .method(HttpMethod.POST)
       .bulkId(UUID.randomUUID().toString())
       .data(finalGroup)
       .sendRequest();
-
-    // Gérer la réponse
     if (response.isSuccess()) {
       BulkResponse bulkResponse = response.getResource();
       LOGGER.info("Bulk Response: {}", bulkResponse);
@@ -194,7 +176,7 @@ public class RequestUtils {
   }
 
   //TODO : update 1 resource
-  public <T> void updateResourceRequest(String id, Class<T> t) {
+  public <T> void updateResource(String id, Class<T> t) {
   }
 
   //TODO : delete 1 resource

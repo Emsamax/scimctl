@@ -50,30 +50,24 @@ public class ImportService {
     // validate other fields (email)
     // stream.map(this::toUserResource).filter().forEach(this::postResource)
 
-    /*Class clazz = User.class;
-    if (type == FilterCommonOptions.ResourceType.GROUP) {
-      clazz = Group.class;
-    }*/
     if (type == FilterCommonOptions.ResourceType.USER) {
-      System.out.println(" ============== TEST ================");
-      // requestUtils.createResourcesRequest(streamBuilder.build(new File(path), User.class), User.class);
-      //streamBuilder.build(new File(path))
-            //  .map(jsonNode ->jsonNode.get("userName").toString()).toList();
+      //TODO : import bunch of user = create group ?
+      //TODO : créer fonction verify appliquable sur le stream;
+      streamBuilder
+        .fromFile(new File(path))
+        .build()
+        .convert()
+        .chunk(50).forEach(chunk -> {
+          requestUtils.createResources(chunk, User.class);
+        });
 
-      var stream = streamBuilder.build(new File(path));
-      var converted = streamConverter.convert(stream, User.class);
-      var chunks = streamConverter.chunk(converted, 50).toList();
-      for(List<JsonNode> chunk: chunks ){
-        requestUtils.createResourcesRequest(chunk, User.class);
-      }
-      //var customSpliterator = new CustomSpliterator<>(converted.toList());
-      //var splitNodes = customSpliterator.trySplit();
-      //out.println(splitNodes);
-
-      //var customSpliterator = new CustomSpliterator<JsonNode>(converted.toList());
-
+      //var converted = streamConverter.convert();
+      //var chunks = streamConverter.chunk(converted, 50).toList();
+      //for (List<JsonNode> chunk : chunks) {
+      //requestUtils.createResources(chunk, User.class);
+      //}
     } else if (type == FilterCommonOptions.ResourceType.GROUP) {
-      //requestUtils.createResourcesRequest(streamBuilder.build(new File(path), Group.class), Group.class);
+
     }
   }
 }
