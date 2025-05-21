@@ -13,12 +13,14 @@ import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Member;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
+import de.captaingoldfish.scim.sdk.common.response.ErrorResponse;
 import de.captaingoldfish.scim.sdk.common.response.ListResponse;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.container.ResourceInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -182,13 +184,23 @@ public class RequestUtils {
   }
 
   //TODO : delete 1 resource
-  public <T> void deleteResource(String id) {
+  public <T extends ResourceNode> void deleteResource(String id, Class<T> clazz) {
+    var requestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
+    ServerResponse<User> response = requestBuilder.delete(User.class, getEndPointPath(clazz), id)
+      .sendRequest();
+    if (response.isSuccess()) {
+      var resp = response.getResource();
+      LOGGER.info("User deleted successfully `{}`", resp);
+    } else if (response.getErrorResponse() == null) {
+      // the response was not an error response as described in RFC7644
+      String errorMessage = response.getResponseBody();
+      LOGGER.error("Error while deleting user: `{}`", errorMessage);
+    } else {
+      ErrorResponse errorResponse = response.getErrorResponse();
+      LOGGER.error("Error `{}`", errorResponse);
+    }
   }
 
-  //TODO : bulk delete
-  public <T> void deleteResources(Stream<String> ids) {
-
-  }
 
   /**
    * Determines the endpoint path based on the provided resource class type.

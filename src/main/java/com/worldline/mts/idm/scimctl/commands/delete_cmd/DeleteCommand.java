@@ -1,6 +1,10 @@
 package com.worldline.mts.idm.scimctl.commands.delete_cmd;
 
+import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
+import com.worldline.mts.idm.scimctl.common.ResourceTypeConverter;
 import com.worldline.mts.idm.scimctl.common.SearchCommonOption;
+import de.captaingoldfish.scim.sdk.common.resources.Group;
+import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import org.slf4j.Logger;
@@ -29,12 +33,26 @@ public class DeleteCommand implements Runnable {
   }
 
   private void handleRequest() {
-    if (options == null) {
-      throw new BadRequestException("no resource specified");
+    switch (options.resourceType) {
+      case USER -> {
+        if (options == null) {
+          throw new BadRequestException("no resource specified");
+        }
+        if (options.id != null) {
+          service.deletUser(options.id, User.class);
+        }
+      }
+      case GROUP -> {
+        if (options == null) {
+          throw new BadRequestException("no resource specified");
+        }
+        if (options.id != null) {
+          service.deletUser(options.id, Group.class);
+        }
+
+      }
     }
-    if (options.id != null) {
-      service.deletUser(options.id);
-    }
+
 
   }
 }
