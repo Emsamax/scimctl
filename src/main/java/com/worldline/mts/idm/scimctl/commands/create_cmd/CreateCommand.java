@@ -21,6 +21,7 @@ public class CreateCommand implements Runnable {
   @Inject
   Logger LOGGER;
 
+
   @CommandLine.Option(names = {"--resource-type", "-t"},
     description = "Resource type (USER or GROUP)",
     converter = ResourceTypeConverter.class,
@@ -31,9 +32,7 @@ public class CreateCommand implements Runnable {
    * Force the user to specify either the path to the JSON file or write the JSON data directly into the console.
    */
   @CommandLine.ArgGroup(heading = "Resource creation options:%n", multiplicity = "1")
-  IOCommonOptions options;
-
-  //TODO : pourquoi faire ça si pas dans les specs ?
+  IOCommonOptions ioOptions;
     /*
     private ResourceNode resolveReourceNodeFromName(String name) {
         return switch (name) {
@@ -56,12 +55,12 @@ public class CreateCommand implements Runnable {
     try {
       switch (resourceType) {
         case USER -> {
-          LOGGER.log(Logger.Level.valueOf("INFO"), "create USER from file path : " + options.text);
-          service.createResource(options.text, User.class);
+          LOGGER.log(Logger.Level.valueOf("INFO"), "create USER from file path : " + ioOptions.text);
+          service.createResource(ioOptions.text, User.class);
         }
         case GROUP -> {
-          LOGGER.log(Logger.Level.valueOf("INFO"), "create GROUP from file path " + options.text);
-          service.createResource(options.text, Group.class);
+          LOGGER.log(Logger.Level.valueOf("INFO"), "create GROUP from file path " + ioOptions.text);
+          service.createResource(ioOptions.text, Group.class);
         }
       }
     } catch (JsonProcessingException e) {

@@ -2,7 +2,6 @@ package com.worldline.mts.idm.scimctl.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import de.captaingoldfish.scim.sdk.common.response.ErrorResponse;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.core.Response;
@@ -24,7 +23,6 @@ public class ScimctlExceptionHandler implements ExceptionMapper<Throwable> {
 
   @Override
   public Response toResponse(Throwable exception) {
-    ErrorResponse errorResponse = new ErrorResponse();
     Response.Status status = null;
 
     if(exception instanceof JsonProcessingException) {

@@ -1,7 +1,9 @@
 package com.worldline.mts.idm.scimctl.commands.update_cmd;
 
+import com.worldline.mts.idm.scimctl.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.common.IOCommonOptions;
 import com.worldline.mts.idm.scimctl.common.SearchCommonOption;
+import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
 import org.jboss.logging.Logger;
@@ -14,23 +16,26 @@ public class UpdateCommand implements Runnable {
   Logger LOGGER;
   @Inject
   UpdateService service;
+
+  @Inject
+  CommonOptions common;
   /**
    * force the user to specify both the id and user.json .
    */
   @CommandLine.ArgGroup(heading = "Update options:%n", exclusive = false, multiplicity = "1")
-  SearchCommonOption options;
+  SearchCommonOption search;
 
   @CommandLine.ArgGroup(heading = "IO options:%n", exclusive = false, multiplicity = "1")
-  IOCommonOptions Options;
+  IOCommonOptions ioOptions;
 
 
   @Override
   public void run() {
     try {
-      switch (options.resourceType) {
+      switch (common.resourceType) {
         case USER -> {
-          if (options.id != null && Options.path != null) {
-            service.updateUser(options.id, Options.path);
+          if (search.id != null && ioOptions.path != null) {
+            service.updateUser(search.id, ioOptions.text, User.class);
           }
         }
       }

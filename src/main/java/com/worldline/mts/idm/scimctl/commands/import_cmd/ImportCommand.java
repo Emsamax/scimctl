@@ -1,6 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.worldline.mts.idm.scimctl.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.common.IOCommonOptions;
 import jakarta.inject.Inject;
@@ -22,30 +23,28 @@ public class ImportCommand implements Runnable {
   @Inject
   Logger LOGGER;
 
-  @CommandLine.Option(names = {"--resource-type", "-t"},
-    description = "Resource type (USER or GROUP)",
-    converter = ResourceTypeConverter.class,
-    required = true)
-  private FilterCommonOptions.ResourceType resourceType;
+  @Inject
+  CommonOptions options;
+
 
   /**
    * Force the user to specify either the path to the JSON file or write the JSON data directly into the console.
    */
   @CommandLine.ArgGroup(heading = "Resource creation options:%n", multiplicity = "1")
-  IOCommonOptions Options;
+  IOCommonOptions ioOptions;
 
   @Override
   public void run() {
     try {
-      switch (resourceType) {
+      switch (options.resourceType) {
         case USER -> {
-          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import USER from file path : `{}`"+ Options.path);
-          service.importResource(Options.path, USER);
+          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import USER from file path : `{}`"+ ioOptions.path);
+          service.importResource(ioOptions.path, USER);
         }
 
         case GROUP -> {
-          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import GROUP from file path : `{}`"+ Options.path);
-          service.importResource(Options.path, GROUP);
+          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import GROUP from file path : `{}`"+ ioOptions.path);
+          service.importResource(ioOptions.path, GROUP);
         }
       }
     } catch (JsonProcessingException e) {

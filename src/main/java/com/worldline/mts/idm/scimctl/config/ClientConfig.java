@@ -1,6 +1,7 @@
 package com.worldline.mts.idm.scimctl.config;
 
 import de.captaingoldfish.scim.sdk.client.ScimClientConfig;
+import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.server.endpoints.authorize.Authorization;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -20,40 +21,48 @@ import java.util.Set;
  */
 public class ClientConfig implements Authorization {
 
-    @ConfigProperty(name = "scim.base.url")
-    String baseUrl;
+  @ConfigProperty(name = "scim.base.url")
+  String baseUrl;
 
-    @ConfigProperty(name = "scim.schema.id")
-    String schemaId;
+  @ConfigProperty(name = "scim.schema.id")
+  String schemaId;
 
-    public String getBaseUrl() {
-        return baseUrl;
-    }
+  private ScimRequestBuilder scimRequestBuilder;
 
-    public String getSchemaId() {
-        return schemaId;
-    }
 
-    public ClientConfig() {
-    }
+  public ClientConfig() {
+    this.scimRequestBuilder = new ScimRequestBuilder(this.getBaseUrl(), this.getScimClientConfig());
+  }
 
-    public ScimClientConfig getScimClientConfig() {
-        return ScimClientConfig.builder()
-                .connectTimeout(5)
-                .requestTimeout(5)
-                .socketTimeout(5)
-                .hostnameVerifier((s, sslSession) -> true)
-                .build();
-    }
+  public String getBaseUrl() {
+    return baseUrl;
+  }
 
-    @Override
-    public Set<String> getClientRoles() {
-        return Set.of();
-    }
+  public String getSchemaId() {
+    return schemaId;
+  }
 
-    @Override
-    public boolean authenticate(Map<String, String> map, Map<String, String> map1) {
-        return true;
-    }
+  public ScimRequestBuilder getScimRequestBuilder(){
+    return this.scimRequestBuilder;
+  }
+
+  public ScimClientConfig getScimClientConfig() {
+    return ScimClientConfig.builder()
+      .connectTimeout(5)
+      .requestTimeout(5)
+      .socketTimeout(5)
+      .hostnameVerifier((s, sslSession) -> true)
+      .build();
+  }
+
+  @Override
+  public Set<String> getClientRoles() {
+    return Set.of();
+  }
+
+  @Override
+  public boolean authenticate(Map<String, String> map, Map<String, String> map1) {
+    return true;
+  }
 
 }

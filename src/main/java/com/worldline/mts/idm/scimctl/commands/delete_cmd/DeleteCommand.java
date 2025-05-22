@@ -1,6 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.delete_cmd;
 
 
+import com.worldline.mts.idm.scimctl.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.common.SearchCommonOption;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
@@ -14,6 +15,9 @@ import picocli.CommandLine;
 public class DeleteCommand implements Runnable {
   @CommandLine.ArgGroup(exclusive = false)
   SearchCommonOption options;
+
+  @Inject
+  CommonOptions commonOptions;
 
   @Inject
   DeletService service;
@@ -33,7 +37,7 @@ public class DeleteCommand implements Runnable {
   }
 
   private void handleRequest() {
-    switch (options.resourceType) {
+    switch (commonOptions.resourceType) {
       case USER -> {
         if (options.id != null) {
           throw new BadRequestException("no resource specified");

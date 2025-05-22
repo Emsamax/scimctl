@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 
-
 @Unremovable
 @ApplicationScoped
 public class ResourceStreamBuilder {
