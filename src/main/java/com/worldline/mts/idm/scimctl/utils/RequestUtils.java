@@ -33,8 +33,7 @@ import java.util.stream.Stream;
 @Unremovable
 @ApplicationScoped
 
-//TODO : métohde vérify pour 1 objet,
-// métohde de gestion des serverResponse
+//TODO : métohde de gestion des serverResponse
 public class RequestUtils {
 
   @Inject
@@ -61,7 +60,6 @@ public class RequestUtils {
   }
 
 
-  //TODO : list from 1 resource
   public <T extends ResourceNode> List<T> getResources(Class<T> clazz) {
     if (!isUser(clazz) && !isGroup(clazz)) {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
@@ -84,7 +82,6 @@ public class RequestUtils {
     throw new BadRequestException(response.getResponseBody());
   }
 
-  //TODO : list from 1 resource + filter
   public <T extends ResourceNode> List<T> getFilteredResources(Class<T> clazz, String filter) {
     if (!isUser(clazz) && !isGroup(clazz)) {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
@@ -139,7 +136,6 @@ public class RequestUtils {
    * @throws RuntimeException   if a resource does not contain a userName or if no response body is received
    * @throws ClassCastException if the provided class type is neither User nor Group
    */
-  //TODO utiliser le userDeserialize en attendant
   public <T extends JsonNode> void createResources(List<JsonNode> chunk, Class<T> clazz) {
     String path = getEndPointPath(clazz);
     String resourceType = getResourceType(clazz);
@@ -183,7 +179,6 @@ public class RequestUtils {
   public <T> void updateResource(String id, Class<T> t) {
   }
 
-  //TODO : delete 1 resource
   public <T extends ResourceNode> void deleteResource(String id, Class<T> clazz) {
     var requestBuilder = new ScimRequestBuilder(config.getBaseUrl(), config.getScimClientConfig());
     ServerResponse<User> response = requestBuilder.delete(User.class, getEndPointPath(clazz), id)

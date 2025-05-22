@@ -2,56 +2,72 @@ package com.worldline.mts.idm.scimctl.commands.create_cmd;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worldline.mts.idm.scimctl.config.ClientConfig;
 import com.worldline.mts.idm.scimctl.utils.JsonUtils;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
-import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
-import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
-import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
-import de.captaingoldfish.scim.sdk.common.constants.ResourceTypeNames;
-import de.captaingoldfish.scim.sdk.common.constants.enums.HttpMethod;
-import de.captaingoldfish.scim.sdk.common.exceptions.BadRequestException;
-import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
-import de.captaingoldfish.scim.sdk.common.resources.User;
-import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Member;
-import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.json.JsonString;
-import org.apache.logging.log4j.spi.ObjectThreadContextMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
+
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 //TO NOT DO : manages duplicate user pas à moi de le faire
+
 @ApplicationScoped
 public class CreateService {
-
-  @Inject
-  RequestUtils utils;
 
   @Inject
   ObjectMapper mapper;
 
   @Inject
-  JsonUtils jsonUtils;
+  Logger LOGGER;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CreateService.class);
   @Named("requestUtils")
   @Inject
   RequestUtils requestUtils;
+
+  @Inject
+  JsonUtils jsonUtils;
 
   /**
    * @param data  contains the data you want to create. The data must be in JSON format.
    * @param clazz is the Object.Class you want to create from the data. User.class or Group.Class for example.
    */
   public <T extends ResourceNode> void createResource(String data, Class<T> clazz) throws IOException, IllegalArgumentException {
+    String reformattedData = reformate(data);
+    LOGGER.info("Reformated JSON: " + reformattedData);
+
+    JsonNode actualObj = mapper.readTree(reformattedData);
+    LOGGER.info("JSON parsed : " + actualObj.toString());
+    LOGGER.info("pretty : " + actualObj.toPrettyString());
+
+
+    if (actualObj.isArray() && actualObj.size() > 0) {
+
+      String innerJsonStrinf = actualObj.get(0).asText();
+      LOGGER.info("first element of array: " + innerJsonStrinf);
+
+      JsonNode userNode = mapper.readTree(innerJsonStrinf);
+      LOGGER.info("content of the element : " + userNode.toString());
+
+      if (userNode.has("userName")) {
+        JsonNode userNameNode = userNode.get("userName");
+        if (userNameNode != null && userNameNode.isTextual()) {
+          LOGGER.info("userName: " + userNameNode.asText());
+        } else {
+          LOGGER.info("No userName Found");
+        }
+      } else {
+        LOGGER.info("No userName key");
+      }
+    } else {
+      LOGGER.info("Json not an array or empty array provided");
+    }
+
+    requestUtils.createResource(actualObj, clazz);
+    /*
     LOGGER.info("Input data: {}", data);
     var jsonData = reformate(data);
     var node = mapper.readTree(jsonData);
@@ -62,9 +78,9 @@ public class CreateService {
     }
     if (node.isArray()) {
       if (!node.isEmpty()) {
-        var str = reformate(node.get(0).asText());
-        var newNode = mapper.readTree(str);
-        LOGGER.info("New node: {}", newNode.get("userName"));
+        //var str = reformate(node.get(0).asText());
+        var name = node.get(0).asText();
+        LOGGER.info("Name : {}", name);
         LOGGER.info("Array element: {}", node.toPrettyString());
       } else {
         throw new IllegalArgumentException("Empty array provided");
@@ -74,28 +90,16 @@ public class CreateService {
     LOGGER.info("Node raw content: {}", node);
     LOGGER.info("Available fields: {}", node.fieldNames().toString());
     requestUtils.createResource(node, clazz);
-  }
+     */
+}
 
   private String reformate(String data) {
-    if (data == null || data.trim().isEmpty()) {
-      throw new IllegalArgumentException("Data cannot be empty");
+    if (!data.contains("\"") && data.contains(":")) {
+      //remplace TEST par "TEST":
+      data = data.replaceAll("([\\w]+)\\s*:", "\"$1\":");
+      data = data.replaceAll(":\\s*([\\w]+)", ": \"$1\"");
     }
-    String jsonData = data.trim();
-
-    if (jsonData.startsWith("\"") && jsonData.endsWith("\"")) {
-      jsonData = jsonData.substring(1, jsonData.length() - 1);
-    }
-
-    if (jsonData.contains("\\\"")) {
-      jsonData = jsonData.replace("\\\"", "\"");
-    }
-
-    if (!jsonData.contains("\"") && jsonData.contains(":")) {
-      //remplace test par "test":
-      jsonData = jsonData.replaceAll("([\\w]+)\\s*:", "\"$1\":");
-      jsonData = jsonData.replaceAll(":\\s*([\\w]+)", ": \"$1\"");
-    }
-    LOGGER.info("Reformatted JSON: {}", jsonData);
-    return jsonData;
+    LOGGER.info("Reformatted JSON: "+ data);
+    return data;
   }
 }

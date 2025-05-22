@@ -1,10 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.worldline.mts.idm.scimctl.config.ClientConfig;
 import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
-import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,9 +11,6 @@ import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
-import static java.lang.System.*;
 
 
 @Named("importService")
@@ -59,13 +53,15 @@ public class ImportService {
           requestUtils.createResources(chunk, User.class);
         });
 
-      //var converted = streamConverter.convert();
-      //var chunks = streamConverter.chunk(converted, 50).toList();
-      //for (List<JsonNode> chunk : chunks) {
-      //requestUtils.createResources(chunk, User.class);
-      //}
     } else if (type == FilterCommonOptions.ResourceType.GROUP) {
-
+      streamBuilder
+        .fromFile(new File(path))
+        .build()
+        .convert()
+        .chunk(50)
+        .forEach(chunk -> {
+          requestUtils.createResources(chunk, Group.class);
+        });
     }
   }
 }

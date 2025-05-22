@@ -8,7 +8,6 @@ import com.worldline.mts.idm.scimctl.utils.JsonUtils;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,6 @@ import static java.util.stream.Collectors.groupingBy;
 public class ResourceStreamBuilder {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ResourceStreamBuilder.class);
-
 
   @Inject
   CsvMapper mapper;

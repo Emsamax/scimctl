@@ -5,12 +5,11 @@ import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.common.IOCommonOptions;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import com.worldline.mts.idm.scimctl.common.ResourceTypeConverter;
 
 import java.io.IOException;
+import org.jboss.logging.Logger;
 
 import static com.worldline.mts.idm.scimctl.common.FilterCommonOptions.ResourceType.GROUP;
 import static com.worldline.mts.idm.scimctl.common.FilterCommonOptions.ResourceType.USER;
@@ -20,7 +19,8 @@ public class ImportCommand implements Runnable {
   @Inject
   ImportService service;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ImportCommand.class);
+  @Inject
+  Logger LOGGER;
 
   @CommandLine.Option(names = {"--resource-type", "-t"},
     description = "Resource type (USER or GROUP)",
@@ -39,27 +39,23 @@ public class ImportCommand implements Runnable {
     try {
       switch (resourceType) {
         case USER -> {
-          LOGGER.info("import USER from file path : `{}`", Options.path);
+          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import USER from file path : `{}`"+ Options.path);
           service.importResource(Options.path, USER);
         }
 
         case GROUP -> {
-          LOGGER.info("import GROUP from file path : `{}`", Options.path);
+          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import GROUP from file path : `{}`"+ Options.path);
           service.importResource(Options.path, GROUP);
         }
       }
     } catch (JsonProcessingException e) {
-      LOGGER.error("error parsing data `{}`", e.getMessage());
-      System.err.println("error parsing data :" + e.getMessage());
+      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error parsing data `{}`"+ e.getMessage());
     } catch (BadRequestException e) {
-      LOGGER.error("bad request : `{}`", e.getMessage());
-      System.err.println("error :" + e.getMessage());
+      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"bad request : `{}`"+ e.getMessage());
     } catch (RuntimeException e) {
-      LOGGER.error("error isn't describe in RFC7644 : `{}`", e.getMessage());
-      System.err.println("error isn't describe in RFC7644 :" + e.getMessage());
+      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error isn't describe in RFC7644 : `{}`"+ e.getMessage());
     } catch (IOException e) {
-      LOGGER.error("error reading the file : `{}`", e.getMessage());
-      System.err.println("error reading the file : " + e.getMessage());
+      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error reading the file : `{}`"+ e.getMessage());
     }
   }
 }

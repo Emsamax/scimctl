@@ -31,8 +31,4 @@ public class DeletService {
     requestUtils.deleteResource(id, clazz);
   }
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DeletService.class);
-
-
-
 }

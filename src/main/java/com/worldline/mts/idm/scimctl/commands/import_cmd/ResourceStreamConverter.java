@@ -1,10 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.worldline.mts.idm.scimctl.utils.JsonUtils;
-import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -19,8 +16,6 @@ import java.util.stream.StreamSupport;
 @Unremovable
 public class ResourceStreamConverter{
 
-  @Inject
-  ObjectMapper mapper;
 
   @Inject
   JsonUtils jsonUtils;

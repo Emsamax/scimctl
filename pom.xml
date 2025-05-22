@@ -26,13 +26,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-bom</artifactId>
-                <version>2.24.3</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -42,12 +35,7 @@
             <artifactId>jackson-dataformat-csv</artifactId>
             <version>2.18.3</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.24.3</version>
-        </dependency>
+       
         <dependency>
             <groupId>com.worldline.mts</groupId>
             <artifactId>secevent-base-lib</artifactId>
@@ -88,6 +76,10 @@
             <artifactId>scim-sdk-server</artifactId>
             <version>1.27.1</version>
         </dependency>
+      <dependency>
+        <groupId>org.jboss.logmanager</groupId>
+        <artifactId>log4j2-jboss-logmanager</artifactId>
+      </dependency>
     </dependencies>
 
     <build>

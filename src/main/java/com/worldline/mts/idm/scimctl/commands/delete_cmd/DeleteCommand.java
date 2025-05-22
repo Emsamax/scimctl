@@ -1,15 +1,14 @@
 package com.worldline.mts.idm.scimctl.commands.delete_cmd;
 
-import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
-import com.worldline.mts.idm.scimctl.common.ResourceTypeConverter;
+
 import com.worldline.mts.idm.scimctl.common.SearchCommonOption;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 import picocli.CommandLine;
+
 
 @CommandLine.Command(name = "delete")
 public class DeleteCommand implements Runnable {
@@ -19,16 +18,17 @@ public class DeleteCommand implements Runnable {
   @Inject
   DeletService service;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DeleteCommand.class);
+  @Inject
+  Logger LOGGER;
 
   @Override
   public void run() {
     try {
       handleRequest();
     } catch (BadRequestException e) {
-      LOGGER.error("bad request `{}`", e.getMessage());
+      LOGGER.log(Logger.Level.valueOf("INFO"), "bad request "+ e.getMessage());
     } catch (IllegalArgumentException e) {
-      LOGGER.error("id does not exist `{}`", e.getMessage());
+      LOGGER.log(Logger.Level.valueOf("ERROR"), "id does not exist"+e.getMessage());
     }
   }
 

@@ -4,8 +4,7 @@ import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.common.SearchCommonOption;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jboss.logging.Logger;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "get")
@@ -14,7 +13,8 @@ public class GetCommand implements Runnable {
     @Inject
     GetResourceService service;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GetCommand.class);
+    @Inject
+    Logger LOGGER;
 
     /**
      * Force the user to specify either the id or the username of the user to get.
@@ -31,9 +31,9 @@ public class GetCommand implements Runnable {
         try {
             handleRequest();
         } catch (BadRequestException e) {
-            LOGGER.error("bad request `{}`", e.getMessage());
+          LOGGER.log(Logger.Level.valueOf("ERROR"),"bad request :"+ e.getMessage());
         } catch (IllegalArgumentException e) {
-            LOGGER.error("id does not exist `{}`", e.getMessage());
+          LOGGER.log(Logger.Level.valueOf("ERROR"),"id does not exist "+ e.getMessage());
         }
     }
 
@@ -49,10 +49,10 @@ public class GetCommand implements Runnable {
         String result;
         if (options.id != null) {
             result = service.getUserWithId(options.id).toString();
-            LOGGER.info("get USER : `{}`", result);
+          LOGGER.log(Logger.Level.valueOf("INFO"),"get USER : "+ result);
         } else {
           LOGGER.info("get USER(S) :");
-          service.getUsers().forEach(u -> LOGGER.info("{}", u.toPrettyString()));
+          service.getUsers().forEach(u -> LOGGER.log(Logger.Level.valueOf("INFO"), u.toPrettyString()));
         }
     }
 
@@ -60,13 +60,13 @@ public class GetCommand implements Runnable {
         String result;
         if (options.id != null) {
             result = service.getUserWithId(options.id).toString();
-            LOGGER.info("get USER : `{}`", result);
+          LOGGER.log(Logger.Level.valueOf("INFO"),"get USER : "+ result);
         } else if (filter != null && !filter.isBlank()) {
             result = service.getUserWithName(filter).toString();
-            LOGGER.info("get filtered USER(S) : `{}`", result);
+          LOGGER.log(Logger.Level.valueOf("INFO"),"get filtered USER(S) : "+ result);
         } else {
             result = service.getUsers().toString();
-            LOGGER.info("get USER(S) : `{}`", result);
+          LOGGER.log(Logger.Level.valueOf("ERROR"),"get USER(S) : `{}`"+ result);
         }
     }
 
