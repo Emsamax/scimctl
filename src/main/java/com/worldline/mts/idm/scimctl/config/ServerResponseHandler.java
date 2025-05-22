@@ -6,6 +6,7 @@ import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import de.captaingoldfish.scim.sdk.common.response.ListResponse;
+import de.captaingoldfish.scim.sdk.common.schemas.Schema;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -25,7 +26,6 @@ public class ServerResponseHandler {
   public static final String UPDATE_MESSAGE = "Resource updated successfully";
   public static final String CREATE_MESSAGE = "Resource created successfully";
   public static final String GET_MESSAGE = "Resource get successfully";
-  public static final String GET_FILTER_MESSAGE = "Resource get filtered successfully";
 
   /**
    * Handle the server response
@@ -48,15 +48,19 @@ public class ServerResponseHandler {
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
         return (T) resource;
       } else handleError(response);
+    } else if (response.getResource() instanceof Schema) {
+      if (response.isSuccess()) {
+        var resource = (Group) response.getResource();
+        LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
+        return (T) resource;
+      } else handleError(response);
     }
-
     if (response.isSuccess()) {
       LOGGER.log(Logger.Level.valueOf("INFO"), message);
     } else handleError(response);
 
     return null;
   }
-
 
   /**
    * If response is not succes

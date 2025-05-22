@@ -74,7 +74,6 @@ public class RequestUtils {
     return responseHandler.handleListResources(response);
   }
 
-
   public <T extends ResourceNode> void createResource(JsonNode node, Class<T> clazz) {
     var path = getEndPointPath(clazz);
     try (var requestBuilder = config.getScimRequestBuilder()) {
@@ -87,8 +86,8 @@ public class RequestUtils {
   }
 
   /**
-   * Creates a bulk SCIM resource request based on a stream of resources and a specified resource type.
-   * The method validates resource attributes, builds bulk operations, and sends them to the server.
+   * Creates a bulk SCIM resource request based on a List of resources and a specified resource type.
+   * The method builds bulk operations, and sends them to the server.
    *
    * @param <T>   the type of resources to be processed
    * @param chunk a list of resources to be included in the bulk request(50 max)
@@ -101,7 +100,6 @@ public class RequestUtils {
     String resourceType = getResourceType(clazz);
     var scimRequestBuilder = config.getScimRequestBuilder();
     var builder = scimRequestBuilder.bulk();
-
     List<Member> groupMembers = new ArrayList<>();
 
     for (JsonNode node : chunk) {
@@ -112,14 +110,12 @@ public class RequestUtils {
       builder.bulkRequestOperation(path).method(HttpMethod.POST).data(node).bulkId(bulkId).next();
       groupMembers.add(Member.builder().value("bulkId:" + bulkId).type(resourceType).build());
     }
-
     Group finalGroup = Group.builder().displayName("chunk-group-" + UUID.randomUUID()).members(groupMembers).build();
     ServerResponse<BulkResponse> response = builder.bulkRequestOperation(EndpointPaths.GROUPS)
       .method(HttpMethod.POST)
       .bulkId(UUID.randomUUID().toString())
       .data(finalGroup)
       .sendRequest();
-
     responseHandler.handleBulkResponse(response);
   }
 

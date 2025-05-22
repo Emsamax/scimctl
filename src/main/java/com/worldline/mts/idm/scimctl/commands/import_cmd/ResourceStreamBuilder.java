@@ -42,7 +42,7 @@ public class ResourceStreamBuilder {
   }
 
   /**
-   * @return stream of the created resource. You can use it to request bulk create resources.
+   * @return stream of jsonNode.
    */
   public ResourceStreamBuilder build() throws IOException {
     if (this.file == null) {

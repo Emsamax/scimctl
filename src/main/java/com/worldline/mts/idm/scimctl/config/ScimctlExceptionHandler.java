@@ -12,14 +12,11 @@ import org.jboss.logging.Logger;
 
 import java.io.IOException;
 
-
 @Provider
 public class ScimctlExceptionHandler implements ExceptionMapper<Throwable> {
 
   @Inject
   Logger LOGGER ;
-
-
 
   @Override
   public Response toResponse(Throwable exception) {
@@ -48,7 +45,6 @@ public class ScimctlExceptionHandler implements ExceptionMapper<Throwable> {
       LOGGER.log(Logger.Level.valueOf("ERROR"), "IOException", exception);
       status = Response.Status.INTERNAL_SERVER_ERROR;
     }
-
     return Response.status(status).build();
   }
 }
