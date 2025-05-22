@@ -27,7 +27,7 @@ public class ClientConfig implements Authorization {
   @ConfigProperty(name = "scim.schema.id")
   String schemaId;
 
-  private ScimRequestBuilder scimRequestBuilder;
+  private final ScimRequestBuilder scimRequestBuilder;
 
 
   public ClientConfig() {

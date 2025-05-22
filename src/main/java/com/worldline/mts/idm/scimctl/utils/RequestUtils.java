@@ -3,7 +3,6 @@ package com.worldline.mts.idm.scimctl.utils;
 import com.worldline.mts.idm.scimctl.config.ClientConfig;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worldline.mts.idm.scimctl.config.ServerResponseHandler;
-import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
 import de.captaingoldfish.scim.sdk.common.constants.ResourceTypeNames;
@@ -14,15 +13,12 @@ import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Member;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
-import de.captaingoldfish.scim.sdk.common.response.ErrorResponse;
 import de.captaingoldfish.scim.sdk.common.response.ListResponse;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
-
-import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +29,14 @@ import java.util.UUID;
 @Unremovable
 @ApplicationScoped
 
-//TODO : métohde de gestion des serverResponse
 public class RequestUtils {
 
+  private final ClientConfig config;
+
   @Inject
-  ClientConfig config;
+  public RequestUtils(ClientConfig config) {
+    this.config = config;
+  }
 
   @Inject
   ServerResponseHandler responseHandler;
@@ -158,7 +157,7 @@ public class RequestUtils {
     }
     return endpointPath;
   }
-  
+
 
   /**
    * Check if the given class is a User
