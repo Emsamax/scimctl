@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 @Unremovable
@@ -13,6 +14,9 @@ public class JsonUtils {
 
   @Inject
   ObjectMapper mapper;
+
+  @Inject
+  Logger LOGGER;
 
   public JsonNode flatToNestedNode(JsonNode flatNode) {
     ObjectNode nestedNode = mapper.createObjectNode();
@@ -43,12 +47,11 @@ public class JsonUtils {
             currentNode = child;
           } else {
             currentNode = (ObjectNode) currentNode.get(part);
-            //currentNode.set(part, value);
           }
         }
       }
     });
-    System.out.println("NESTED : \n" + nestedNode.toPrettyString());
+    LOGGER.info("NESTED : \n" + nestedNode.toPrettyString());
     return nestedNode;
   }
 }

@@ -22,8 +22,6 @@ import java.util.logging.Logger;
 )
 
 //TODO : script configuration des variables ENV
-//TODO : faire create -> json
-
 public class ScimCtl implements QuarkusApplication {
     @Inject
     CommandLine.IFactory factory;

@@ -96,7 +96,7 @@ public class ResourceStreamBuilder {
     if (this.currentStream == null) {
       throw new IllegalStateException("Chunk must be called after build and convert");
     }
-    AtomicInteger counter = new AtomicInteger();
+    var counter = new AtomicInteger();
     return this.currentStream.collect(groupingBy(x -> counter.getAndIncrement() / chunkSize)).values();
   }
 }

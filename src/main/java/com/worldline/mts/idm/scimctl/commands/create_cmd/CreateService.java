@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worldline.mts.idm.scimctl.utils.JsonUtils;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
+import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -36,38 +37,32 @@ public class CreateService {
    * @param clazz is the Object.Class you want to create from the data. User.class or Group.Class for example.
    */
   public <T extends ResourceNode> void createResource(String data, Class<T> clazz) throws IOException, IllegalArgumentException {
-    String reformattedData = reformate(data);
-    LOGGER.info("Reformated JSON: " + reformattedData);
+    LOGGER.infof("input data : %s", data);
+    //String reformattedData = reformate(data);
+    var myMapper = new ObjectMapper();
+    data = data.replaceAll("\\\\", "");
+    LOGGER.infof("cleaned data : %s", data);
 
-    JsonNode actualObj = mapper.readTree(reformattedData);
-    LOGGER.info("JSON parsed : " + actualObj.toString());
-    LOGGER.info("pretty : " + actualObj.toPrettyString());
-
-
-    if (actualObj.isArray() && actualObj.size() > 0) {
-
-      String innerJsonStrinf = actualObj.get(0).asText();
-      LOGGER.info("first element of array: " + innerJsonStrinf);
-
-      JsonNode userNode = mapper.readTree(innerJsonStrinf);
-      LOGGER.info("content of the element : " + userNode.toString());
-
-      if (userNode.has("userName")) {
-        JsonNode userNameNode = userNode.get("userName");
-        if (userNameNode != null && userNameNode.isTextual()) {
-          LOGGER.info("userName: " + userNameNode.asText());
-        } else {
-          LOGGER.info("No userName Found");
-        }
+    var resource = myMapper.readValue(data, JsonNode.class);
+    LOGGER.info("JSON parsed : " + resource.toString());
+    LOGGER.info("pretty : " + resource.toPrettyString());
+    /*if (resource.isArray()) {
+      String first = actualObj.get(0).asText();
+      var node = mapper.readTree(first);
+      LOGGER.info("reading table " + node.toPrettyString());
+      JsonNode userNameNode = node.get("userName");
+      if (userNameNode != null && !userNameNode.asText().isEmpty()) {
+        LOGGER.info("userName : " + userNameNode.asText());
       } else {
-        LOGGER.info("No userName key");
+        LOGGER.warn("No userName found or empty");
       }
     } else {
-      LOGGER.info("Json not an array or empty array provided");
-    }
+      LOGGER.info("JSON is not an array");
+    }*/
 
-    requestUtils.createResource(actualObj, clazz);
-    /*
+    requestUtils.createResource(resource, clazz);
+  /*
+
     LOGGER.info("Input data: {}", data);
     var jsonData = reformate(data);
     var node = mapper.readTree(jsonData);
@@ -91,7 +86,7 @@ public class CreateService {
     LOGGER.info("Available fields: {}", node.fieldNames().toString());
     requestUtils.createResource(node, clazz);
      */
-}
+  }
 
   private String reformate(String data) {
     if (!data.contains("\"") && data.contains(":")) {
@@ -99,7 +94,7 @@ public class CreateService {
       data = data.replaceAll("([\\w]+)\\s*:", "\"$1\":");
       data = data.replaceAll(":\\s*([\\w]+)", ": \"$1\"");
     }
-    LOGGER.info("Reformatted JSON: "+ data);
+    LOGGER.info("Reformatted JSON: " + data);
     return data;
   }
 }

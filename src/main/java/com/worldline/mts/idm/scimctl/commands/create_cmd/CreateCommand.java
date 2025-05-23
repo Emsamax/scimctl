@@ -55,11 +55,11 @@ public class CreateCommand implements Runnable {
     try {
       switch (resourceType) {
         case USER -> {
-          LOGGER.log(Logger.Level.valueOf("INFO"), "create USER from file path : " + ioOptions.text);
+          LOGGER.log(Logger.Level.valueOf("INFO"), "create USER from text : " + ioOptions.text);
           service.createResource(ioOptions.text, User.class);
         }
         case GROUP -> {
-          LOGGER.log(Logger.Level.valueOf("INFO"), "create GROUP from file path " + ioOptions.text);
+          LOGGER.log(Logger.Level.valueOf("INFO"), "create GROUP from text " + ioOptions.text);
           service.createResource(ioOptions.text, Group.class);
         }
       }

@@ -34,7 +34,6 @@ public class StreamBuilderTest {
   private static String RJOHNSON = "rjohnson,Johnson,Robert,Mr.,Robert Johnson,rjohnson@example.com,work,true,+12345678903,home,true,user,User,rjohnson.personal@example.com,home,manager,Manager\n";
   private static String LJONES = "ljones,Jones,Laura,Ms.,Laura Jones,ljones@example.com,work,,+12345678904,mobile,false,user,User,,,,";
   private static String MWHITE = "mwhite,White,Michael,Dr.,Dr. Michael White,mwhite@example.com,work,true,+12345678905,work,true,user,User,,,,";
-  private static Logger LOGGER = LoggerFactory.getLogger(StreamBuilderTest.class);
   */
 
   @BeforeEach
@@ -44,17 +43,17 @@ public class StreamBuilderTest {
   }
 
   @Test
-  @Order(1)
+  //@Order(1)
   void test_parse_from_csv_file() {
-    /*
+/*
     try {
       var users = resourceStreamBuilder
         .fromFile(new File(PATH))
         .build()
         .convert()
-        .chunk(50);
+        .chunk(50).forEach(chunks );
       assertEquals(5, users.size());
-      User streamJdoe = (User) users.get(0);
+
       assertNotNull(streamJdoe);
       assertEquals("jdoe", streamJdoe.getUserName());
       assertEquals("Doe", streamJdoe.get("familyName"));

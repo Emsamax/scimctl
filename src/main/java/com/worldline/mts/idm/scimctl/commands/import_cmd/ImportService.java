@@ -1,7 +1,9 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
+import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,6 +13,8 @@ import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
 
 
 @Named("importService")
@@ -41,28 +45,20 @@ public class ImportService {
     // validate mandatory fields : userName, ...  -> wrappers/splitIterators sur stream<T extends ResourceNode>
     // validate other fields (email)
     // stream.map(this::toUserResource).filter().forEach(this::postResource)
+    var creator = resolveResourceCreator(type);
 
-    if (type == FilterCommonOptions.ResourceType.USER) {
-      //TODO : import bunch of user = create group ?
-      //TODO : créer fonction verify appliquable sur le stream;
-      streamBuilder
-        .fromFile(new File(path))
-        .build()
-        .convert()
-        .chunk(50).forEach(chunk -> {
-          requestUtils.createResources(chunk, User.class);
-        });
+    streamBuilder
+      .fromFile(new File(path))
+      .build()
+      .convert()
+      .chunk(50).forEach(creator);
+  }
 
-    } else if (type == FilterCommonOptions.ResourceType.GROUP) {
-      streamBuilder
-        .fromFile(new File(path))
-        .build()
-        .convert()
-        .chunk(50)
-        .forEach(chunk -> {
-          requestUtils.createResources(chunk, Group.class);
-        });
-    }
+  private Consumer<List<JsonNode>> resolveResourceCreator(FilterCommonOptions.ResourceType type) {
+    return switch (type) {
+      case FilterCommonOptions.ResourceType.USER -> (node) -> requestUtils.createResources(node, User.class);
+      case FilterCommonOptions.ResourceType.GROUP -> (node) -> requestUtils.createResources(node, Group.class);
+    };
   }
 }
 
