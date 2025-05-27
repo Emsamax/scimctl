@@ -36,6 +36,12 @@ public class ResourceStreamBuilder {
 
   private Stream<JsonNode> currentStream;
 
+  private CsvSchema schema;
+
+  public CsvSchema getSchema(){
+    return this.schema;
+  }
+
   public ResourceStreamBuilder fromFile(File file) {
     this.file = file;
     return this;
@@ -48,11 +54,11 @@ public class ResourceStreamBuilder {
     if (this.file == null) {
       throw new IllegalStateException("File must be set before build()");
     }
-    var schema = CsvSchema.builder()
+     this.schema = CsvSchema.builder()
       .setUseHeader(true)
       .setColumnSeparator(',')
       .setQuoteChar('"')
-      .setArrayElementSeparator("/")
+      .setArrayElementSeparator(";")
       .build();
     var iterator = mapper
       .enable(CsvParser.Feature.SKIP_EMPTY_LINES)
@@ -83,7 +89,7 @@ public class ResourceStreamBuilder {
     if (this.currentStream == null) {
       throw new IllegalStateException("call build before convert");
     }
-    this.currentStream = this.currentStream.map(flatNode -> jsonUtils.flatToNestedNode(flatNode));
+    this.currentStream = this.currentStream.map(flatNode -> jsonUtils.flatToNestedNode(flatNode, schema));
     return this;
   }
 

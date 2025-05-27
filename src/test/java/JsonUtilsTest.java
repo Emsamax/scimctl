@@ -1,12 +1,12 @@
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
 import com.worldline.mts.idm.scimctl.utils.JsonUtils;
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import org.junit.jupiter.api.BeforeAll;
+import jakarta.json.stream.JsonParser;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -28,41 +28,54 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 @QuarkusTest
 public class JsonUtilsTest {
 
-  private static Collection<List<JsonNode>> flattened = new ArrayList<>();
-  private static Iterator<JsonNode> expectedNestedNode;
+  private Collection<List<JsonNode>> flattened = new ArrayList<>();
+  private Iterator<JsonNode> expectedNestedNode;
 
   private static final Logger LOGGER = Logger.getLogger(JsonUtilsTest.class);
 
-  private static JsonUtils jsonUtils;
+  @Inject
+  ResourceStreamBuilder stream;
 
 
-  private static ResourceStreamBuilder stream;
+  @Inject
+  JsonUtils jsonUtils;
 
-
-  @BeforeAll
-  public static void testAll() throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    jsonUtils = new JsonUtils();
-    if (flattened == null) {
-      //init data from stream
-      flattened = stream.fromFile(new File("src/main/resources/test_users.csv"))
+  @BeforeEach
+  public void setUp() throws IOException {
+    LOGGER.info("Setup starting");
+    File csvFile = new File("src/main/resources/test_users2.csv");
+    File jsonFile = new File("src/main/resources/test_expected_users.json");
+    LOGGER.info("CSV file exists: " + csvFile.exists());
+    LOGGER.info("JSON file exists: " + jsonFile.exists());
+    try {
+      flattened = stream.fromFile(csvFile)
         .build()
         .chunk(50);
-      expectedNestedNode = mapper.readerFor(JsonNode.class).readValues(new File("src/main/resources/test_expected_users.json"));
+      LOGGER.info("Flattened collection initialized with size: " + flattened.size());
+      JsonMapper jsonMapper = new JsonMapper();
+      JsonNode jsonNode = jsonMapper.readTree(jsonFile);
+      expectedNestedNode = jsonNode.iterator();
+
+      LOGGER.info("Expected nodes initialized");
+      testFlatToNestedNode();
+    } catch (Exception e) {
+      LOGGER.error("Error during initialization", e);
+      throw e;
     }
   }
 
   @Test
   public void testFlatToNestedNode() {
+    LOGGER.info("test flat to nested : ");
+    LOGGER.info("flattened size : " + flattened.size());
     for (List<JsonNode> chunk : flattened) {
       for (JsonNode flat : chunk) {
         assumeTrue(expectedNestedNode.hasNext(), "no more expected nodes");
         assumeTrue(flattened.iterator().hasNext(), "no more flat nodes");
-        JsonNode expected = expectedNestedNode.next();
-        JsonNode actual = jsonUtils.flatToNestedNode(flat);
+        var expected = expectedNestedNode.next();
+        var actual = jsonUtils.flatToNestedNode(flat, stream.getSchema());
 
-        LOGGER.log(Logger.Level.DEBUG, "Nested: \n" + actual.toPrettyString());
-        LOGGER.log(Logger.Level.DEBUG, "Expected: \n" + expected.toPrettyString());
+        LOGGER.info( " ===== Expected ===== : \n" + expected.toPrettyString());
 
         assertEquals(expected, actual, "Nested structure does not match expected result");
       }

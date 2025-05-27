@@ -3,16 +3,15 @@ import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.*;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Inherited;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import static io.smallrye.common.constraint.Assert.assertNotNull;
@@ -23,8 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class StreamBuilderTest {
 
 
-  @Inject
-  ResourceStreamBuilder resourceStreamBuilder;
+
+  private ResourceStreamBuilder resourceStreamBuilder;
+
+  private Iterator<List<JsonNode>> iterator;
 
   private static String PATH = "src/test/resources/users.csv";
  /*
@@ -36,25 +37,23 @@ public class StreamBuilderTest {
   private static String MWHITE = "mwhite,White,Michael,Dr.,Dr. Michael White,mwhite@example.com,work,true,+12345678905,work,true,user,User,,,,";
   */
 
-  @BeforeEach
-  void setUp() {
-    this.resourceStreamBuilder = new ResourceStreamBuilder();
+  @BeforeAll
+  public static void setUp() throws IOException {
+
 
   }
 
   @Test
-  //@Order(1)
   void test_parse_from_csv_file() {
-/*
-    try {
-      var users = resourceStreamBuilder
-        .fromFile(new File(PATH))
-        .build()
-        .convert()
-        .chunk(50).forEach(chunks );
-      assertEquals(5, users.size());
+    /*try {
+      resourceStreamBuilder = new ResourceStreamBuilder();
+      iterator = resourceStreamBuilder.fromFile(new File(PATH)).build().convert().chunk(50).iterator();
+      var chunk = iterator.next();
+      var listIterator = chunk.listIterator();
+      User streamJdoe = (User) listIterator.next();
 
       assertNotNull(streamJdoe);
+      System.out.println("TEST+++++++++++");
       assertEquals("jdoe", streamJdoe.getUserName());
       assertEquals("Doe", streamJdoe.get("familyName"));
       assertEquals("John", streamJdoe.get("givenName"));

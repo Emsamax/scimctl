@@ -1,0 +1,6 @@
+userName,name.familyName,name.givenName.value,name.givenName.shortName,name.honorificPrefix,displayName,emails_value,emails_type,emails_primary,phoneNumbers_value,phoneNumbers_type,active,roles_value,roles_display
+jdoe,Doe,John,J, M.,John Doe,jdoe@example.com,work,true,+12345678901,mobile,,user,user
+asmith,Smith,A,A,Ms.,Alice Smith,asmith@example.com,work,true,+12345678902,mobile,,admin,admin
+rjohnson,Johnson,Robert,R,Mr.,Robert Johnson,rjohnson@example.com,work,true;+johnson.personal@example.com,home, true,+12345678903,home,true,user,User
+ljones,Jones,Laura,L,Ms.,Laura Jones,ljones@example.com,work,,+12345678904,mobile,false,user,User
+mwhite,White,Michael,M,Dr.,Dr. Michael White,mwhite@example.com,work,true,+12345678905,work,true,user,User

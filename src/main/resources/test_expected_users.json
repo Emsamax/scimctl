@@ -3,7 +3,10 @@
     "userName": "jdoe",
     "name": {
       "familyName": "Doe",
-      "givenName": "John",
+      "givenName": {
+        "value": "John",
+        "shortName": "J"
+      },
       "honorificPrefix": "M."
     },
     "displayName": "John Doe",
@@ -12,6 +15,11 @@
         "value": "jdoe@example.com",
         "type": "work",
         "primary": true
+      },
+      {
+        "value": "jdoe2@example.com",
+        "type": "personal",
+        "primary": false
       }
     ],
     "phoneNumbers": [
@@ -24,6 +32,10 @@
     "roles": [
       {
         "value": "user",
+        "display": "user"
+      },
+      {
+        "value": "User",
         "display": "User"
       }
     ]
@@ -32,7 +44,10 @@
     "userName": "asmith",
     "name": {
       "familyName": "Smith",
-      "givenName": "Alice",
+      "givenName": {
+        "value": "Alice",
+        "shortName": "A"
+      },
       "honorificPrefix": "Ms."
     },
     "displayName": "Alice Smith",
@@ -61,7 +76,10 @@
     "userName": "rjohnson",
     "name": {
       "familyName": "Johnson",
-      "givenName": "Robert",
+      "givenName": {
+        "value": "Robert",
+        "shortName": "R"
+      },
       "honorificPrefix": "Mr."
     },
     "displayName": "Robert Johnson",
@@ -98,7 +116,10 @@
     "userName": "ljones",
     "name": {
       "familyName": "Jones",
-      "givenName": "Laura",
+      "givenName": {
+        "value": "Laura",
+        "shortName": "L"
+      },
       "honorificPrefix": "Ms."
     },
     "displayName": "Laura Jones",
@@ -123,35 +144,35 @@
     ]
   },
   {
-      "userName": "mwhite",
-      "name": {
-        "familyName": "White",
-        "givenName": {
-              "primary": "Michael",
-              "additional": "Jackson"
-            },
-        "honorificPrefix": "Dr."
+    "userName": "mwhite",
+    "name": {
+      "familyName": "White",
+      "givenName": {
+        "value": "Michael",
+        "shortName": "M"
       },
-      "displayName": "Dr. Michael White",
-      "emails": [
-        {
-          "value": "mwhite@example.com",
-          "type": "work",
-          "primary": true
-        }
-      ],
-      "phoneNumbers": [
-        {
-          "value": "+12345678905",
-          "type": "work"
-        }
-      ],
-      "active": true,
-      "roles": [
-        {
-          "value": "user",
-          "display": "User"
-        }
-      ]
-    }
+      "honorificPrefix": "Dr."
+    },
+    "displayName": "Dr. Michael White",
+    "emails": [
+      {
+        "value": "mwhite@example.com",
+        "type": "work",
+        "primary": true
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678905",
+        "type": "work"
+      }
+    ],
+    "active": true,
+    "roles": [
+      {
+        "value": "user",
+        "display": "User"
+      }
+    ]
+  }
 ]
