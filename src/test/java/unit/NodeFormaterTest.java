@@ -1,17 +1,18 @@
+package unit;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
-import com.worldline.mts.idm.scimctl.utils.JsonUtils;
-import io.quarkus.test.junit.QuarkusTest;
+import com.worldline.mts.idm.scimctl.utils.NodeFormater;
 import jakarta.inject.Inject;
-import jakarta.json.stream.JsonParser;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,30 +26,34 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 /**
  * testing node restructuration
  */
-@QuarkusTest
-public class JsonUtilsTest {
+public class NodeFormaterTest {
 
   private Collection<List<JsonNode>> flattened = new ArrayList<>();
   private Iterator<JsonNode> expectedNestedNode;
 
-  private static final Logger LOGGER = Logger.getLogger(JsonUtilsTest.class);
+  private static final Logger LOGGER = Logger.getLogger(NodeFormaterTest.class);
 
-  @Inject
-  ResourceStreamBuilder stream;
+  private static ResourceStreamBuilder streamBuilder;
+
+  private static NodeFormater nodeFormater;
 
 
-  @Inject
-  JsonUtils jsonUtils;
+  @BeforeAll
+  public static void init(){
+    nodeFormater = new NodeFormater(new ObjectMapper());
+    streamBuilder = new ResourceStreamBuilder(new CsvMapper(), nodeFormater);
+  }
 
   @BeforeEach
   public void setUp() throws IOException {
+
     LOGGER.info("Setup starting");
-    File csvFile = new File("src/main/resources/test_users2.csv");
-    File jsonFile = new File("src/main/resources/test_expected_users.json");
+    File csvFile = new File("src/test/resources/csv/test_users2.csv");
+    File jsonFile = new File("src/test/resources/json/test_expected_users.json");
     LOGGER.info("CSV file exists: " + csvFile.exists());
     LOGGER.info("JSON file exists: " + jsonFile.exists());
     try {
-      flattened = stream.fromFile(csvFile)
+      flattened = streamBuilder.fromFile(csvFile)
         .build()
         .chunk(50);
       LOGGER.info("Flattened collection initialized with size: " + flattened.size());
@@ -73,7 +78,7 @@ public class JsonUtilsTest {
         assumeTrue(expectedNestedNode.hasNext(), "no more expected nodes");
         assumeTrue(flattened.iterator().hasNext(), "no more flat nodes");
         var expected = expectedNestedNode.next();
-        var actual = jsonUtils.flatToNestedNode(flat, stream.getSchema());
+        var actual = nodeFormater.flatToNestedNode(flat);
 
         LOGGER.info( " ===== Expected ===== : \n" + expected.toPrettyString());
 

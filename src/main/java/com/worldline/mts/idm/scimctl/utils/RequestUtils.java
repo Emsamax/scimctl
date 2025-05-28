@@ -52,7 +52,7 @@ public class RequestUtils {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
     var path = getEndPointPath(clazz);
-    ServerResponse<ListResponse<T>> response = config.getScimRequestBuilder()
+    var response = config.getScimRequestBuilder()
       .list(clazz, path)
       .count(50)
       .get()
@@ -133,7 +133,6 @@ public class RequestUtils {
     responseHandler.handleServerResponse(response, ServerResponseHandler.DELETE_MESSAGE);
   }
 
-
   /**
    * Determines the endpoint path based on the provided resource class type.
    *
@@ -153,7 +152,6 @@ public class RequestUtils {
     }
     return endpointPath;
   }
-
 
   /**
    * Check if the given class is a User

@@ -1,21 +1,14 @@
+package unit;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
-import de.captaingoldfish.scim.sdk.common.resources.User;
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.*;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Inherited;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
-import static io.smallrye.common.constraint.Assert.assertNotNull;
-import static io.smallrye.common.constraint.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest

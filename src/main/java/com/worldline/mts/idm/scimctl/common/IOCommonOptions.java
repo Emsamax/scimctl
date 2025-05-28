@@ -8,7 +8,7 @@ import picocli.CommandLine;
  */
 public class IOCommonOptions {
     @CommandLine.Option(names = {"--file", "-f"},
-            description = "JSON file for the resource")
+            description = "CSV file for the resource")
     public String path;
 
     @CommandLine.Option(names = {"--data", "-d"},

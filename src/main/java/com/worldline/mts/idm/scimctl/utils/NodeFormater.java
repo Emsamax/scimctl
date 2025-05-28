@@ -5,25 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.BooleanNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import io.quarkus.arc.Unremovable;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 
-@ApplicationScoped
-@Unremovable
-public class JsonUtils {
+public class NodeFormater {
 
-  @Inject
-  ObjectMapper mapper;
+  private final static Logger LOGGER = Logger.getLogger(NodeFormater.class);
 
-  @Inject
-  Logger LOGGER;
+  private final ObjectMapper mapper;
 
-  public JsonNode flatToNestedNode(JsonNode flatNode, CsvSchema schema) {
-    LOGGER.info("flat : \n" + flatNode.toPrettyString());
+  public NodeFormater(ObjectMapper mapper){
+    this.mapper = mapper;
+  }
+
+  public JsonNode flatToNestedNode(JsonNode flatNode) {
+    LOGGER.debug("flat : \n" + flatNode.toPrettyString());
     ObjectNode nestedNode = mapper.createObjectNode();
     flatNode.fields().forEachRemaining(field -> {
       var key = field.getKey();
@@ -74,7 +70,7 @@ public class JsonUtils {
         var content = s.split("=");
 
         //check if value in array is bool to not have "true" but true
-        if(isBoolFromText(content[1])){
+        if (isBoolFromText(content[1])) {
           objNode.set(content[0], BooleanNode.valueOf(Boolean.parseBoolean(content[1])));
         }
         objNode.set(content[0], TextNode.valueOf(content[1]));
@@ -88,7 +84,7 @@ public class JsonUtils {
     return s.startsWith("*");
   }
 
-  private boolean isBoolFromText(String node){
+  private boolean isBoolFromText(String node) {
     return Boolean.parseBoolean(node);
   }
 }

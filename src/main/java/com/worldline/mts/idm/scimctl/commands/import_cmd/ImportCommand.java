@@ -23,14 +23,13 @@ public class ImportCommand implements Runnable {
   @Inject
   Logger LOGGER;
 
-  @Inject
+  @CommandLine.Mixin
   CommonOptions options;
-
 
   /**
    * Force the user to specify either the path to the JSON file or write the JSON data directly into the console.
    */
-  @CommandLine.ArgGroup(heading = "Resource creation options:%n", multiplicity = "1")
+  @CommandLine.ArgGroup(heading = "Resource creation options:%n")
   IOCommonOptions ioOptions;
 
   @Override

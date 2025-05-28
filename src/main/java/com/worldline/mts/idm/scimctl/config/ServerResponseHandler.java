@@ -35,16 +35,14 @@ public class ServerResponseHandler {
    * @return null if server does not send a resource else return the resource
    */
   public <T extends ResourceNode> T handleServerResponse(ServerResponse<?> response, String message) {
-    if (response.getResource() instanceof User) {
+    if (response.getResource() instanceof User resource) {
       if (response.isSuccess()) {
-        var resource = (User) response.getResource();
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
         return (T) resource;
       } else handleError(response);
 
-    } else if (response.getResource() instanceof Group) {
+    } else if (response.getResource() instanceof Group resource) {
       if (response.isSuccess()) {
-        var resource = (Group) response.getResource();
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
         return (T) resource;
       } else handleError(response);
@@ -100,9 +98,8 @@ public class ServerResponseHandler {
     if (response.isSuccess()) {
       return response.getResource().getListedResources();
     }
-
     if (response.getErrorResponse() == null) {
-      throw new BadRequestException("Invalid response format: " + response.getResponseBody());
+      throw new BadRequestException("Invalid response format: " + response.getErrorResponse());
     }
     throw new BadRequestException(response.getResponseBody());
   }

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.worldline.mts.idm.scimctl.utils.JsonUtils;
-import io.quarkus.arc.Unremovable;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
+import com.worldline.mts.idm.scimctl.utils.NodeFormater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,26 +17,22 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.groupingBy;
 
-@Unremovable
-@ApplicationScoped
+
 public class ResourceStreamBuilder {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ResourceStreamBuilder.class);
-
-  @Inject
-  CsvMapper mapper;
-
-  @Inject
-  JsonUtils jsonUtils;
 
   private File file;
 
   private Stream<JsonNode> currentStream;
 
-  private CsvSchema schema;
+  private final CsvMapper mapper;
 
-  public CsvSchema getSchema(){
-    return this.schema;
+  private final NodeFormater formater;
+
+  public ResourceStreamBuilder(CsvMapper mapper, NodeFormater formater) {
+    this.mapper = mapper;
+    this.formater = formater;
   }
 
   public ResourceStreamBuilder fromFile(File file) {
@@ -54,7 +47,7 @@ public class ResourceStreamBuilder {
     if (this.file == null) {
       throw new IllegalStateException("File must be set before build()");
     }
-     this.schema = CsvSchema.builder()
+    CsvSchema schema = CsvSchema.builder()
       .setUseHeader(true)
       .setColumnSeparator(',')
       .setQuoteChar('"')
@@ -89,14 +82,12 @@ public class ResourceStreamBuilder {
     if (this.currentStream == null) {
       throw new IllegalStateException("call build before convert");
     }
-    this.currentStream = this.currentStream.map(flatNode -> jsonUtils.flatToNestedNode(flatNode, schema));
+    this.currentStream = this.currentStream.map(formater::flatToNestedNode);
     return this;
   }
 
   /**
    * Create as many chunk as possible with the specified chunk size
-   * @param chunkSize
-   * @return
    */
   public Collection<List<JsonNode>> chunk(int chunkSize) {
     if (this.currentStream == null) {

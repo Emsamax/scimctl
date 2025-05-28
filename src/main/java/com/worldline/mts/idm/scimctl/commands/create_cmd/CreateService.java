@@ -2,10 +2,9 @@ package com.worldline.mts.idm.scimctl.commands.create_cmd;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worldline.mts.idm.scimctl.utils.JsonUtils;
+import com.worldline.mts.idm.scimctl.utils.NodeFormater;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
-import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -30,7 +29,7 @@ public class CreateService {
   RequestUtils requestUtils;
 
   @Inject
-  JsonUtils jsonUtils;
+  NodeFormater nodeFormater;
 
   /**
    * @param data  contains the data you want to create. The data must be in JSON format.

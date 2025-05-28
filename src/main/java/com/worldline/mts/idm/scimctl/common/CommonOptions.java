@@ -2,6 +2,7 @@ package com.worldline.mts.idm.scimctl.common;
 
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 import jdk.jfr.Name;
 import picocli.CommandLine;
 
@@ -14,8 +15,6 @@ public class CommonOptions {
             converter = ResourceTypeConverter.class)
     public FilterCommonOptions.ResourceType resourceType;
 
-  public FilterCommonOptions.ResourceType getResourceType() {
-    return resourceType;
-  }
+
 
 }

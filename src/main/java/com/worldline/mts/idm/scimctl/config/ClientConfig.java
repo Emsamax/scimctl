@@ -2,12 +2,14 @@ package com.worldline.mts.idm.scimctl.config;
 
 import de.captaingoldfish.scim.sdk.client.ScimClientConfig;
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
+import de.captaingoldfish.scim.sdk.client.keys.KeyStoreWrapper;
 import de.captaingoldfish.scim.sdk.server.endpoints.authorize.Authorization;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.security.KeyStore;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,7 +20,7 @@ import java.util.Set;
 @ApplicationScoped
 @Named("clientConfig")
 @Unremovable
-public class ClientConfig implements Authorization {
+public class ClientConfig{
 
  // @ConfigProperty(name = "scim.base.url")
  // String baseUrl;
@@ -33,9 +35,9 @@ public class ClientConfig implements Authorization {
     this.scimRequestBuilder = new ScimRequestBuilder("http://localhost:8080/base/scim/v2", this.getScimClientConfig());
   }
 
-  //public String getBaseUrl() {
-  //  return baseUrl;
-  //}
+  private KeyStoreWrapper wrapper;
+
+
 
   public String getSchemaId() {
     return "urn:ietf:params:scim:schemas:core:2.0:Group";
@@ -46,22 +48,14 @@ public class ClientConfig implements Authorization {
   }
 
   public ScimClientConfig getScimClientConfig() {
+    //this.wrapper = new KeyStoreWrapper()
     return ScimClientConfig.builder()
       .connectTimeout(5)
       .requestTimeout(5)
       .socketTimeout(5)
+      .clientAuth(wrapper)
+      //.truststore()
       .hostnameVerifier((s, sslSession) -> true)
       .build();
   }
-
-  @Override
-  public Set<String> getClientRoles() {
-    return Set.of();
-  }
-
-  @Override
-  public boolean authenticate(Map<String, String> map, Map<String, String> map1) {
-    return true;
-  }
-
 }

@@ -1,6 +1,0 @@
-userName,name/familyName,name/givenName,name/honorificPrefix,displayName,emails/0/value,emails/0/type,emails/0/primary,phoneNumbers/0/value,phoneNumbers/0/type,active,roles/0/value,roles/0/display,emails/1/value,emails/1/type,roles/1/value,roles/1/display,name/givenName/primary,name/givenName/additional
-jdoe,Doe,John,M.,John Doe,jdoe@example.com,work,true,+12345678901,mobile,true,user,User,,,,,,
-asmith,Smith,Alice,Ms.,Alice Smith,asmith@example.com,work,true,+12345678902,mobile,true,admin,Administrator,,,,,,
-rjohnson,Johnson,Robert,Mr.,Robert Johnson,rjohnson@example.com,work,true,+12345678903,home,true,user,User,rjohnson.personal@example.com,home,manager,Manager,,
-ljones,Jones,Laura,Ms.,Laura Jones,ljones@example.com,work,,+12345678904,mobile,false,user,User,,,,,,
-mwhite,White,,Dr.,Dr. Michael White,mwhite@example.com,work,true,+12345678905,work,true,user,User,,,,,Michael,Jackson
