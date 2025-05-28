@@ -11,25 +11,26 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class ScimCtlConfig {
 
-  @Inject
-  ObjectMapper mapper;
-
+  @Produces
   public ObjectMapper getObjectMapper(){
     return mapper;
   }
 
+  @ApplicationScoped
   @Produces
-  public NodeFormater getNodeFormater(){
+  public NodeFormater getNodeFormater(ObjectMapper mapper){
     return new NodeFormater(mapper);
   }
 
+  @ApplicationScoped
   @Produces
   public CsvMapper getCsvMapper(){
     return new CsvMapper();
   }
 
+  @ApplicationScoped
   @Produces
-  public ResourceStreamBuilder getResourceStreamBuilder(){
-    return new ResourceStreamBuilder(getCsvMapper(), getNodeFormater());
+  public ResourceStreamBuilder getResourceStreamBuilder(CsvMapper csvMapper, NodeFormater formater){
+    return new ResourceStreamBuilder(csvMapper, formater);
   }
 }

@@ -46,7 +46,11 @@ public class NodeFormaterTest {
 
   @BeforeEach
   public void setUp() throws IOException {
-
+    //TODO : create a file for each possible case with testNestedNode as a prefix and a json file with expectedNestedNode as a prefix
+    //TODO : scan class Path to retrieve all csv and json files
+    //TODO : for each file compare create corresponding nodes result between csvNode and jsonNode
+    //TODO : do not use resource stream builder -> this will be tested later
+    //TODO : in set up create mappers.
     LOGGER.info("Setup starting");
     File csvFile = new File("src/test/resources/csv/test_users2.csv");
     File jsonFile = new File("src/test/resources/json/test_expected_users.json");
