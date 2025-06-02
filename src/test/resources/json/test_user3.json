@@ -1,0 +1,43 @@
+[
+  {
+    "userName": "rjohnson",
+    "name": {
+      "familyName": "Johnson",
+      "givenName": {
+        "value": "Robert",
+        "shortName": "R"
+      },
+      "honorificPrefix": "Mr."
+    },
+    "displayName": "Robert Johnson",
+    "emails": [
+      {
+        "value": "rjohnson@example.com",
+        "type": "work",
+        "primary": "true"
+      },
+      {
+        "value": "rjohnson.personal@example.com",
+        "type": "home",
+        "primary": "false"
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678903",
+        "type": "home"
+      }
+    ],
+    "active": "true",
+    "roles": [
+      {
+        "value": "user",
+        "display": "User"
+      },
+      {
+        "value": "manager",
+        "display": "Manager"
+      }
+    ]
+  }
+]

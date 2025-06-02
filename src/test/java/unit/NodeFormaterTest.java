@@ -6,29 +6,29 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
 import com.worldline.mts.idm.scimctl.utils.NodeFormater;
+import org.apache.commons.io.FilenameUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.Stream;
 
 import org.jboss.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * testing node restructuration
+ * For log see target/surefire-reports
  */
 public class NodeFormaterTest {
-
-  private Collection<List<JsonNode>> flattened = new ArrayList<>();
-  private Iterator<JsonNode> expectedNestedNode;
 
   private static final Logger LOGGER = Logger.getLogger(NodeFormaterTest.class);
 
@@ -40,34 +40,74 @@ public class NodeFormaterTest {
 
   private File csvFile;
 
+  private static List<Path> csvFiles;
+
+  private static List<Path> jsonFiles;
+
+  private static Iterator<Path> fileIterator;
+
+
   @BeforeAll
   public static void init() {
     nodeFormater = new NodeFormater(new ObjectMapper());
     streamBuilder = new ResourceStreamBuilder(new CsvMapper(), nodeFormater);
+
   }
 
+  /**
+   * iterate on all csvFiles and matches the name of the file in jsonFiles to get the expected file
+   */
   @BeforeEach
-  public void setUp() throws IOException {
-    LOGGER.info("Setup starting");
-    csvFile = new File("src/test/resources/csv/test_users2.csv");
-    jsonFile = new File("src/test/resources/json/test_expected_users.json");
-    LOGGER.info("CSV file exists: " + csvFile.exists());
-    LOGGER.info("JSON file exists: " + jsonFile.exists());
-
+  public void changeTestCase() {
+    if (fileIterator.hasNext()) {
+      csvFile = new File(fileIterator.next().toUri());
+      Optional<Path> filePath = jsonFiles.stream()
+        .filter(filePathStr -> {
+          var jsonFileName = FilenameUtils.removeExtension(filePathStr.getFileName().toString());
+          var matcher = FilenameUtils.removeExtension(csvFile.getName());
+          LOGGER.info("CSV file name = " + matcher + " JSON file name = " + jsonFileName);
+          return jsonFileName.equals(matcher);
+        })
+        .findFirst();
+      LOGGER.info("CSV file : " + csvFile.getName());
+      if (filePath.isPresent()) {
+        jsonFile = new File(filePath.get().toUri());
+        LOGGER.info("JSON file : " + jsonFile.getName());
+      } else {
+        LOGGER.warn("No JSON files found");
+      }
+    }
   }
 
-  @Test
+  @BeforeAll
+  public static void setUp() throws IOException {
+    LOGGER.info("Setup starting");
+    jsonFiles = new ArrayList<>();
+    csvFiles = new ArrayList<>();
+    try (Stream<Path> stream = Files.walk(Paths.get("src/test/resources"), Integer.MAX_VALUE)) {
+      stream
+        .filter(file -> !Files.isDirectory(file))
+        .forEach(file -> {
+          if (file.toString().endsWith(".csv")) csvFiles.add(file);
+          if (file.toString().endsWith(".json")) jsonFiles.add(file);
+        });
+    }
+    fileIterator = csvFiles.iterator();
+    csvFiles.forEach(System.out::println);
+    jsonFiles.forEach(System.out::println);
+  }
+
+  @RepeatedTest(value = 5)
   public void testFlatToNestedNode() {
     try {
-      flattened = streamBuilder.fromFile(csvFile)
+      Collection<List<JsonNode>> flattened = streamBuilder.fromFile(csvFile)
         .build()
         .chunk(50);
       LOGGER.info("Flattened collection initialized with size: " + flattened.size());
       JsonMapper jsonMapper = new JsonMapper();
       JsonNode jsonNode = jsonMapper.readTree(jsonFile);
-      expectedNestedNode = jsonNode.iterator();
+      Iterator<JsonNode> expectedNestedNode = jsonNode.iterator();
       LOGGER.info("Expected nodes initialized");
-
       LOGGER.info("test flat to nested : ");
       LOGGER.info("flattened size : " + flattened.size());
       for (List<JsonNode> chunk : flattened) {
@@ -78,10 +118,8 @@ public class NodeFormaterTest {
           var actual = nodeFormater.flatToNestedNode(flat).toPrettyString();
           LOGGER.info(" ===== Expected ===== : \n" + expected);
           assertEquals(expected, actual, "Nested structure does not match expected result");
-          //assertTrue(expectedNestedNode.hasNext());
         }
       }
-
     } catch (Exception e) {
       LOGGER.error("Error during initialization", e);
     }

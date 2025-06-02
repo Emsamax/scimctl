@@ -1,0 +1,43 @@
+[
+  {
+    "userName": "jdoe",
+    "name": {
+      "familyName": "Doe",
+      "givenName": {
+        "value": "John",
+        "shortName": "J"
+      },
+      "honorificPrefix": "M."
+    },
+    "displayName": "John Doe",
+    "emails": [
+      {
+        "value": "jdoe@example.com",
+        "type": "work",
+        "primary": "true"
+      },
+      {
+        "value": "jdoe2@example.com",
+        "type": "personal",
+        "primary": "false"
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678901",
+        "type": "mobile"
+      }
+    ],
+    "active":"true",
+    "roles": [
+      {
+        "value": "user",
+        "display": "user"
+      },
+      {
+        "value": "User",
+        "display": "User"
+      }
+    ]
+  }
+]

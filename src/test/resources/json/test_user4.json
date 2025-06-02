@@ -1,0 +1,33 @@
+[
+  {
+    "userName": "ljones",
+    "name": {
+      "familyName": "Jones",
+      "givenName": {
+        "value": "Laura",
+        "shortName": "L"
+      },
+      "honorificPrefix": "Ms."
+    },
+    "displayName": "Laura Jones",
+    "emails": [
+      {
+        "value": "ljones@example.com",
+        "type": "work"
+      }
+    ],
+    "phoneNumbers": [
+      {
+        "value": "+12345678904",
+        "type": "mobile"
+      }
+    ],
+    "active": "false",
+    "roles": [
+      {
+        "value": "user",
+        "display": "User"
+      }
+    ]
+  }
+]
