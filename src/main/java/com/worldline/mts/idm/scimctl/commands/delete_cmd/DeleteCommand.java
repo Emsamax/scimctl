@@ -10,6 +10,8 @@ import jakarta.ws.rs.BadRequestException;
 import org.jboss.logging.Logger;
 import picocli.CommandLine;
 
+import static org.jboss.logging.Logger.getLogger;
+
 
 @CommandLine.Command(name = "delete")
 public class DeleteCommand implements Runnable {
@@ -22,8 +24,7 @@ public class DeleteCommand implements Runnable {
   @Inject
   DeletService service;
 
-  @Inject
-  Logger LOGGER;
+  private static final Logger LOGGER = getLogger(DeleteCommand.class);
 
   @Override
   public void run() {

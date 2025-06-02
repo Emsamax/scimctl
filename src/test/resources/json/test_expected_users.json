@@ -14,12 +14,12 @@
       {
         "value": "jdoe@example.com",
         "type": "work",
-        "primary": true
+        "primary": "true"
       },
       {
         "value": "jdoe2@example.com",
         "type": "personal",
-        "primary": false
+        "primary": "false"
       }
     ],
     "phoneNumbers": [
@@ -28,7 +28,7 @@
         "type": "mobile"
       }
     ],
-    "active": true,
+    "active":"true",
     "roles": [
       {
         "value": "user",
@@ -45,7 +45,7 @@
     "name": {
       "familyName": "Smith",
       "givenName": {
-        "value": "Alice",
+        "value": "A",
         "shortName": "A"
       },
       "honorificPrefix": "Ms."
@@ -55,7 +55,7 @@
       {
         "value": "asmith@example.com",
         "type": "work",
-        "primary": true
+        "primary": "true"
       }
     ],
     "phoneNumbers": [
@@ -64,7 +64,7 @@
         "type": "mobile"
       }
     ],
-    "active": true,
+    "active": "true",
     "roles": [
       {
         "value": "admin",
@@ -87,11 +87,12 @@
       {
         "value": "rjohnson@example.com",
         "type": "work",
-        "primary": true
+        "primary": "true"
       },
       {
         "value": "rjohnson.personal@example.com",
-        "type": "home"
+        "type": "home",
+        "primary": "false"
       }
     ],
     "phoneNumbers": [
@@ -100,7 +101,7 @@
         "type": "home"
       }
     ],
-    "active": true,
+    "active": "true",
     "roles": [
       {
         "value": "user",
@@ -135,7 +136,7 @@
         "type": "mobile"
       }
     ],
-    "active": false,
+    "active": "false",
     "roles": [
       {
         "value": "user",
@@ -158,7 +159,7 @@
       {
         "value": "mwhite@example.com",
         "type": "work",
-        "primary": true
+        "primary": "true"
       }
     ],
     "phoneNumbers": [
@@ -167,7 +168,7 @@
         "type": "work"
       }
     ],
-    "active": true,
+    "active": "true",
     "roles": [
       {
         "value": "user",

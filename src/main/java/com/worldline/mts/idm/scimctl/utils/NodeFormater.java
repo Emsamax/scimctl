@@ -2,24 +2,19 @@ package com.worldline.mts.idm.scimctl.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.BooleanNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
+import com.fasterxml.jackson.databind.node.*;
 import org.jboss.logging.Logger;
 
-
 public class NodeFormater {
-
   private final static Logger LOGGER = Logger.getLogger(NodeFormater.class);
-
   private final ObjectMapper mapper;
 
-  public NodeFormater(ObjectMapper mapper){
+  public NodeFormater(ObjectMapper mapper) {
     this.mapper = mapper;
   }
 
   public JsonNode flatToNestedNode(JsonNode flatNode) {
-    LOGGER.debug("flat : \n" + flatNode.toPrettyString());
+    LOGGER.info("FLAT : \n" + flatNode.toPrettyString());
     ObjectNode nestedNode = mapper.createObjectNode();
     flatNode.fields().forEachRemaining(field -> {
       var key = field.getKey();
@@ -70,8 +65,8 @@ public class NodeFormater {
         var content = s.split("=");
 
         //check if value in array is bool to not have "true" but true
-        if (isBoolFromText(content[1])) {
-          objNode.set(content[0], BooleanNode.valueOf(Boolean.parseBoolean(content[1])));
+        if (Boolean.parseBoolean(content[1])) {
+          handleBool(objNode, content[0], content[1]);
         }
         objNode.set(content[0], TextNode.valueOf(content[1]));
       }
@@ -84,8 +79,12 @@ public class NodeFormater {
     return s.startsWith("*");
   }
 
-  private boolean isBoolFromText(String node) {
-    return Boolean.parseBoolean(node);
+  private void handleBool(ObjectNode currentNode, String key, String value) {
+    if (Boolean.parseBoolean(value)) {
+      boolean bool = Boolean.parseBoolean(value);
+      var boolNode = JsonNodeFactory.instance.booleanNode(bool);
+      currentNode.set(key, boolNode);
+    }
   }
 }
 
