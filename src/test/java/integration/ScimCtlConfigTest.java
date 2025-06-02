@@ -6,6 +6,7 @@ import com.worldline.mts.idm.scimctl.config.ScimCtlConfig;
 import com.worldline.mts.idm.scimctl.utils.NodeFormater;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,10 @@ public class ScimCtlConfigTest {
   @Inject
   ScimCtlConfig config;
 
-  private NodeFormater formatter;
-
-  private ResourceStreamBuilder resourceStreamBuilder;
+  private static final Logger LOGGER = Logger.getLogger(ScimCtlConfigTest.class);
 
   @Test
+  @Order(0)
   public void testRetrieveBeans() {
     assertNotNull(config);
     assertNotNull(config.getObjectMapper());
@@ -33,27 +33,10 @@ public class ScimCtlConfigTest {
     var csvMapper = config.getCsvMapper();
     assertNotNull(config.getNodeFormater());
     var nodeFormater = config.getNodeFormater();
-    this.formatter = nodeFormater;
     assertNotNull(config.getResourceStreamBuilder(csvMapper, nodeFormater));
     var stream = config.getResourceStreamBuilder(csvMapper, nodeFormater);
-    this.resourceStreamBuilder = stream;
     assertNotNull(stream);
+    LOGGER.info("All beans instantiated");
   }
 
-  /*
-  @Test
-  @Order(1)
-  public void testNodeFormater() {
-    JsonNode flatNode = null;
-    JsonNode expectedNode = null;
-    assertEquals(this.formatter.flatToNestedNode(flatNode), expectedNode);
-  }
-
-
-  @Test
-  @Order(2)
-  public void testResourceStreamBuilder(String csfFilePath, String jsonFilePath) {
-    //
-  }
-   */
 }
