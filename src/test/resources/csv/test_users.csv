@@ -1,6 +1,0 @@
-userName,name.familyName,name.givenName.value,name.givenName.shortName,name.honorificPrefix,displayName,*emails,*phoneNumbers,active,*roles
-jdoe,Doe,John,J, M.,John Doe,"value=jdoe@example.com,type=work,primary=true;value=jdoe2@example.com,type=personal,primary=false","value=+12345678901,type=mobile",true,"value=user,display=user;value=User,display=User"
-asmith,Smith,A,A,Ms.,Alice Smith,"value=asmith@example.com,type=work,primary=true","value=+12345678902,type=mobile",true,"value=admin,display=Administrator"
-rjohnson,Johnson,Robert,R,Mr.,Robert Johnson,"value=rjohnson@example.com,type=work,primary=true;value=rjohnson.personal@example.com,type=home,primary=false","value=+12345678903,type=home",true,"value=user,display=User;value=manager,display=Manager"
-ljones,Jones,Laura,L,Ms.,Laura Jones,"value=ljones@example.com,type=work","value=+12345678904,type=mobile",false,"value=user,display=User"
-mwhite,White,Michael,M,Dr.,Dr. Michael White,"value=mwhite@example.com,type=work,primary=true","value=+12345678905,type=work",true,"value=user,display=User"

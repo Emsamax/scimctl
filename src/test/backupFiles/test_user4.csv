@@ -1,0 +1,2 @@
+userName,name.familyName,name.givenName.value,name.givenName.shortName,name.honorificPrefix,displayName,*emails,*phoneNumbers,active,*roles
+ljones,Jones,Laura,L,Ms.,Laura Jones,"value=ljones@example.com,type=work","value=+12345678904,type=mobile",false,"value=user,display=User"
