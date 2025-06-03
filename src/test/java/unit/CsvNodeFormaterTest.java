@@ -5,12 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
-import com.worldline.mts.idm.scimctl.utils.NodeFormater;
+import com.worldline.mts.idm.scimctl.utils.strategy.NodeFormater;
 import org.apache.commons.io.FilenameUtils;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * testing node restructuration
  * For log see target/surefire-reports
  */
-public class NodeFormaterTest {
+public class CsvNodeFormaterTest {
 
-  private static final Logger LOGGER = Logger.getLogger(NodeFormaterTest.class);
+  private static final Logger LOGGER = Logger.getLogger(CsvNodeFormaterTest.class);
 
   private static ResourceStreamBuilder streamBuilder;
 
@@ -46,14 +43,6 @@ public class NodeFormaterTest {
 
   private static Iterator<Path> fileIterator;
 
-
-  @BeforeAll
-  public static void init() {
-    nodeFormater = new NodeFormater(new ObjectMapper());
-    streamBuilder = new ResourceStreamBuilder(new CsvMapper(), nodeFormater);
-
-  }
-
   /**
    * iterate on all csvFiles and matches the name of the file in jsonFiles to get the expected file
    */
@@ -61,7 +50,8 @@ public class NodeFormaterTest {
   public void changeTestCase() {
     if (fileIterator.hasNext()) {
       csvFile = new File(fileIterator.next().toUri());
-      Optional<Path> filePath = jsonFiles.stream()
+      Optional<Path> filePath = jsonFiles
+        .stream()
         .filter(filePathStr -> {
           var jsonFileName = FilenameUtils.removeExtension(filePathStr.getFileName().toString());
           var matcher = FilenameUtils.removeExtension(csvFile.getName());
@@ -82,6 +72,8 @@ public class NodeFormaterTest {
   @BeforeAll
   public static void setUp() throws IOException {
     LOGGER.info("Setup starting");
+    nodeFormater = new NodeFormater(new ObjectMapper());
+    streamBuilder = new ResourceStreamBuilder(new CsvMapper(), nodeFormater);
     jsonFiles = new ArrayList<>();
     csvFiles = new ArrayList<>();
     try (Stream<Path> stream = Files.walk(Paths.get("src/test/resources"), Integer.MAX_VALUE)) {
@@ -101,8 +93,8 @@ public class NodeFormaterTest {
   public void testFlatToNestedNode() {
     try {
       Collection<List<JsonNode>> flattened = streamBuilder.fromFile(csvFile)
-        .build()
-        .chunk(50);
+                                                          .build()
+                                                          .chunk(50);
       LOGGER.info("Flattened collection initialized with size: " + flattened.size());
       JsonMapper jsonMapper = new JsonMapper();
       JsonNode jsonNode = jsonMapper.readTree(jsonFile);

@@ -1,13 +1,9 @@
 package integration;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
 import com.worldline.mts.idm.scimctl.config.ScimCtlConfig;
-import com.worldline.mts.idm.scimctl.utils.NodeFormater;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
@@ -17,16 +13,17 @@ import static org.junit.jupiter.api.Assertions.*;
  * integration test for beans managed by quarkus
  */
 @QuarkusTest
-public class ScimCtlConfigTest {
+public class ScimCtlConfigIT {
 
   @Inject
   ScimCtlConfig config;
 
-  private static final Logger LOGGER = Logger.getLogger(ScimCtlConfigTest.class);
+  private static final Logger LOGGER = Logger.getLogger(ScimCtlConfigIT.class);
 
   @Test
   @Order(0)
   public void testRetrieveBeans() {
+    LOGGER.info("IT TEST");
     assertNotNull(config);
     assertNotNull(config.getObjectMapper());
     assertNotNull(config.getCsvMapper());

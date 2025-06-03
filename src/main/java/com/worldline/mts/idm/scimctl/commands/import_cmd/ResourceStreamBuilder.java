@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.worldline.mts.idm.scimctl.utils.NodeFormater;
+import com.worldline.mts.idm.scimctl.utils.strategy.CsvNodeFormater;
+import com.worldline.mts.idm.scimctl.utils.strategy.NodeFormater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
