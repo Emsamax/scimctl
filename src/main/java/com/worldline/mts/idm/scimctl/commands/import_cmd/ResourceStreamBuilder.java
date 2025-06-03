@@ -41,6 +41,14 @@ public class ResourceStreamBuilder {
     return this;
   }
 
+  public File getFile(){
+    return this.file;
+  }
+
+  public void setFile(File file){
+    this.file = file;
+  }
+
   /**
    * @return stream of jsonNode.
    */

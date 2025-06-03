@@ -21,7 +21,6 @@ public class ScimCtlConfigIT {
   private static final Logger LOGGER = Logger.getLogger(ScimCtlConfigIT.class);
 
   @Test
-  @Order(0)
   public void testRetrieveBeans() {
     LOGGER.info("IT TEST");
     assertNotNull(config);

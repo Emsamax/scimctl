@@ -30,7 +30,7 @@ public class JsonNodeFormater implements Strategy {
       } catch (JsonProcessingException e) {
         throw new RuntimeException(e);
       }
-    } else if (key.split("\\.").length == 1) {
+   /* } else if (key.split("\\.").length == 1) {
       //if key is not a composite
       var composite = key.split("\\.");
       curentNode.set(composite[0], value);
@@ -49,7 +49,7 @@ public class JsonNodeFormater implements Strategy {
         } else {
           curentNode = (ObjectNode) curentNode.get(part);
         }
-      }
+      }*/
     }
   }
 

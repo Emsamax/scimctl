@@ -16,16 +16,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 
-
 @Named("importService")
 @Unremovable
 @ApplicationScoped
 public class ImportService {
-  //TO NOT DO : manages duplicate user pas à moi de le faire
 
   @Inject
   ResourceStreamBuilder streamBuilder;
-
 
   @Inject
   RequestUtils requestUtils;
