@@ -28,22 +28,11 @@ public class CsvNodeFormaterTest extends SetUpTest {
    */
   @Test
   public void testFlatToNestedNodes() {
-    if (fileIterator.hasNext()) {
-      currentInputFile = new File(fileIterator.next().toUri());
-      Optional<Path> filePath = expectedFiles
-        .stream()
-        .filter(filePathStr -> {
-          var jsonFileName = FilenameUtils.removeExtension(filePathStr.getFileName().toString());
-          var matcher = FilenameUtils.removeExtension(currentInputFile.getName());
-          return jsonFileName.equals(matcher);
-        })
-        .findFirst();
-      if (filePath.isPresent()) {
-        expectedFile = new File(filePath.get().toUri());
-        testFlatToNestedNode();
-      } else {
-        LOGGER.warn("No JSON files found");
-      }
+    while (it.hasNext()) {
+      var tuple = it.next();
+      currentInputFile = tuple.input();
+      currentExpectedFile = tuple.expected();
+      testFlatToNestedNode();
     }
   }
 
@@ -54,7 +43,7 @@ public class CsvNodeFormaterTest extends SetUpTest {
                                                           .build()
                                                           .chunk(50);
       JsonMapper jsonMapper = new JsonMapper();
-      JsonNode jsonNode = jsonMapper.readTree(expectedFile);
+      JsonNode jsonNode = jsonMapper.readTree(currentExpectedFile);
       Iterator<JsonNode> expectedNestedNode = jsonNode.iterator();
       for (List<JsonNode> chunk : flattened) {
         for (JsonNode flat : chunk) {

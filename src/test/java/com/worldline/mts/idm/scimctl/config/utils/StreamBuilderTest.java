@@ -26,7 +26,7 @@ public class StreamBuilderTest extends SetUpTest {
   @Test
   @Order(2)
   void testFromFile() {
-    var file = inputFiles.getFirst().toFile();
+    var file = data.getFirst().input();
     System.out.println(file);
     streamBuilder.fromFile(file);
     assertEquals(streamBuilder.getFile(), file);
@@ -36,7 +36,7 @@ public class StreamBuilderTest extends SetUpTest {
   @Order(3)
   void testBuild() {
     try {
-      streamBuilder.fromFile(inputFiles.getFirst().toFile()).build();
+      streamBuilder.fromFile(data.getFirst().input()).build();
       assertNotNull(streamBuilder);
     } catch (IOException e) {
       LOGGER.log(Logger.Level.ERROR, "Error building the stream");
@@ -50,7 +50,7 @@ public class StreamBuilderTest extends SetUpTest {
   void chunk() {
     try {
       var size = 1;
-      var chunks = streamBuilder.fromFile(inputFiles.getFirst().toFile()).build().chunk(size);
+      var chunks = streamBuilder.fromFile(data.getFirst().input()).build().chunk(size);
       for (List<JsonNode> chunk : chunks) {
         LOGGER.info("size = " + size + " : " + chunk.toString());
         assertEquals(size, chunk.size());

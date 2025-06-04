@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,31 +24,32 @@ public class SetUpTest {
 
   public static NodeFormater nodeFormater;
 
-  public File expectedFile;
+  public File currentExpectedFile;
 
   public File currentInputFile;
 
-  public static List<Path> inputFiles;
+  public static List<TestCasesFiles> data;
 
-  public static List<Path> expectedFiles;
+  public static Iterator<TestCasesFiles> it;
 
-  public static Iterator<Path> fileIterator;
+  public record TestCasesFiles(File input, File expected) {
+  }
 
   @BeforeAll
   public static void setUp() throws IOException {
-    LOGGER.info("Setup starting");
     nodeFormater = new NodeFormater(new ObjectMapper());
     streamBuilder = new ResourceStreamBuilder(new CsvMapper(), nodeFormater);
-    expectedFiles = new ArrayList<>();
-    inputFiles = new ArrayList<>();
+    data = new ArrayList<>();
     try (var stream = Files.walk(Paths.get("src/test/resources"), Integer.MAX_VALUE)) {
       stream
-        .filter(file -> !Files.isDirectory(file))
-        .forEach(file -> {
-          if (file.toString().endsWith(".csv")) inputFiles.add(file);
-          if (file.toString().endsWith(".json")) expectedFiles.add(file);
+        .filter(path -> !Files.isDirectory(path))
+        .filter(path -> path.toString().endsWith(".csv"))
+        .forEach(path -> {
+          var fileName = path.toString().split("\\.")[0];
+          Path newFile = Path.of(fileName + ".json");
+          data.add(new TestCasesFiles(new File(path.toUri()), new File(newFile.toUri())));
         });
     }
-    fileIterator = inputFiles.iterator();
+    it = data.iterator();
   }
 }
