@@ -1,4 +1,4 @@
-package unit;
+package com.worldline.mts.idm.scimctl.config.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -26,49 +26,42 @@ public class CsvNodeFormaterTest extends SetUpTest {
   /**
    * iterate on all csvFiles and matches the name of the file in jsonFiles to get the expected file
    */
-  @BeforeEach
-  public void changeTestCase() {
+  @Test
+  public void testFlatToNestedNodes() {
     if (fileIterator.hasNext()) {
-      csvFile = new File(fileIterator.next().toUri());
-      Optional<Path> filePath = jsonFiles
+      currentInputFile = new File(fileIterator.next().toUri());
+      Optional<Path> filePath = expectedFiles
         .stream()
         .filter(filePathStr -> {
           var jsonFileName = FilenameUtils.removeExtension(filePathStr.getFileName().toString());
-          var matcher = FilenameUtils.removeExtension(csvFile.getName());
-          LOGGER.info("CSV file name = " + matcher + " JSON file name = " + jsonFileName);
+          var matcher = FilenameUtils.removeExtension(currentInputFile.getName());
           return jsonFileName.equals(matcher);
         })
         .findFirst();
-      LOGGER.info("CSV file : " + csvFile.getName());
       if (filePath.isPresent()) {
-        jsonFile = new File(filePath.get().toUri());
-        LOGGER.info("JSON file : " + jsonFile.getName());
+        expectedFile = new File(filePath.get().toUri());
+        testFlatToNestedNode();
       } else {
         LOGGER.warn("No JSON files found");
       }
     }
   }
 
-  @RepeatedTest(value = 5)
-  public void testFlatToNestedNode() {
+  @Test
+  protected void testFlatToNestedNode() {
     try {
-      Collection<List<JsonNode>> flattened = streamBuilder.fromFile(csvFile)
+      Collection<List<JsonNode>> flattened = streamBuilder.fromFile(currentInputFile)
                                                           .build()
                                                           .chunk(50);
-      LOGGER.info("Flattened collection initialized with size: " + flattened.size());
       JsonMapper jsonMapper = new JsonMapper();
-      JsonNode jsonNode = jsonMapper.readTree(jsonFile);
+      JsonNode jsonNode = jsonMapper.readTree(expectedFile);
       Iterator<JsonNode> expectedNestedNode = jsonNode.iterator();
-      LOGGER.info("Expected nodes initialized");
-      LOGGER.info("test flat to nested : ");
-      LOGGER.info("flattened size : " + flattened.size());
       for (List<JsonNode> chunk : flattened) {
         for (JsonNode flat : chunk) {
           assertNotNull(expectedNestedNode, "no more expected nodes");
           assertNotNull(flattened.iterator(), "no more flat nodes");
           var expected = expectedNestedNode.next().toPrettyString();
           var actual = nodeFormater.flatToNestedNode(flat).toPrettyString();
-          LOGGER.info(" ===== Expected ===== : \n" + expected);
           assertEquals(expected, actual, "Nested structure does not match expected result");
         }
       }

@@ -1,10 +1,9 @@
-package integration;
+package com.worldline.mts.idm.scimctl.config.config;
 
 import com.worldline.mts.idm.scimctl.config.ScimCtlConfig;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +21,6 @@ public class ScimCtlConfigIT {
 
   @Test
   public void testRetrieveBeans() {
-    LOGGER.info("IT TEST");
     assertNotNull(config);
     assertNotNull(config.getObjectMapper());
     assertNotNull(config.getCsvMapper());
@@ -32,7 +30,6 @@ public class ScimCtlConfigIT {
     assertNotNull(config.getResourceStreamBuilder(csvMapper, nodeFormater));
     var stream = config.getResourceStreamBuilder(csvMapper, nodeFormater);
     assertNotNull(stream);
-    LOGGER.info("All beans instantiated");
   }
 
 }

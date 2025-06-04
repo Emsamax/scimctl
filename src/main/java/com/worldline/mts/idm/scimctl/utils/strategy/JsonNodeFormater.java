@@ -1,13 +1,10 @@
 package com.worldline.mts.idm.scimctl.utils.strategy;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.jboss.logging.Logger;
 
-import java.util.Currency;
-import java.util.Map;
 
 /**
  * concrete strategy for json in csv files
@@ -30,26 +27,6 @@ public class JsonNodeFormater implements Strategy {
       } catch (JsonProcessingException e) {
         throw new RuntimeException(e);
       }
-   /* } else if (key.split("\\.").length == 1) {
-      //if key is not a composite
-      var composite = key.split("\\.");
-      curentNode.set(composite[0], value);
-    } else {
-      var composite = key.split("\\.");
-      //value is the last element of the composite
-      //iterate on all the part of the key to create if not exist then set the value
-      for (int i = 0; i < composite.length; i++) {
-        var part = composite[i];
-        if (i == composite.length - 1) {
-          curentNode.set(part, value);
-        } else if (!curentNode.has(part) || !curentNode.get(part).isObject()) {
-          var child = mapper.createObjectNode();
-          curentNode.set(part, child);
-          curentNode = child;
-        } else {
-          curentNode = (ObjectNode) curentNode.get(part);
-        }
-      }*/
     }
   }
 
