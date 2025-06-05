@@ -1,8 +1,8 @@
 package com.worldline.mts.idm.scimctl.commands.get_cmd;
 
-import com.worldline.mts.idm.scimctl.common.CommonOptions;
-import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
-import com.worldline.mts.idm.scimctl.common.SearchCommonOption;
+import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
+import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
+import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import org.jboss.logging.Logger;

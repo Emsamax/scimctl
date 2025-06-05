@@ -1,4 +1,4 @@
-package com.worldline.mts.idm.scimctl.common;
+package com.worldline.mts.idm.scimctl.commands.common;
 
 import picocli.CommandLine;
 

@@ -1,8 +1,8 @@
 package com.worldline.mts.idm.scimctl.commands.delete_cmd;
 
 
-import com.worldline.mts.idm.scimctl.common.CommonOptions;
-import com.worldline.mts.idm.scimctl.common.SearchCommonOption;
+import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
+import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;

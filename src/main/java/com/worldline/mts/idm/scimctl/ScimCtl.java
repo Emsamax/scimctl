@@ -4,7 +4,6 @@ import com.worldline.mts.idm.scimctl.commands.delete_cmd.DeleteCommand;
 import com.worldline.mts.idm.scimctl.commands.get_cmd.GetCommand;
 import com.worldline.mts.idm.scimctl.commands.create_cmd.CreateCommand;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ImportCommand;
-import com.worldline.mts.idm.scimctl.common.CommonOptions;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
@@ -26,8 +25,6 @@ import java.util.logging.Logger;
 public class ScimCtl implements QuarkusApplication {
   @Inject
   CommandLine.IFactory factory;
-
-
 
   private static final Logger LOGGER = LogManager.getLogManager().getLogger("scim-ctl");
 

@@ -1,9 +1,8 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
+import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
-import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;

@@ -1,19 +1,17 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.worldline.mts.idm.scimctl.common.CommonOptions;
-import com.worldline.mts.idm.scimctl.common.FilterCommonOptions;
-import com.worldline.mts.idm.scimctl.common.IOCommonOptions;
+import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
+import com.worldline.mts.idm.scimctl.commands.common.IOCommonOptions;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import picocli.CommandLine;
-import com.worldline.mts.idm.scimctl.common.ResourceTypeConverter;
 
 import java.io.IOException;
 import org.jboss.logging.Logger;
 
-import static com.worldline.mts.idm.scimctl.common.FilterCommonOptions.ResourceType.GROUP;
-import static com.worldline.mts.idm.scimctl.common.FilterCommonOptions.ResourceType.USER;
+import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.GROUP;
+import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.USER;
 
 @CommandLine.Command(name = "import")
 public class ImportCommand implements Runnable {

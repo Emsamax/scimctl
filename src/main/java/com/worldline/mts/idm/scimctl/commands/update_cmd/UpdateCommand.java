@@ -1,8 +1,8 @@
 package com.worldline.mts.idm.scimctl.commands.update_cmd;
 
-import com.worldline.mts.idm.scimctl.common.CommonOptions;
-import com.worldline.mts.idm.scimctl.common.IOCommonOptions;
-import com.worldline.mts.idm.scimctl.common.SearchCommonOption;
+import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
+import com.worldline.mts.idm.scimctl.commands.common.IOCommonOptions;
+import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import picocli.CommandLine;

@@ -1,8 +1,7 @@
-package com.worldline.mts.idm.scimctl.common;
+package com.worldline.mts.idm.scimctl.commands.common;
 
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.inject.Produces;
 import jdk.jfr.Name;
 import picocli.CommandLine;
 
