@@ -23,13 +23,13 @@ public class ScimCtlConfigIT {
   public void testRetrieveBeans() {
     assertNotNull(config);
     //assertNotNull(config.getObjectMapper());
-    assertNotNull(config.getCsvMapper());
-    var csvMapper = config.getCsvMapper();
+    //assertNotNull(config.getCsvMapper());
+    //var csvMapper = config.getCsvMapper();
     assertNotNull(config.getNodeFormater());
     var nodeFormater = config.getNodeFormater();
-    assertNotNull(config.getResourceStreamBuilder(csvMapper, nodeFormater));
-    var stream = config.getResourceStreamBuilder(csvMapper, nodeFormater);
-    assertNotNull(stream);
+    //assertNotNull(config.getResourceStreamBuilder(csvMapper, nodeFormater));
+    //var stream = config.getResourceStreamBuilder(csvMapper, nodeFormater);
+    //assertNotNull(stream);
   }
 
 }

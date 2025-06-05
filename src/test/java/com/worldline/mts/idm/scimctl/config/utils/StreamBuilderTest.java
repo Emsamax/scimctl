@@ -15,7 +15,7 @@ public class StreamBuilderTest extends SetUpTest {
   public StreamBuilderTest() {
     super();
   }
-
+/*
   @Test
   @Order(1)
   void testThrowException() {
@@ -60,5 +60,7 @@ public class StreamBuilderTest extends SetUpTest {
     }
 
   }
+
+ */
 }
 

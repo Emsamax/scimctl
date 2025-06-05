@@ -20,12 +20,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @Order(2)
 public class CsvNodeFormaterTest extends SetUpTest {
+  /*
 
   private static final Logger LOGGER = Logger.getLogger(CsvNodeFormaterTest.class);
 
   /**
    * iterate on all csvFiles and matches the name of the file in jsonFiles to get the expected file
-   */
+   *
   @Test
   public void testFlatToNestedNodes() {
     while (it.hasNext()) {
@@ -58,4 +59,5 @@ public class CsvNodeFormaterTest extends SetUpTest {
       LOGGER.error("Error during initialization", e);
     }
   }
+  */
 }

@@ -1,9 +1,6 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvParser;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.worldline.mts.idm.scimctl.utils.strategy.CsvNodeFormater;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeFormater;
 import org.slf4j.Logger;
@@ -20,6 +17,7 @@ import static java.util.stream.Collectors.groupingBy;
 
 
 public class ResourceStreamBuilder {
+  /*
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ResourceStreamBuilder.class);
 
@@ -51,7 +49,7 @@ public class ResourceStreamBuilder {
 
   /**
    * @return stream of jsonNode.
-   */
+   *
   public ResourceStreamBuilder build() throws IOException {
     if (this.file == null) {
       throw new IllegalStateException("File must be set before build()");
@@ -97,7 +95,7 @@ public class ResourceStreamBuilder {
 
   /**
    * Create as many chunk as possible with the specified chunk size
-   */
+   *
   public Collection<List<JsonNode>> chunk(int chunkSize) {
     if (this.currentStream == null) {
       throw new IllegalStateException("Chunk must be called after build and convert");
@@ -105,4 +103,6 @@ public class ResourceStreamBuilder {
     var counter = new AtomicInteger();
     return this.currentStream.collect(groupingBy(x -> counter.getAndIncrement() / chunkSize)).values();
   }
+  */
+
 }

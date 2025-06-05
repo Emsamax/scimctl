@@ -1,7 +1,6 @@
 package com.worldline.mts.idm.scimctl.config.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeFormater;
 import org.jboss.logging.Logger;
@@ -18,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class SetUpTest {
+  /*
   private static final Logger LOGGER = Logger.getLogger(SetUpTest.class);
 
   public static ResourceStreamBuilder streamBuilder;
@@ -52,4 +52,5 @@ public class SetUpTest {
     }
     it = data.iterator();
   }
+  */
 }

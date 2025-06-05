@@ -21,12 +21,12 @@ public class OidcServiceAccountCreator {
   private volatile OidcClient oidcClient;
 
   //TODO : env var for oidc variables
-  @ConfigProperty(name = "quarkus.oidc.auth-server-url")
-  String keycloakClient;
-  @ConfigProperty(name = "quarkus.oidc.client-id")
-  String ClientId;
-  @ConfigProperty(name = "quarkus.oidc.credentials.secret")
-  String ClientSecret;
+ // @ConfigProperty(name = "quarkus.oidc.auth-server-url")
+  String keycloakClient ="//localhost:8081/realms/scim";
+ // @ConfigProperty(name = "quarkus.oidc.client-id")
+  String ClientId ="scim-ctl";
+ // @ConfigProperty(name = "quarkus.oidc.credentials.secret")
+  String ClientSecret = "8naJ78ay1to1xGjEnyhc9VxPpTgxyBqh";
 
   public void startup(@Observes StartupEvent event) {
     createOidcClient().subscribe().with(client -> {

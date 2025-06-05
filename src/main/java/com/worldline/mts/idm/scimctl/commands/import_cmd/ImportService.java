@@ -19,9 +19,11 @@ import java.util.function.Consumer;
 @Unremovable
 @ApplicationScoped
 public class ImportService {
-
+/*
   @Inject
   ResourceStreamBuilder streamBuilder;
+  */
+
 
   @Inject
   RequestUtils requestUtils;
@@ -42,12 +44,14 @@ public class ImportService {
     // validate other fields (email)
     // stream.map(this::toUserResource).filter().forEach(this::postResource)
     var creator = resolveResourceCreator(type);
-
+/*
     streamBuilder
       .fromFile(new File(path))
       .build()
       .convert()
       .chunk(50).forEach(creator);
+      */
+
   }
 
   private Consumer<List<JsonNode>> resolveResourceCreator(FilterCommonOptions.ResourceType type) {
