@@ -14,10 +14,9 @@ public class ScimCtlConfig {
   @Inject
   ObjectMapper mapper;
 
-  /*public ObjectMapper getObjectMapper() {
-    //this.mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  public ObjectMapper getObjectMapper() {
     return this.mapper;
-  }*/
+  }
 
   @ApplicationScoped
   @Produces
@@ -25,20 +24,11 @@ public class ScimCtlConfig {
     return new NodeFormater(this.mapper);
   }
 
-  /*
+
   @ApplicationScoped
   @Produces
-  public CsvMapper getCsvMapper() {
-    return new CsvMapper();
-  }
-  */
-
-
-/*  @ApplicationScoped
-  @Produces
-  public ResourceStreamBuilder getResourceStreamBuilder(CsvMapper csvMapper, NodeFormater formater) {
-    return new ResourceStreamBuilder(csvMapper, formater);
+  public ResourceStreamBuilder getResourceStreamBuilder(NodeFormater formater) {
+    return new ResourceStreamBuilder(formater);
   }
 
- */
 }

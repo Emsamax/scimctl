@@ -2,6 +2,7 @@ package com.worldline.mts.idm.scimctl.utils.strategy;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.ws.rs.NotFoundException;
+import org.apache.commons.csv.CSVRecord;
 import org.jboss.logging.Logger;
 
 public class StrategyResolver {
@@ -14,9 +15,8 @@ public class StrategyResolver {
     this.jsonNodeFormater = jsonNodeFormater;
   }
 
-  public Strategy resolveStrategyFromNode(String key, JsonNode node) throws NotFoundException {
-
-    if (node.asText().contains("{") || node.asText().contains("[") || node.asText().contains(":")) {
+  public Strategy resolveStrategyFromNode(String key, String record) throws NotFoundException {
+    if (record.contains("{") || record.contains("[") || record.contains(":")) {
       LOGGER.info("Strategy JsonNodeFormater");
       return this.jsonNodeFormater;
     } else if (key.contains("*")) {

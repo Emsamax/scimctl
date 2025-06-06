@@ -1,6 +1,7 @@
 package com.worldline.mts.idm.scimctl.config.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.worldline.mts.idm.scimctl.utils.strategy.NodeWrapper;
 import org.jboss.logging.Logger;
 import org.junit.jupiter.api.*;
 
@@ -15,7 +16,7 @@ public class StreamBuilderTest extends SetUpTest {
   public StreamBuilderTest() {
     super();
   }
-/*
+
   @Test
   @Order(1)
   void testThrowException() {
@@ -51,7 +52,7 @@ public class StreamBuilderTest extends SetUpTest {
     try {
       var size = 1;
       var chunks = streamBuilder.fromFile(data.getFirst().input()).build().chunk(size);
-      for (List<JsonNode> chunk : chunks) {
+      for (List<NodeWrapper> chunk : chunks) {
         LOGGER.info("size = " + size + " : " + chunk.toString());
         assertEquals(size, chunk.size());
       }
@@ -61,6 +62,6 @@ public class StreamBuilderTest extends SetUpTest {
 
   }
 
- */
+
 }
 

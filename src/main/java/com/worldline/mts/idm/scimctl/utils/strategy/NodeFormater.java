@@ -1,9 +1,16 @@
 package com.worldline.mts.idm.scimctl.utils.strategy;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.csv.CSVRecord;
 import org.jboss.logging.Logger;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Context class and client class at the same time
@@ -33,30 +40,34 @@ public class NodeFormater {
   }
 
   public void setStrategy(Strategy newStrategy) {
-    if(newStrategy == null){
+    if (newStrategy == null) {
       this.currentStrategy = csvNodeFormater;
       return;
     }
     this.currentStrategy = newStrategy;
   }
 
-  public JsonNode flatToNestedNode(JsonNode flatNode) {
-    LOGGER.info("FLAT : \n" + flatNode.toPrettyString());
+  public NodeWrapper flatToNestedNode(NodeWrapper nodeWrapper, Map<String, Integer> header) {
+    var csvRecord = nodeWrapper.getCsvRecord();
     ObjectNode nestedNode = mapper.createObjectNode();
-    flatNode.fields().forEachRemaining(field -> {
-      var key = field.getKey();
+    for (Map.Entry<String, Integer> entry : header.entrySet()) {
+      var key = entry.getKey();
       //ignore null fields name
-      var value = field.getValue();
-      if (value.isNull() || value.asText().isEmpty()) {
-        return;
+      var pos = entry.getValue();
+      if (!(key == null || key.isEmpty())) {
+        setStrategy(strategyResolver.resolveStrategyFromNode(key, csvRecord.get().get(pos)));
+        if (this.currentStrategy == null) {
+          LOGGER.error("Strategy was not resolved properly for key: " + key + " values : " + csvRecord);
+        }
+        try {
+          this.currentStrategy.handleFromat(nestedNode, key, csvRecord.get().get(pos));
+        } catch (JsonProcessingException e) {
+          LOGGER.error(e.getMessage());
+        }
       }
-       setStrategy(strategyResolver.resolveStrategyFromNode(key, value));
-      if (this.currentStrategy == null) {
-        LOGGER.error("Strategy was not resolved properly for key: " + key);
-      }
-      this.currentStrategy.handleFromat(nestedNode, key, value);
-    });
+    }
     LOGGER.info("NESTED : \n" + nestedNode.toPrettyString());
-    return nestedNode;
+    nodeWrapper.setJsonNode(nestedNode);
+    return nodeWrapper;
   }
 }

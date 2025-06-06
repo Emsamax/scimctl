@@ -1,9 +1,8 @@
 package com.worldline.mts.idm.scimctl.utils.strategy;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
-import org.apache.http.annotation.Obsolete;
 import org.jboss.logging.Logger;
 
 /**
@@ -18,13 +17,15 @@ public class CsvNodeFormater implements Strategy {
   }
 
   @Override
-  public void handleFromat(ObjectNode curentNode, String key, JsonNode value) {
+  public void handleFromat(ObjectNode curentNode, String key, String value) throws JsonProcessingException {
     if (isArray(key)) {
       handleArray(curentNode, key, value);
     } else if (key.split("\\.").length == 1) {
       //if key is not a composite
       var composite = key.split("\\.");
-      curentNode.set(composite[0], value);
+      var finalKey = composite[composite.length - 1];
+      var jsonNode = mapper.readTree( "\"" + value + "\"");
+      curentNode.set(composite[0], jsonNode);
     } else {
       var composite = key.split("\\.");
       //value is the last element of the composite
@@ -32,7 +33,8 @@ public class CsvNodeFormater implements Strategy {
       for (int i = 0; i < composite.length; i++) {
         var part = composite[i];
         if (i == composite.length - 1) {
-          curentNode.set(part, value);
+          var jsonNode = mapper.readTree( "\"" + value + "\"");
+          curentNode.set(part, jsonNode);
         } else if (!curentNode.has(part) || !curentNode.get(part).isObject()) {
           var child = mapper.createObjectNode();
           curentNode.set(part, child);
@@ -45,10 +47,10 @@ public class CsvNodeFormater implements Strategy {
     LOGGER.info(curentNode.toPrettyString());
   }
 
-  public void handleArray(ObjectNode currentObjectNode, String key, JsonNode value) {
+  public void handleArray(ObjectNode currentObjectNode, String key, String value) {
     var composite = key.replace("*", "").trim().split("\\.");
     var keyName = composite[0];
-    var items = value.asText().split(";");
+    var items = value.split(";");
     var arrayNode = mapper.createArrayNode();
     for (String item : items) {
       var objNode = mapper.createObjectNode();

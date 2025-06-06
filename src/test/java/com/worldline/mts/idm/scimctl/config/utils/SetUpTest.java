@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class SetUpTest {
-  /*
+
   private static final Logger LOGGER = Logger.getLogger(SetUpTest.class);
 
   public static ResourceStreamBuilder streamBuilder;
@@ -38,7 +38,7 @@ public class SetUpTest {
   @BeforeAll
   public static void setUp() throws IOException {
     nodeFormater = new NodeFormater(new ObjectMapper());
-    streamBuilder = new ResourceStreamBuilder(new CsvMapper(), nodeFormater);
+    streamBuilder = new ResourceStreamBuilder(nodeFormater);
     data = new ArrayList<>();
     try (var stream = Files.walk(Paths.get("src/test/resources"), Integer.MAX_VALUE)) {
       stream
@@ -52,5 +52,5 @@ public class SetUpTest {
     }
     it = data.iterator();
   }
-  */
+
 }
