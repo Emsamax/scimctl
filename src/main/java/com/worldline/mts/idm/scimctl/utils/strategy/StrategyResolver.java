@@ -1,8 +1,7 @@
 package com.worldline.mts.idm.scimctl.utils.strategy;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.ws.rs.NotFoundException;
-import org.apache.commons.csv.CSVRecord;
+
 import org.jboss.logging.Logger;
 
 public class StrategyResolver {
@@ -20,8 +19,9 @@ public class StrategyResolver {
       LOGGER.info("Strategy JsonNodeFormater");
       return this.jsonNodeFormater;
     } else if (key.contains("*")) {
-           LOGGER.info("Strategy CsvNodeFormater");
-           return this.csvNodeFormater;
-    } else return this.csvNodeFormater;
+      LOGGER.info("Strategy CsvNodeFormater");
+      return this.csvNodeFormater;
+    } else
+      return this.csvNodeFormater;
   }
 }

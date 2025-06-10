@@ -1,4 +1,4 @@
-package com.worldline.mts.idm.scimctl.auth;
+package com.worldline.mts.idm.scimctl.config;
 
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;

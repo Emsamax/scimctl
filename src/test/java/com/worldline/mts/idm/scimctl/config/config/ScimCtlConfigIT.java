@@ -3,7 +3,6 @@ package com.worldline.mts.idm.scimctl.config.config;
 import com.worldline.mts.idm.scimctl.config.ScimCtlConfig;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,8 +15,6 @@ public class ScimCtlConfigIT {
 
   @Inject
   ScimCtlConfig config;
-
-  private static final Logger LOGGER = Logger.getLogger(ScimCtlConfigIT.class);
 
   @Test
   public void testRetrieveBeans() {

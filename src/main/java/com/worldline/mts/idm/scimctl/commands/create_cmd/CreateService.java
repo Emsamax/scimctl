@@ -2,7 +2,6 @@ package com.worldline.mts.idm.scimctl.commands.create_cmd;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.worldline.mts.idm.scimctl.utils.strategy.CsvNodeFormater;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -43,15 +42,5 @@ public class CreateService {
     LOGGER.info("JSON parsed : " + resource.toString());
     LOGGER.info("pretty : " + resource.toPrettyString());
     requestUtils.createResource(resource, clazz);
-  }
-
-  private String reformate(String data) {
-    if (!data.contains("\"") && data.contains(":")) {
-      //remplace TEST par "TEST":
-      data = data.replaceAll("([\\w]+)\\s*:", "\"$1\":");
-      data = data.replaceAll(":\\s*([\\w]+)", ": \"$1\"");
-    }
-    LOGGER.info("Reformatted JSON: " + data);
-    return data;
   }
 }

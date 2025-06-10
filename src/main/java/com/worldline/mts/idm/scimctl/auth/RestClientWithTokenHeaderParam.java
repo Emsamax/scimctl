@@ -14,11 +14,5 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface RestClientWithTokenHeaderParam {
   @GET
   @Produces("text/plain")
-  @Path("userName")
-  Uni<String> getUserName(@HeaderParam("Authorization") String authorization);
-
-  @GET
-  @Produces("text/plain")
-  @Path("adminName")
-  Uni<String> getAdminName(@HeaderParam("Authorization") String authorization);
+  Uni<String> getToken(@HeaderParam("Authorization") String authorization);
 }

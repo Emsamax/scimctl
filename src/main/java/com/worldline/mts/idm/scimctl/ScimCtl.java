@@ -15,13 +15,10 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 @QuarkusMain
-@CommandLine.Command(
-  name = "scim-ctl",
-  mixinStandardHelpOptions = true,
-  subcommands = {ScimSchema.class, GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class}
-)
+@CommandLine.Command(name = "scim-ctl", mixinStandardHelpOptions = true, subcommands = { ScimSchema.class,
+    GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class })
 
-//TODO : script configuration des variables ENV
+// TODO : script configuration des variables ENV pour oidc
 public class ScimCtl implements QuarkusApplication {
   @Inject
   CommandLine.IFactory factory;

@@ -3,8 +3,6 @@ package com.worldline.mts.idm.scimctl.commands.import_cmd;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeFormater;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeWrapper;
 import org.apache.commons.csv.CSVFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
@@ -14,8 +12,6 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.groupingBy;
 
 public class ResourceStreamBuilder {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ResourceStreamBuilder.class);
 
   private File file;
 
@@ -42,7 +38,7 @@ public class ResourceStreamBuilder {
     this.file = file;
   }
 
-  public Map<String, Integer>getHeader(){
+  public Map<String, Integer> getHeader() {
     return this.header;
   }
 
@@ -54,13 +50,12 @@ public class ResourceStreamBuilder {
       throw new IllegalStateException("File must be set before build()");
     }
     Reader in = new FileReader(this.file);
-    var records = CSVFormat
-      .RFC4180
-      .builder()
-      .setHeader()
-      .setSkipHeaderRecord(true)
-      .get()
-      .parse(in);
+    var records = CSVFormat.RFC4180
+        .builder()
+        .setHeader()
+        .setSkipHeaderRecord(true)
+        .get()
+        .parse(in);
     var iterator = records.iterator();
     this.header = records.getHeaderMap();
     this.currentStream = Stream.generate(() -> {
@@ -95,8 +90,8 @@ public class ResourceStreamBuilder {
     }
     var counter = new AtomicInteger();
     return this.currentStream
-      .collect(groupingBy(x -> counter.getAndIncrement() / chunkSize))
-      .values();
+        .collect(groupingBy(x -> counter.getAndIncrement() / chunkSize))
+        .values();
   }
 
 }

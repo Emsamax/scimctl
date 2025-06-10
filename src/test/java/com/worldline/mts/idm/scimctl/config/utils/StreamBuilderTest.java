@@ -1,6 +1,5 @@
 package com.worldline.mts.idm.scimctl.config.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeWrapper;
 import org.jboss.logging.Logger;
 import org.junit.jupiter.api.*;
@@ -62,6 +61,4 @@ public class StreamBuilderTest extends SetUpTest {
 
   }
 
-
 }
-

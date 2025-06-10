@@ -2,7 +2,6 @@ package com.worldline.mts.idm.scimctl.commands.schema_cmd;
 
 import com.worldline.mts.idm.scimctl.config.ClientConfig;
 import com.worldline.mts.idm.scimctl.config.ServerResponseHandler;
-import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
 import de.captaingoldfish.scim.sdk.common.schemas.Schema;

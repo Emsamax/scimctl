@@ -38,6 +38,9 @@ public class UpdateCommand implements Runnable {
             service.updateUser(search.id, ioOptions.text, User.class);
           }
         }
+        case GROUP -> {
+          LOGGER.info("update group not done yet");
+        }
       }
     } catch (IOException e) {
       LOGGER.log(Logger.Level.valueOf("ERROR"), "error reading the file : "+ e.getMessage());

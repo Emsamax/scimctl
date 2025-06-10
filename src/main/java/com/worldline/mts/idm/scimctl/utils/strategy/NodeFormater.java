@@ -1,16 +1,13 @@
 package com.worldline.mts.idm.scimctl.utils.strategy;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.csv.CSVRecord;
+
 import org.jboss.logging.Logger;
 
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Context class and client class at the same time
@@ -52,7 +49,7 @@ public class NodeFormater {
     ObjectNode nestedNode = mapper.createObjectNode();
     for (Map.Entry<String, Integer> entry : header.entrySet()) {
       var key = entry.getKey();
-      //ignore null fields name
+      // ignore null fields name
       var pos = entry.getValue();
       if (!(key == null || key.isEmpty())) {
         setStrategy(strategyResolver.resolveStrategyFromNode(key, csvRecord.get().get(pos)));

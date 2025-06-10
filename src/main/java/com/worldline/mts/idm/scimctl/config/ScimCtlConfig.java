@@ -1,7 +1,6 @@
 package com.worldline.mts.idm.scimctl.config;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeFormater;
@@ -29,6 +28,12 @@ public class ScimCtlConfig {
   @Produces
   public ResourceStreamBuilder getResourceStreamBuilder(NodeFormater formater) {
     return new ResourceStreamBuilder(formater);
+  }
+
+  @ApplicationScoped
+  @Produces
+  public ResourceStreamBuilder getResourceStreamBuilder() {
+    return new ResourceStreamBuilder(getNodeFormater());
   }
 
 }

@@ -23,7 +23,6 @@ public class CsvNodeFormater implements Strategy {
     } else if (key.split("\\.").length == 1) {
       //if key is not a composite
       var composite = key.split("\\.");
-      var finalKey = composite[composite.length - 1];
       var jsonNode = mapper.readTree( "\"" + value + "\"");
       curentNode.set(composite[0], jsonNode);
     } else {

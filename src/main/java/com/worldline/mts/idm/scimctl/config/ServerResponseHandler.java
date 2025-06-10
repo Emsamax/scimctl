@@ -39,23 +39,27 @@ public class ServerResponseHandler {
       if (response.isSuccess()) {
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
         return (T) resource;
-      } else handleError(response);
+      } else
+        handleError(response);
 
     } else if (response.getResource() instanceof Group resource) {
       if (response.isSuccess()) {
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
         return (T) resource;
-      } else handleError(response);
+      } else
+        handleError(response);
     } else if (response.getResource() instanceof Schema) {
       if (response.isSuccess()) {
         var resource = (Group) response.getResource();
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
         return (T) resource;
-      } else handleError(response);
+      } else
+        handleError(response);
     }
     if (response.isSuccess()) {
       LOGGER.log(Logger.Level.valueOf("INFO"), message);
-    } else handleError(response);
+    } else
+      handleError(response);
 
     return null;
   }
@@ -96,6 +100,8 @@ public class ServerResponseHandler {
 
   public <T extends ResourceNode> List<T> handleListResources(ServerResponse<ListResponse<T>> response) {
     if (response.isSuccess()) {
+      if (response.getResource().isEmpty())
+        System.out.println("EMPTY");
       return response.getResource().getListedResources();
     }
     if (response.getErrorResponse() == null) {
