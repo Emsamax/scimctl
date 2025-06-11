@@ -8,6 +8,8 @@ import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
+import picocli.CommandLine.ScopeType;
+
 import com.worldline.mts.idm.scimctl.commands.schema_cmd.ScimSchema;
 import com.worldline.mts.idm.scimctl.commands.update_cmd.UpdateCommand;
 
@@ -21,7 +23,23 @@ public class ScimCtl implements QuarkusApplication {
   @Inject
   CommandLine.IFactory factory;
 
+  private EventManager manager;
+  
+  private String message;
+
+  public void setMessage(String message){
+    this.message = message;
+  }
+
   private static final Logger LOGGER = LogManager.getLogManager().getLogger("scim-ctl");
+
+  @CommandLine.Option(names = { "--verbose", "-v" }, scope = ScopeType.INHERIT)
+  private void verbose(boolean verbose) {
+    if(verbose){
+      this.manager = new EventManager();
+      logVerboseEvent(manager);
+    }
+  }
 
   @Override
   public int run(String... args) {
@@ -29,8 +47,7 @@ public class ScimCtl implements QuarkusApplication {
     return new CommandLine(this, factory).execute(args);
   }
 
-
-  //TODO : if option contains --verbose or -v -> instanciate observer and subscribe a logger
-  
-  //TODO : protected func void notify(Class<T> clazz, String message); annotated  @Option(names = "-v", scope = ScopeType.INHERIT)
+  private void logVerboseEvent(EventManager manager){
+      manager.logEvent(this.message);
+  }
 }

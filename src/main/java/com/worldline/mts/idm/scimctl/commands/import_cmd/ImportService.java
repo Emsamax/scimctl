@@ -52,7 +52,8 @@ public class ImportService {
     // stream.map(this::toUserResource).filter().forEach(this::postResource)
     var creator = resolveResourceCreator(type);
 
-    config.getResourceStreamBuilder(null)
+    var foramter = config.getNodeFormater();
+    config.getResourceStreamBuilder(foramter)
         .fromFile(new File(path))
         .build()
         .convert()

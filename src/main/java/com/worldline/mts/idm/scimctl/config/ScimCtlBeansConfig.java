@@ -33,5 +33,4 @@ public class ScimCtlBeansConfig {
   public ResourceStreamBuilder getResourceStreamBuilder() {
     return new ResourceStreamBuilder(getNodeFormater());
   }
-
 }

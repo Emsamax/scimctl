@@ -70,6 +70,9 @@ public class ServerResponseHandler {
    * @param ServerResponse
    */
   private void handleError(ServerResponse<?> ServerResponse) throws RuntimeException, BadRequestException {
+    if (ServerResponse.getResource().isEmpty()) {
+      LOGGER.info("EMPTY :");
+    }
     if (ServerResponse.getErrorResponse() == null && ServerResponse.getResource() == null) {
       throw new RuntimeException("No response body, error not in RFC7644: " + ServerResponse.getResponseBody());
     } else {

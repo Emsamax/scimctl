@@ -35,23 +35,23 @@ public class ImportCommand implements Runnable {
     try {
       switch (options.resourceType) {
         case USER -> {
-          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import USER from file path : `{}`"+ ioOptions.path);
+          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import USER from file path : "+ ioOptions.path);
           service.importResource(ioOptions.path, USER);
         }
 
         case GROUP -> {
-          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import GROUP from file path : `{}`"+ ioOptions.path);
+          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import GROUP from file path : `"+ ioOptions.path);
           service.importResource(ioOptions.path, GROUP);
         }
       }
     } catch (JsonProcessingException e) {
-      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error parsing data `{}`"+ e.getMessage());
+      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error parsing data "+ e.getMessage());
     } catch (BadRequestException e) {
-      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"bad request : `{}`"+ e.getMessage());
+      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"bad request : "+ e.getMessage());
     } catch (RuntimeException e) {
-      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error isn't describe in RFC7644 : `{}`"+ e.getMessage());
+      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error isn't describe in RFC7644 : "+ e.getMessage());
     } catch (IOException e) {
-      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error reading the file : `{}`"+ e.getMessage());
+      LOGGER.log(org.jboss.logging.Logger.Level.valueOf("ERROR"),"error reading the file : "+ e.getMessage());
     }
   }
 }
