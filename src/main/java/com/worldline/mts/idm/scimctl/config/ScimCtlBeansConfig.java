@@ -1,6 +1,5 @@
 package com.worldline.mts.idm.scimctl.config;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ResourceStreamBuilder;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeFormater;
@@ -9,7 +8,7 @@ import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public class ScimCtlConfig {
+public class ScimCtlBeansConfig {
   @Inject
   ObjectMapper mapper;
 
@@ -22,7 +21,6 @@ public class ScimCtlConfig {
   public NodeFormater getNodeFormater() {
     return new NodeFormater(this.mapper);
   }
-
 
   @ApplicationScoped
   @Produces

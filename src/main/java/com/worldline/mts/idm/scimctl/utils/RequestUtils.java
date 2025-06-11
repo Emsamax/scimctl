@@ -2,9 +2,9 @@ package com.worldline.mts.idm.scimctl.utils;
 
 import com.worldline.mts.idm.scimctl.config.ClientConfig;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.worldline.mts.idm.scimctl.config.ServerResponseHandler;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeWrapper;
 
+import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.EndpointPaths;
 import de.captaingoldfish.scim.sdk.common.constants.ResourceTypeNames;
@@ -33,11 +33,17 @@ import java.util.UUID;
 
 public class RequestUtils {
 
-  private final ClientConfig config;
+  private ScimRequestBuilder requestBuilder;
 
   @Inject
+  ClientConfig config;
+
+  private final static String baseUrl = "http://localhost:8080/base/scim/v2";
+
   public RequestUtils(ClientConfig config) {
     this.config = config;
+    this.requestBuilder = new ScimRequestBuilder(baseUrl,
+        this.config.getScimClientConfig());
   }
 
   @Inject
@@ -46,7 +52,7 @@ public class RequestUtils {
   public <T extends ResourceNode> T getResource(String id, Class<T> clazz)
       throws BadRequestException, IllegalArgumentException, ClassCastException {
     var path = getEndPointPath(clazz);
-    var response = config.getScimRequestBuilder().get(User.class, path, id).sendRequest();
+    var response = this.requestBuilder.get(User.class, path, id).sendRequest();
     return responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
   }
 
@@ -55,7 +61,7 @@ public class RequestUtils {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
     var path = getEndPointPath(clazz);
-    var response = config.getScimRequestBuilder()
+    var response = this.requestBuilder
         .list(clazz, path)
         .count(50)
         .get()
@@ -68,7 +74,7 @@ public class RequestUtils {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
     var path = getEndPointPath(clazz);
-    ServerResponse<ListResponse<T>> response = config.getScimRequestBuilder()
+    ServerResponse<ListResponse<T>> response = this.requestBuilder
         .list(clazz, path)
         .filter("userName", Comparator.CO, filter)
         .build()
@@ -79,7 +85,7 @@ public class RequestUtils {
 
   public <T extends ResourceNode> void createResource(JsonNode node, Class<T> clazz) {
     var path = getEndPointPath(clazz);
-    try (var requestBuilder = config.getScimRequestBuilder()) {
+    try (var requestBuilder = this.requestBuilder) {
       if (!node.has("userName") || node.get("userName").asText().isEmpty()) {
         throw new RuntimeException("Resource must have a userName : " + node);
       }
@@ -105,7 +111,7 @@ public class RequestUtils {
   public <T extends JsonNode> void createResources(List<NodeWrapper> chunk, Class<T> clazz) {
     String path = getEndPointPath(clazz);
     String resourceType = getResourceType(clazz);
-    var scimRequestBuilder = config.getScimRequestBuilder();
+    var scimRequestBuilder = this.requestBuilder;
     var builder = scimRequestBuilder.bulk();
     List<Member> groupMembers = new ArrayList<>();
 
@@ -134,14 +140,14 @@ public class RequestUtils {
 
   public <T extends ResourceNode> void updateResource(String id, Class<T> clazz, JsonNode updatedData) {
     var path = getEndPointPath(clazz);
-    var response = config.getScimRequestBuilder().update(clazz, path, id)
+    var response = this.requestBuilder.update(clazz, path, id)
         .setResource(updatedData)
         .sendRequest();
     responseHandler.handleServerResponse(response, ServerResponseHandler.UPDATE_MESSAGE);
   }
 
   public <T extends ResourceNode> void deleteResource(String id, Class<T> clazz) {
-    ServerResponse<User> response = config.getScimRequestBuilder().delete(User.class, getEndPointPath(clazz), id)
+    ServerResponse<User> response = this.requestBuilder.delete(User.class, getEndPointPath(clazz), id)
         .sendRequest();
     responseHandler.handleServerResponse(response, ServerResponseHandler.DELETE_MESSAGE);
   }

@@ -1,6 +1,6 @@
 package com.worldline.mts.idm.scimctl.config.config;
 
-import com.worldline.mts.idm.scimctl.config.ScimCtlConfig;
+import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ScimCtlConfigIT {
 
   @Inject
-  ScimCtlConfig config;
+  ScimCtlBeansConfig config;
 
   @Test
   public void testRetrieveBeans() {

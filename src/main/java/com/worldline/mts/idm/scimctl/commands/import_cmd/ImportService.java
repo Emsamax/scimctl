@@ -1,7 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
 import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
-import com.worldline.mts.idm.scimctl.config.ScimCtlConfig;
+import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
 
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
@@ -27,7 +27,7 @@ public class ImportService {
    */
 
   @Inject
-  ScimCtlConfig config;
+  ScimCtlBeansConfig config;
 
   @Inject
   RequestUtils requestUtils;

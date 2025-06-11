@@ -1,4 +1,4 @@
-package com.worldline.mts.idm.scimctl.config;
+package com.worldline.mts.idm.scimctl.utils;
 
 import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
@@ -105,7 +105,10 @@ public class ServerResponseHandler {
       return response.getResource().getListedResources();
     }
     if (response.getErrorResponse() == null) {
-      throw new BadRequestException("Invalid response format: " + response.getErrorResponse());
+      throw new BadRequestException(
+          "Invalid response format: " + "\nbody :" + response.getResponseBody() + ",\nerror : "
+              + response.getErrorResponse() + ",\nstatus: " + response.getHttpStatus() + ",\nheader : "
+              + response.getHttpHeaders() + ",\ninfo : ");
     }
     throw new BadRequestException(response.getResponseBody());
   }

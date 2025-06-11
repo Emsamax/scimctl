@@ -1,0 +1,15 @@
+#!/bin/bash
+ 
+realm=${KEYCLOAK_REALM:-scim}
+authority=${authority:-http://localhost:8081}
+client_id=${client_id:-scim-ctl}
+client_secret=${client_secret:-8naJ78ay1to1xGjEnyhc9VxPpTgxyBqh}
+scope=${scope:-email}
+ 
+payload="grant_type=client_credentials&client_id=${client_id}&client_secret=${client_secret}&scope=openid ${scope}"
+ 
+res=`curl -s -k --data "${payload}" "${authority}/realms/${realm}/protocol/openid-connect/token"`
+echo $res
+ 
+access_token=`echo $res | jq -r .access_token`
+echo $access_token
