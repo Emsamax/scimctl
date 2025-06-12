@@ -1,5 +1,9 @@
 package com.worldline.mts.idm.scimctl.commands.common;
 
+import java.util.HashMap;
+
+import org.antlr.v4.parse.v4ParserException;
+
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jdk.jfr.Name;
@@ -14,7 +18,8 @@ public class CommonOptions {
   description = "Resource type", converter = ResourceTypeConverter.class)
   public FilterCommonOptions.ResourceType resourceType;
 
-  @CommandLine.Option(names = { "--verbose", "-v" }, description = "verbosity")
-  public boolean verbose;
+
+  @CommandLine.Option(names = {"--batch-size"})
+  public int batchSize;
 
 }

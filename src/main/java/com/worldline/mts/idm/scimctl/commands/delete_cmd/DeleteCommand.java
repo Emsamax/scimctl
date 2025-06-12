@@ -15,10 +15,10 @@ import static org.jboss.logging.Logger.getLogger;
 
 @CommandLine.Command(name = "delete")
 public class DeleteCommand implements Runnable {
-  @CommandLine.ArgGroup(exclusive = false)
+  @CommandLine.Mixin
   SearchCommonOption options;
 
-  @Inject
+  @CommandLine.Mixin
   CommonOptions commonOptions;
 
   @Inject
@@ -40,13 +40,13 @@ public class DeleteCommand implements Runnable {
   private void handleRequest() {
     switch (commonOptions.resourceType) {
       case USER -> {
-        if (options.id != null) {
+        if (options.id == null) {
           throw new BadRequestException("no resource specified");
         }
         service.deletUser(options.id, User.class);
       }
       case GROUP -> {
-        if (options.id != null) {
+        if (options.id == null) {
           throw new BadRequestException("no resource specified");
         }
         service.deletUser(options.id, Group.class);

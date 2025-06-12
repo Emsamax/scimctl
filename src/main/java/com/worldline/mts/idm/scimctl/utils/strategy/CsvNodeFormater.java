@@ -43,7 +43,7 @@ public class CsvNodeFormater implements Strategy {
         }
       }
     }
-    LOGGER.info(curentNode.toPrettyString());
+   // LOGGER.info(curentNode.toPrettyString());
   }
 
   public void handleArray(ObjectNode currentObjectNode, String key, String value) {

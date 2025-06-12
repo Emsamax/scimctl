@@ -40,14 +40,12 @@ public class RequestUtils {
   @Inject
   ClientConfig config;
 
-  //@ConfigProperty(name = "baseUrl", defaultValue = "http://localhost:8080/base/scim/v2")
+  String baseUrl;
 
-  private static final String baseUrl="http://localhost:8080/base/scim/v2";
-
-  public RequestUtils(ClientConfig config) {
+  public RequestUtils(ClientConfig config,@ConfigProperty(name = "base.url") String baseUrl) {
     this.config = config;
-    this.requestBuilder = new ScimRequestBuilder(baseUrl,
-        this.config.getScimClientConfig());
+    this.baseUrl = baseUrl;
+    this.requestBuilder = new ScimRequestBuilder(baseUrl, this.config.getScimClientConfig());
   }
 
   @Inject

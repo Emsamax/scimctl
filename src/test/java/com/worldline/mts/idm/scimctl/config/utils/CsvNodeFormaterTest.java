@@ -27,6 +27,7 @@ public class CsvNodeFormaterTest extends SetUpTest {
    */
   @Test
   public void testFlatToNestedNodes() {
+    
     while (it.hasNext()) {
       var tuple = it.next();
       currentInputFile = tuple.input();

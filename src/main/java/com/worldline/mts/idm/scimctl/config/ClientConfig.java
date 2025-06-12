@@ -26,7 +26,6 @@ public class ClientConfig {
 
   public ScimClientConfig getScimClientConfig() {
     tokenService.fetchTokens();
-    System.out.println("TOKEN =========================== \n " + tokenService.getCurrentToken().getAccessToken());
     return ScimClientConfig.builder()
         .connectTimeout(5)
         .requestTimeout(5)

@@ -20,13 +20,15 @@ import java.util.logging.Logger;
 @CommandLine.Command(name = "scim-ctl", mixinStandardHelpOptions = true, subcommands = { ScimSchema.class,
     GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class })
 public class ScimCtl implements QuarkusApplication {
+  //TODO : refactor common option, (see arggroup or mixin)
+  //TODO : --verbose (1 lvl)
+  //TODO : dry run
+  //TODO : --batch-size 
+
   @Inject
   CommandLine.IFactory factory;
 
   private static final Logger LOGGER = LogManager.getLogManager().getLogger("scim-ctl");
-
-  //@CommandLine.Option(names = { "--verbose", "-v" }, scope = ScopeType.INHERIT)
-  //public boolean verbose;
 
   @Override
   public int run(String... args) {

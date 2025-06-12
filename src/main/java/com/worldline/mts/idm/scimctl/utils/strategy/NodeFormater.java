@@ -63,7 +63,7 @@ public class NodeFormater {
         }
       }
     }
-    LOGGER.info("NESTED : \n" + nestedNode.toPrettyString());
+    //LOGGER.info("NESTED : \n" + nestedNode.toPrettyString());
     nodeWrapper.setJsonNode(nestedNode);
     return nodeWrapper;
   }

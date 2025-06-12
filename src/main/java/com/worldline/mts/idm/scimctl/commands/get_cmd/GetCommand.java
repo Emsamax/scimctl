@@ -10,6 +10,8 @@ import static org.jboss.logging.Logger.getLogger;
 
 import org.jboss.logging.Logger;
 import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Mixin;
 
 @CommandLine.Command(name = "get")
 public class GetCommand implements Runnable {
@@ -22,13 +24,13 @@ public class GetCommand implements Runnable {
   /**
    * Force the user to specify either the id or the username of the user to get.
    */
-  @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false, multiplicity = "1")
+  @CommandLine.Mixin
   SearchCommonOption search;
 
   @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false)
   FilterCommonOptions filter;
 
-  @Inject
+  @CommandLine.Mixin
   CommonOptions options;
 
 
