@@ -40,16 +40,20 @@ public class RequestUtils {
   @Inject
   ClientConfig config;
 
+  @Inject
+  ServerResponseHandler responseHandler;
+
   String baseUrl;
 
-  public RequestUtils(ClientConfig config,@ConfigProperty(name = "base.url") String baseUrl) {
+  int batchSize;
+
+  public RequestUtils(ClientConfig config, @ConfigProperty(name = "base.url") String baseUrl,
+      @ConfigProperty(name = "batch.size") int batch_size) {
+    this.batchSize = batch_size;
     this.config = config;
     this.baseUrl = baseUrl;
     this.requestBuilder = new ScimRequestBuilder(baseUrl, this.config.getScimClientConfig());
   }
-
-  @Inject
-  ServerResponseHandler responseHandler;
 
   public <T extends ResourceNode> T getResource(String id, Class<T> clazz)
       throws BadRequestException, IllegalArgumentException, ClassCastException {
@@ -65,7 +69,7 @@ public class RequestUtils {
     var path = getEndPointPath(clazz);
     var response = this.requestBuilder
         .list(clazz, path)
-        .count(50)
+        .count(batchSize)
         .get()
         .sendRequest();
     return responseHandler.handleListResources(response);
@@ -102,7 +106,7 @@ public class RequestUtils {
    * The method builds bulk operations, and sends them to the server.
    *
    * @param <T>   the type of resources to be processed
-   * @param chunk a list of resources to be included in the bulk request(50 max)
+   * @param chunk a list of resources to be included in the bulk request(size of a chunk = batchSize, 50 by default)
    * @param clazz the class type of the resource (e.g., User.class or Group.class)
    *              used to determine endpoint paths
    * @throws RuntimeException   if a resource does not contain a userName or if no

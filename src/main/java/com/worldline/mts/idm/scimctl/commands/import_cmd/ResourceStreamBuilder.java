@@ -27,6 +27,7 @@ public class ResourceStreamBuilder {
 
   public ResourceStreamBuilder fromFile(File file) {
     this.file = file;
+
     return this;
   }
 
@@ -84,13 +85,13 @@ public class ResourceStreamBuilder {
   /**
    * Create as many chunk as possible with the specified chunk size
    */
-  public Collection<List<NodeWrapper>> chunk(int chunkSize) {
+  public Collection<List<NodeWrapper>> chunk(int size) {
     if (this.currentStream == null) {
       throw new IllegalStateException("Chunk must be called after build and convert");
     }
     var counter = new AtomicInteger();
     return this.currentStream
-        .collect(groupingBy(x -> counter.getAndIncrement() / chunkSize))
+        .collect(groupingBy(x -> counter.getAndIncrement() / size))
         .values();
   }
 
