@@ -38,6 +38,7 @@ public class ServerResponseHandler {
   public <T extends ResourceNode> T handleServerResponse(ServerResponse<T> response, String message) {
     if (response.getResource() instanceof User resource) {
       if (response.isSuccess()) {
+        if(response.getResource().isEmpty()) LOGGER.info("EMPTY :");
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
         return (T) resource;
       } else
@@ -45,11 +46,13 @@ public class ServerResponseHandler {
 
     } else if (response.getResource() instanceof Group resource) {
       if (response.isSuccess()) {
+        if(response.getResource().isEmpty()) LOGGER.info("EMPTY :");
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
         return (T) resource;
       } else
         handleError(response);
     } else if (response.getResource() instanceof Schema) {
+      if(response.getResource().isEmpty()) LOGGER.info("EMPTY :");
       if (response.isSuccess()) {
         var resource = (Group) response.getResource();
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
@@ -88,7 +91,9 @@ public class ServerResponseHandler {
    */
   public void handleBulkResponse(ServerResponse<BulkResponse> response) {
     if (response.isSuccess()) {
+
       BulkResponse bulkResponse = response.getResource();
+      if(bulkResponse.isEmpty()) LOGGER.info("EMPTY");
       LOGGER.log(Logger.Level.valueOf("INFO"), "Bulk Response : " + bulkResponse);
       LOGGER.log(Logger.Level.valueOf("INFO"), "Failed Operations :" + bulkResponse.getFailedOperations());
       LOGGER.log(Logger.Level.valueOf("INFO"), "Successful Operations : " + bulkResponse.getSuccessfulOperations());

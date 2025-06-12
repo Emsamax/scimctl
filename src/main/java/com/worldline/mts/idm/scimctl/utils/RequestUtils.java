@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
 @Named("requestUtils")
 @Unremovable
 @ApplicationScoped
@@ -38,7 +40,9 @@ public class RequestUtils {
   @Inject
   ClientConfig config;
 
-  private final static String baseUrl = "http://localhost:8080/base/scim/v2";
+  //@ConfigProperty(name = "baseUrl", defaultValue = "http://localhost:8080/base/scim/v2")
+
+  private static final String baseUrl="http://localhost:8080/base/scim/v2";
 
   public RequestUtils(ClientConfig config) {
     this.config = config;

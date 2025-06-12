@@ -23,31 +23,13 @@ public class ScimCtl implements QuarkusApplication {
   @Inject
   CommandLine.IFactory factory;
 
-  private EventManager manager;
-  
-  private String message;
-
-  public void setMessage(String message){
-    this.message = message;
-  }
-
   private static final Logger LOGGER = LogManager.getLogManager().getLogger("scim-ctl");
 
-  @CommandLine.Option(names = { "--verbose", "-v" }, scope = ScopeType.INHERIT)
-  private void verbose(boolean verbose) {
-    if(verbose){
-      this.manager = new EventManager();
-      logVerboseEvent(manager);
-    }
-  }
+  //@CommandLine.Option(names = { "--verbose", "-v" }, scope = ScopeType.INHERIT)
+  //public boolean verbose;
 
   @Override
   public int run(String... args) {
-    LOGGER.info("Start the CLI");
     return new CommandLine(this, factory).execute(args);
-  }
-
-  private void logVerboseEvent(EventManager manager){
-      manager.logEvent(this.message);
   }
 }
