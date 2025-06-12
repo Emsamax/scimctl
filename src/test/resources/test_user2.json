@@ -3,10 +3,7 @@
     "userName": "asmith",
     "name": {
       "familyName": "Smith",
-      "givenName": {
-        "value": "A",
-        "shortName": "A"
-      },
+      "givenName": "A",
       "honorificPrefix": "Ms."
     },
     "displayName": "Alice Smith",

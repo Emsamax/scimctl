@@ -34,7 +34,8 @@ public class ServerResponseHandler {
    * @param <T>      the response if returned by the server
    * @return null if server does not send a resource else return the resource
    */
-  public <T extends ResourceNode> T handleServerResponse(ServerResponse<?> response, String message) {
+  @SuppressWarnings("unchecked")
+  public <T extends ResourceNode> T handleServerResponse(ServerResponse<T> response, String message) {
     if (response.getResource() instanceof User resource) {
       if (response.isSuccess()) {
         LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());

@@ -1,0 +1,140 @@
+@issuer=http://localhost:8081/realms/scim
+@realm = scim
+@authority = http://localhost:8081
+@client_id = scim-ctl
+@client_secret = 8naJ78ay1to1xGjEnyhc9VxPpTgxyBqh
+@scope = email
+
+### ask for token endpoint
+GET {{issuer}}/.well-known/openid-configuration
+
+?? status == 200
+?? header content-type == application/json;charset=UTF-8
+
+### get oidc token 
+POST {{authority}}/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_secret}}&scope=openid {{scope}}
+
+?? status == 200
+?? header content-type == application/json
+
+{{
+   const { ok } = require('assert');
+   test("query response is valid", () => {
+    const body = response.parsedBody
+    ok(body.hasOwnProperty("access_token"))
+    $global.token = body.access_token
+  })
+}}
+
+### create user from json 
+
+{{
+  $global.base_url ="http://localhost:8080/base/scim/v2"
+}}
+
+POST {{$global.base_url}}/Users
+Authorization: Bearer {{$global.token}}
+Content-Type: application/scim+json
+
+{
+  "userName": "asmith",
+  "name": {
+    "familyName": "Smith",
+    "givenName": "A",
+    "honorificPrefix": "Ms."
+  },
+  "displayName": "Alice Smith",
+  "emails": [
+    {
+      "value": "asmith@example.com",
+      "type": "work",
+      "primary": "true"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "value": "+12345678902",
+      "type": "mobile"
+    }
+  ],
+  "active": "true",
+  "roles": [
+    {
+      "value": "admin",
+      "display": "Administrator"
+    }
+  ]
+}
+
+?? status == 201
+?? header Content-Type: application/scim+json
+
+### get all user and get if from new created user 
+GET {{$global.base_url}}/Users
+Authorization: Bearer {{$global.token}}
+Content-Type: application/scim+json
+
+?? status == 200
+?? header content-type == application/scim+json
+
+{{
+  const { ok } = require('assert')
+  test("Get query response is valid", () => {
+    const content = response.parsedBody
+    ok(content);
+    const user = content.Resources[0];
+    ok(user)
+    ok(user.hasOwnProperty("userName") && user.hasOwnProperty("id"))
+    ok(user.userName === "asmith")
+    $global.id = user.id
+  })
+}}
+
+### update user by id no patch now 
+//PATCH {{$global.base_url}}/Users/{{$global.id}}
+//Authorization: Bearer {{$global.token}}
+//Content-Type: application/scim+json
+
+//{
+  //"userName": "asmith",
+  //"name": {
+    //"familyName": "Smith_updated",
+    //"givenName": "A",
+    //"honorificPrefix": "Ms."
+  //},
+ // "displayName": "Alice Smith",
+ // "emails": [
+   // {
+     // "value": "asmith@example.com",
+     // "type": "work",
+     // "primary": "true"
+   // }
+  //],
+  //"phoneNumbers": [
+    //{
+      //"value": "+12345678902",
+      //"type": "mobile"
+   // }
+  //],
+ // "active": "true",
+ // "roles": [
+   // {
+     // "value": "admin",
+     // "display": "Administrator"
+   // }
+  //]
+//}
+
+//?? status == 204
+//?? header Content-Type: application/scim+json
+
+
+ ### delete user by id 
+DELETE {{$global.base_url}}/Users/{{$global.id}}
+Authorization: Bearer {{$global.token}}
+Content-Type: application/scim+json
+
+?? status == 204

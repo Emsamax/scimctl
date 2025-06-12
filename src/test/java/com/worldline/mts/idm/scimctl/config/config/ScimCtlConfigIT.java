@@ -1,6 +1,7 @@
 package com.worldline.mts.idm.scimctl.config.config;
 
 import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
+
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -26,5 +27,4 @@ public class ScimCtlConfigIT {
     var stream = config.getResourceStreamBuilder(nodeFormater);
     assertNotNull(stream);
   }
-
 }

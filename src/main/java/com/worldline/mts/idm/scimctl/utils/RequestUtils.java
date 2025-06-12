@@ -53,7 +53,7 @@ public class RequestUtils {
       throws BadRequestException, IllegalArgumentException, ClassCastException {
     var path = getEndPointPath(clazz);
     var response = this.requestBuilder.get(User.class, path, id).sendRequest();
-    return responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
+    return (T) responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
   }
 
   public <T extends ResourceNode> List<T> getResources(Class<T> clazz) {
