@@ -3,8 +3,6 @@ package com.worldline.mts.idm.scimctl;
 import com.worldline.mts.idm.scimctl.commands.delete_cmd.DeleteCommand;
 import com.worldline.mts.idm.scimctl.commands.get_cmd.GetCommand;
 
-import org.jboss.logging.Logger;
-
 import com.worldline.mts.idm.scimctl.commands.create_cmd.CreateCommand;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ImportCommand;
 import io.quarkus.runtime.QuarkusApplication;

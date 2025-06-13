@@ -11,8 +11,12 @@ import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
+
+import org.antlr.v4.parse.ANTLRParser.elementEntry_return;
+import org.antlr.v4.parse.ANTLRParser.throwsSpec_return;
 import org.jboss.logging.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -97,7 +101,6 @@ public class ServerResponseHandler {
    */
   public void handleBulkResponse(ServerResponse<BulkResponse> response) {
     if (response.isSuccess()) {
-
       BulkResponse bulkResponse = response.getResource();
       if (bulkResponse.isEmpty()) {
         outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
@@ -109,14 +112,16 @@ public class ServerResponseHandler {
       } else if (response.getErrorResponse() == null && response.getResource() == null) {
         throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
       } else if (response.getErrorResponse() == null) {
-        throw new RuntimeException("Bulk error: " + response.getResponseBody());
+        checkAlreadyCreatedResource(response.getResource());
+        // throw new RuntimeException("Bulk error: " + response.getResponseBody());
       } else {
         throw new BadRequestException("Bad request: " + response.getErrorResponse());
       }
     }
   }
 
-  public <T extends ResourceNode> List<T> handleListResources(ServerResponse<ListResponse<T>> response) {
+  public <T extends ResourceNode> List<T> handleListResources(ServerResponse<ListResponse<T>> response)
+      throws BadRequestException {
     if (response.isSuccess()) {
       if (response.getResource().isEmpty())
         outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
@@ -124,11 +129,43 @@ public class ServerResponseHandler {
       return response.getResource().getListedResources();
     }
     if (response.getErrorResponse() == null) {
+      checkAlreadyCreatedResource(response.getResource());
       throw new BadRequestException(
           "Invalid response format: " + "\nbody :" + response.getResponseBody() + ",\nerror : "
               + response.getErrorResponse() + ",\nstatus: " + response.getHttpStatus() + ",\nheader : "
               + response.getHttpHeaders() + ",\ninfo : ");
     }
     throw new BadRequestException(response.getResponseBody());
+  }
+
+  private <T extends ResourceNode> void checkAlreadyCreatedResource(ListResponse<T> serverResponse)
+      throws BadRequestException {
+    var idList = new ArrayList<String>();
+    if (serverResponse.getHttpStatus() == 409) {
+      for (var resp : serverResponse.getListedResources()) {
+        idList.add(resp.get("bulkId").toString());
+      }
+      throw new BadRequestException(
+          "liste resource error : cannot create resources, already created : " + idList.toString());
+    }
+  }
+
+  private <T extends ResourceNode> void checkAlreadyCreatedResource(BulkResponse serverResponse)
+      throws BadRequestException {
+    var idList = new ArrayList<String>();
+
+    var operations = serverResponse.get("Operations");
+    if (operations.isArray() && !operations.isNull()) {
+      for (var item : operations) {
+        idList.add(item.get("response").toPrettyString());
+      }
+    }
+    throw new BadRequestException("bulk error : cannot create resources, already created : " + idList.toString());
+  }
+
+  private <T extends ResourceNode> void checkAlreadyCreatedResource(ServerResponse serverResponse) {
+    if (serverResponse.getHttpStatus() == 409) {
+      throw new BadRequestException("response error : cannot create resource, already created : ");
+    } 
   }
 }

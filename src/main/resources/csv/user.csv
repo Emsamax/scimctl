@@ -1,2 +1,3 @@
 userName,name.familyName,name.givenName,name.honorificPrefix,displayName,*emails,*phoneNumbers,active,*roles
 asmith,Smith,A,Ms.,Alice Smith,"value=asmith@example.com,type=work,primary=true","value=+12345678902,type=mobile",true,"value=admin,display=Administrator"
+rjohnson,Johnson,Robert,Mr.,Robert Johnson,"value=rjohnson@example.com,type=work,primary=true;value=rjohnson.personal@example.com,type=home,primary=false","value=+12345678903,type=home",true,"value=user,display=User;value=manager,display=Manager"
