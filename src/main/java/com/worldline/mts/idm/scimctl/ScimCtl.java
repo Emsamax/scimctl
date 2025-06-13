@@ -2,33 +2,31 @@ package com.worldline.mts.idm.scimctl;
 
 import com.worldline.mts.idm.scimctl.commands.delete_cmd.DeleteCommand;
 import com.worldline.mts.idm.scimctl.commands.get_cmd.GetCommand;
+
+import org.jboss.logging.Logger;
+
 import com.worldline.mts.idm.scimctl.commands.create_cmd.CreateCommand;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ImportCommand;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import jakarta.inject.Inject;
+
 import picocli.CommandLine;
-import picocli.CommandLine.ScopeType;
 
 import com.worldline.mts.idm.scimctl.commands.schema_cmd.ScimSchema;
 import com.worldline.mts.idm.scimctl.commands.update_cmd.UpdateCommand;
-
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 @QuarkusMain
 @CommandLine.Command(name = "scim-ctl", mixinStandardHelpOptions = true, subcommands = { ScimSchema.class,
     GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class })
 public class ScimCtl implements QuarkusApplication {
-  //TODO : refactor common option, (see arggroup or mixin)
-  //TODO : --verbose (1 lvl)
-  //TODO : dry run
-  //TODO : --batch-size 
+  // TODO : --verbose (1 lvl)
+  // TODO : dry run
 
   @Inject
   CommandLine.IFactory factory;
 
-  private static final Logger LOGGER = LogManager.getLogManager().getLogger("scim-ctl");
+  private static final Logger LOGGER = Logger.getLogger(ScimCtl.class);
 
   @Override
   public int run(String... args) {

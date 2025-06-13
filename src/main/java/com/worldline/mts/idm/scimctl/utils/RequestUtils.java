@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jboss.logging.Logger;
 
 @Named("requestUtils")
 @Unremovable
@@ -42,6 +43,11 @@ public class RequestUtils {
 
   @Inject
   ServerResponseHandler responseHandler;
+
+  @Inject
+  OutputUtils outputUtils;
+
+  private static final Logger LOGGER = Logger.getLogger(RequestUtils.class);
 
   String baseUrl;
 
@@ -58,6 +64,7 @@ public class RequestUtils {
   public <T extends ResourceNode> T getResource(String id, Class<T> clazz)
       throws BadRequestException, IllegalArgumentException, ClassCastException {
     var path = getEndPointPath(clazz);
+    outputUtils.logMsg(LOGGER, Logger.Level.INFO, "request : " + baseUrl + path + "/" + id);
     var response = this.requestBuilder.get(User.class, path, id).sendRequest();
     return (T) responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
   }
@@ -67,6 +74,7 @@ public class RequestUtils {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
     var path = getEndPointPath(clazz);
+    outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request : " + baseUrl + path);
     var response = this.requestBuilder
         .list(clazz, path)
         .count(batchSize)
@@ -80,6 +88,7 @@ public class RequestUtils {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
     var path = getEndPointPath(clazz);
+    outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request : " + baseUrl + path + "/" + filter);
     ServerResponse<ListResponse<T>> response = this.requestBuilder
         .list(clazz, path)
         .filter("userName", Comparator.CO, filter)
@@ -95,6 +104,7 @@ public class RequestUtils {
       if (!node.has("userName") || node.get("userName").asText().isEmpty()) {
         throw new RuntimeException("Resource must have a userName : " + node);
       }
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "create request : " + baseUrl + path);
       var response = requestBuilder.create(clazz, path).setResource(node).sendRequest();
       responseHandler.handleServerResponse(response, ServerResponseHandler.CREATE_MESSAGE);
     }
@@ -106,7 +116,8 @@ public class RequestUtils {
    * The method builds bulk operations, and sends them to the server.
    *
    * @param <T>   the type of resources to be processed
-   * @param chunk a list of resources to be included in the bulk request(size of a chunk = batchSize, 50 by default)
+   * @param chunk a list of resources to be included in the bulk request(size of a
+   *              chunk = batchSize, 50 by default)
    * @param clazz the class type of the resource (e.g., User.class or Group.class)
    *              used to determine endpoint paths
    * @throws RuntimeException   if a resource does not contain a userName or if no
@@ -137,6 +148,7 @@ public class RequestUtils {
           .bulkId(UUID.randomUUID().toString())
           .data(finalGroup)
           .sendRequest();
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "bulk request : " + baseUrl + path + EndpointPaths.GROUPS);
       responseHandler.handleBulkResponse(response);
     } catch (NoSuchElementException e) {
       e.getMessage();
@@ -146,6 +158,7 @@ public class RequestUtils {
 
   public <T extends ResourceNode> void updateResource(String id, Class<T> clazz, JsonNode updatedData) {
     var path = getEndPointPath(clazz);
+    outputUtils.logMsg(LOGGER, Logger.Level.INFO, "patch request : " + baseUrl + path);
     var response = this.requestBuilder.update(clazz, path, id)
         .setResource(updatedData)
         .sendRequest();
@@ -153,7 +166,9 @@ public class RequestUtils {
   }
 
   public <T extends ResourceNode> void deleteResource(String id, Class<T> clazz) {
-    ServerResponse<User> response = this.requestBuilder.delete(User.class, getEndPointPath(clazz), id)
+    var path = getEndPointPath(clazz);
+    outputUtils.logMsg(LOGGER, Logger.Level.INFO, "delete request : " + baseUrl + path + "/" +id);
+    ServerResponse<User> response = this.requestBuilder.delete(User.class, path, id)
         .sendRequest();
     responseHandler.handleServerResponse(response, ServerResponseHandler.DELETE_MESSAGE);
   }

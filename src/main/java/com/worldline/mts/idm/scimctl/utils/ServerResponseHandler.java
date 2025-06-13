@@ -13,6 +13,8 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import org.jboss.logging.Logger;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
+
 import java.util.List;
 
 @ApplicationScoped
@@ -20,12 +22,15 @@ import java.util.List;
 public class ServerResponseHandler {
 
   @Inject
-  Logger LOGGER;
+  OutputUtils outputUtils;
+
+  private static final Logger LOGGER = Logger.getLogger(ServerResponseHandler.class);
 
   public static final String DELETE_MESSAGE = "Resource deleted successfully";
   public static final String UPDATE_MESSAGE = "Resource updated successfully";
   public static final String CREATE_MESSAGE = "Resource created successfully";
   public static final String GET_MESSAGE = "Resource get successfully";
+  public static final String EMPTY_MESSAGE = "Empty []";
 
   /**
    * Handle the server response
@@ -38,30 +43,33 @@ public class ServerResponseHandler {
   public <T extends ResourceNode> T handleServerResponse(ServerResponse<T> response, String message) {
     if (response.getResource() instanceof User resource) {
       if (response.isSuccess()) {
-        if(response.getResource().isEmpty()) LOGGER.info("EMPTY :");
-        LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
+        if (response.getResource().isEmpty())
+          outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
         return (T) resource;
       } else
         handleError(response);
 
     } else if (response.getResource() instanceof Group resource) {
       if (response.isSuccess()) {
-        if(response.getResource().isEmpty()) LOGGER.info("EMPTY :");
-        LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
+        if (response.getResource().isEmpty())
+          outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
         return (T) resource;
       } else
         handleError(response);
     } else if (response.getResource() instanceof Schema) {
-      if(response.getResource().isEmpty()) LOGGER.info("EMPTY :");
+      if (response.getResource().isEmpty())
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
       if (response.isSuccess()) {
         var resource = (Group) response.getResource();
-        LOGGER.log(Logger.Level.valueOf("INFO"), message + " : " + resource.toPrettyString());
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
         return (T) resource;
       } else
         handleError(response);
     }
     if (response.isSuccess()) {
-      LOGGER.log(Logger.Level.valueOf("INFO"), message);
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
     } else
       handleError(response);
 
@@ -75,7 +83,7 @@ public class ServerResponseHandler {
    */
   private void handleError(ServerResponse<?> ServerResponse) throws RuntimeException, BadRequestException {
     if (ServerResponse.getResource().isEmpty()) {
-      LOGGER.info("EMPTY :");
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "error response : " + EMPTY_MESSAGE);
     }
     if (ServerResponse.getErrorResponse() == null && ServerResponse.getResource() == null) {
       throw new RuntimeException("No response body, error not in RFC7644: " + ServerResponse.getResponseBody());
@@ -93,24 +101,28 @@ public class ServerResponseHandler {
     if (response.isSuccess()) {
 
       BulkResponse bulkResponse = response.getResource();
-      if(bulkResponse.isEmpty()) LOGGER.info("EMPTY");
-      LOGGER.log(Logger.Level.valueOf("INFO"), "Bulk Response : " + bulkResponse);
-      LOGGER.log(Logger.Level.valueOf("INFO"), "Failed Operations :" + bulkResponse.getFailedOperations());
-      LOGGER.log(Logger.Level.valueOf("INFO"), "Successful Operations : " + bulkResponse.getSuccessfulOperations());
-      LOGGER.log(Logger.Level.valueOf("INFO"), "HTTP Status : " + bulkResponse.getHttpStatus());
-    } else if (response.getErrorResponse() == null && response.getResource() == null) {
-      throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
-    } else if (response.getErrorResponse() == null) {
-      throw new RuntimeException("Bulk error: " + response.getResponseBody());
-    } else {
-      throw new BadRequestException("Bad request: " + response.getErrorResponse());
+      if (bulkResponse.isEmpty()) {
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, "bulk response : " + bulkResponse);
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, "Failed Operations : " + bulkResponse.getFailedOperations());
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO,
+            "Successful Operations : " + bulkResponse.getSuccessfulOperations());
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, "HTTP Status : " + bulkResponse.getHttpStatus());
+      } else if (response.getErrorResponse() == null && response.getResource() == null) {
+        throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
+      } else if (response.getErrorResponse() == null) {
+        throw new RuntimeException("Bulk error: " + response.getResponseBody());
+      } else {
+        throw new BadRequestException("Bad request: " + response.getErrorResponse());
+      }
     }
   }
 
   public <T extends ResourceNode> List<T> handleListResources(ServerResponse<ListResponse<T>> response) {
     if (response.isSuccess()) {
       if (response.getResource().isEmpty())
-        System.out.println("EMPTY");
+        outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, GET_MESSAGE + "\n" + response.getResource());
       return response.getResource().getListedResources();
     }
     if (response.getErrorResponse() == null) {
