@@ -12,8 +12,6 @@ import static org.jboss.logging.Logger.getLogger;
 
 import org.jboss.logging.Logger;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
 
 @CommandLine.Command(name = "get")
 public class GetCommand implements Runnable {
@@ -38,7 +36,6 @@ public class GetCommand implements Runnable {
   @CommandLine.Mixin
   CommonOptions options;
 
-
   @Override
   public void run() {
     try {
@@ -62,7 +59,7 @@ public class GetCommand implements Runnable {
     String result;
     if (search.id != null) {
       result = service.getUserWithId(search.id).toString();
-         utils.logMsg(LOGGER, Logger.Level.INFO, "Get user : "+ result);
+      utils.logMsg(LOGGER, Logger.Level.INFO, "Get user : " + result);
     } else {
       utils.logMsg(LOGGER, Logger.Level.INFO, "Get user with filter");
       service.getUsers().forEach(u -> LOGGER.log(Logger.Level.valueOf("INFO"), u.toPrettyString()));
@@ -73,10 +70,10 @@ public class GetCommand implements Runnable {
     String result;
     if (search.id != null) {
       result = service.getUserWithId(search.id).toString();
-         utils.logMsg(LOGGER, Logger.Level.INFO, result);
+      utils.logMsg(LOGGER, Logger.Level.INFO, result);
     } else if (filter != null && !filter.isBlank()) {
       result = service.getUserWithName(filter).toString();
-         utils.logMsg(LOGGER, Logger.Level.INFO, "get user " + result);
+      utils.logMsg(LOGGER, Logger.Level.INFO, "get user " + result);
     } else {
       result = service.getUsers().toString();
       utils.logMsg(LOGGER, Logger.Level.INFO, "get users " + result);

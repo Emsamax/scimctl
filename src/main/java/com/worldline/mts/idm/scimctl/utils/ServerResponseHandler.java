@@ -13,8 +13,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import org.jboss.logging.Logger;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-
 import java.util.List;
 
 @ApplicationScoped
@@ -122,7 +120,7 @@ public class ServerResponseHandler {
     if (response.isSuccess()) {
       if (response.getResource().isEmpty())
         outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, GET_MESSAGE + "\n" + response.getResource());
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, GET_MESSAGE);
       return response.getResource().getListedResources();
     }
     if (response.getErrorResponse() == null) {

@@ -27,7 +27,7 @@ public class CsvNodeFormaterTest extends SetUpTest {
    */
   @Test
   public void testFlatToNestedNodes() {
-    
+
     while (it.hasNext()) {
       var tuple = it.next();
       currentInputFile = tuple.input();
@@ -59,5 +59,4 @@ public class CsvNodeFormaterTest extends SetUpTest {
       LOGGER.error("Error during initialization", e);
     }
   }
-
 }

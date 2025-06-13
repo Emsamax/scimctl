@@ -61,6 +61,7 @@ public class RequestUtils {
     this.requestBuilder = new ScimRequestBuilder(baseUrl, this.config.getScimClientConfig());
   }
 
+  @SuppressWarnings("unchecked")
   public <T extends ResourceNode> T getResource(String id, Class<T> clazz)
       throws BadRequestException, IllegalArgumentException, ClassCastException {
     var path = getEndPointPath(clazz);

@@ -3,13 +3,11 @@ package com.worldline.mts.idm.scimctl.utils.strategy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.*;
-import org.jboss.logging.Logger;
 
 /**
  * concrete strategy for array in csv files
  */
 public class CsvNodeFormater implements Strategy {
-  private final static Logger LOGGER = Logger.getLogger(CsvNodeFormater.class);
   private final ObjectMapper mapper;
 
   public CsvNodeFormater(ObjectMapper mapper) {

@@ -25,7 +25,6 @@ public class ScimCtl implements QuarkusApplication {
   @Inject
   CommandLine.IFactory factory;
 
-  private static final Logger LOGGER = Logger.getLogger(ScimCtl.class);
 
   @Override
   public int run(String... args) {

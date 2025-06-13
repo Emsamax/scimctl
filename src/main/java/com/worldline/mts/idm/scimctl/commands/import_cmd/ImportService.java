@@ -17,25 +17,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 @Named("importService")
 @Unremovable
 @ApplicationScoped
 public class ImportService {
-  /*
-   * @Inject
-   * ResourceStreamBuilder streamBuilder;
-   */
-
 
   @Inject
   ScimCtlBeansConfig config;
 
   @Inject
   RequestUtils requestUtils;
-
-  
 
   /**
    * <p>

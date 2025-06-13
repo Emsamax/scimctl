@@ -1,9 +1,7 @@
 package com.worldline.mts.idm.scimctl.auth;
 
-import io.netty.handler.logging.LogLevel;
 import io.quarkus.oidc.client.OidcClient;
 import io.quarkus.oidc.client.Tokens;
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;

@@ -17,7 +17,7 @@ public class OutputUtils {
   private static final Logger LOGGER = Logger.getLogger(OutputUtils.class);
 
   public void logMsg(Logger logger, Logger.Level lvl, String msg) {
-    if (verbose) {
+    if (verbose || dryRun) {
       try {
         logger.log(lvl, msg);
       } catch (IllegalArgumentException e) {
