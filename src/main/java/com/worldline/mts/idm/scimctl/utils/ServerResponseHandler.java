@@ -90,6 +90,7 @@ public class ServerResponseHandler {
     if (ServerResponse.getErrorResponse() == null && ServerResponse.getResource() == null) {
       throw new RuntimeException("No response body, error not in RFC7644: " + ServerResponse.getResponseBody());
     } else {
+      checkAlreadyCreatedResource(ServerResponse);
       throw new BadRequestException("Bad request: " + ServerResponse.getErrorResponse());
     }
   }
@@ -141,13 +142,11 @@ public class ServerResponseHandler {
   private <T extends ResourceNode> void checkAlreadyCreatedResource(ListResponse<T> serverResponse)
       throws BadRequestException {
     var idList = new ArrayList<String>();
-    if (serverResponse.getHttpStatus() == 409) {
-      for (var resp : serverResponse.getListedResources()) {
-        idList.add(resp.get("bulkId").toString());
-      }
-      throw new BadRequestException(
-          "liste resource error : cannot create resources, already created : " + idList.toString());
+    for (var resp : serverResponse.getListedResources()) {
+      idList.add(resp.get("id").asText());
     }
+    throw new BadRequestException(
+        "liste resource error : cannot create resources, already created : " + idList.toString());
   }
 
   private <T extends ResourceNode> void checkAlreadyCreatedResource(BulkResponse serverResponse)
@@ -165,7 +164,8 @@ public class ServerResponseHandler {
 
   private <T extends ResourceNode> void checkAlreadyCreatedResource(ServerResponse serverResponse) {
     if (serverResponse.getHttpStatus() == 409) {
-      throw new BadRequestException("response error : cannot create resource, already created : ");
-    } 
+      throw new BadRequestException("response error : cannot create resource, already created : "
+          + serverResponse.getResource().get("id").asText());
+    }
   }
 }
