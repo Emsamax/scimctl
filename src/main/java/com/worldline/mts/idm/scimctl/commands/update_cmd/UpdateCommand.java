@@ -3,6 +3,8 @@ package com.worldline.mts.idm.scimctl.commands.update_cmd;
 import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.IOCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
+import com.worldline.mts.idm.scimctl.utils.OutputUtils;
+
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
@@ -28,6 +30,8 @@ public class UpdateCommand implements Runnable {
   @CommandLine.ArgGroup(heading = "IO options:%n", exclusive = false, multiplicity = "1")
   IOCommonOptions ioOptions;
 
+  @Inject
+  OutputUtils utils;
 
   @Override
   public void run() {
@@ -35,6 +39,7 @@ public class UpdateCommand implements Runnable {
       switch (common.resourceType) {
         case USER -> {
           if (search.id != null && ioOptions.path != null) {
+            utils.logMsg(LOGGER, Logger.Level.INFO, "update user");
             service.updateUser(search.id, ioOptions.text, User.class);
           }
         }
@@ -43,9 +48,7 @@ public class UpdateCommand implements Runnable {
         }
       }
     } catch (IOException e) {
-      LOGGER.log(Logger.Level.valueOf("ERROR"), "error reading the file : "+ e.getMessage());
+      LOGGER.log(Logger.Level.valueOf("ERROR"), "error reading the file : " + e.getMessage());
     }
-
-
   }
 }

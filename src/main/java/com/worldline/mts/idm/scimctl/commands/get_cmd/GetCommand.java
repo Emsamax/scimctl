@@ -3,6 +3,8 @@ package com.worldline.mts.idm.scimctl.commands.get_cmd;
 import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
+import com.worldline.mts.idm.scimctl.utils.OutputUtils;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 
@@ -26,6 +28,9 @@ public class GetCommand implements Runnable {
    */
   @CommandLine.Mixin
   SearchCommonOption search;
+
+  @Inject
+  OutputUtils utils;
 
   @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false)
   FilterCommonOptions filter;
@@ -57,9 +62,9 @@ public class GetCommand implements Runnable {
     String result;
     if (search.id != null) {
       result = service.getUserWithId(search.id).toString();
-      LOGGER.log(Logger.Level.valueOf("INFO"), "get USER : " + result);
+         utils.logMsg(LOGGER, Logger.Level.INFO, "Get user : "+ result);
     } else {
-      LOGGER.info("get USER(S) :");
+      utils.logMsg(LOGGER, Logger.Level.INFO, "Get user with filter");
       service.getUsers().forEach(u -> LOGGER.log(Logger.Level.valueOf("INFO"), u.toPrettyString()));
     }
   }
@@ -68,13 +73,13 @@ public class GetCommand implements Runnable {
     String result;
     if (search.id != null) {
       result = service.getUserWithId(search.id).toString();
-      LOGGER.log(Logger.Level.valueOf("INFO"), "get USER : " + result);
+         utils.logMsg(LOGGER, Logger.Level.INFO, result);
     } else if (filter != null && !filter.isBlank()) {
       result = service.getUserWithName(filter).toString();
-      LOGGER.log(Logger.Level.valueOf("INFO"), "get filtered USER(S) : " + result);
+         utils.logMsg(LOGGER, Logger.Level.INFO, "get user " + result);
     } else {
       result = service.getUsers().toString();
-      LOGGER.log(Logger.Level.valueOf("ERROR"), "get USER(S) : `{}`" + result);
+      utils.logMsg(LOGGER, Logger.Level.INFO, "get users " + result);
     }
   }
 

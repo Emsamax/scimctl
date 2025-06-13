@@ -3,6 +3,8 @@ package com.worldline.mts.idm.scimctl.commands.delete_cmd;
 
 import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
+import com.worldline.mts.idm.scimctl.utils.OutputUtils;
+
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
@@ -24,6 +26,9 @@ public class DeleteCommand implements Runnable {
   @Inject
   DeletService service;
 
+  @Inject 
+  OutputUtils utils;
+
   private static final Logger LOGGER = getLogger(DeleteCommand.class);
 
   @Override
@@ -43,12 +48,14 @@ public class DeleteCommand implements Runnable {
         if (options.id == null) {
           throw new BadRequestException("no resource specified");
         }
+        utils.logMsg(LOGGER, Logger.Level.INFO, "Delete user with id "+ options.id);
         service.deletUser(options.id, User.class);
       }
       case GROUP -> {
         if (options.id == null) {
           throw new BadRequestException("no resource specified");
         }
+        utils.logMsg(LOGGER, Logger.Level.INFO, "Delete group with id "+ options.id);
         service.deletUser(options.id, Group.class);
       }
     }

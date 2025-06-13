@@ -3,6 +3,8 @@ package com.worldline.mts.idm.scimctl.commands.import_cmd;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.IOCommonOptions;
+import com.worldline.mts.idm.scimctl.utils.OutputUtils;
+
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import picocli.CommandLine;
@@ -24,6 +26,8 @@ public class ImportCommand implements Runnable {
   @CommandLine.Mixin
   CommonOptions options;
 
+  @Inject
+  OutputUtils utils;
   /**
    * Force the user to specify either the path to the JSON file or write the JSON data directly into the console.
    */
@@ -35,12 +39,12 @@ public class ImportCommand implements Runnable {
     try {
       switch (options.resourceType) {
         case USER -> {
-          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import USER from file path : "+ ioOptions.path);
+          utils.logMsg(LOGGER, Logger.Level.INFO, "import USER from file path : "+ ioOptions.path);
           service.importResource(ioOptions.path, USER);
         }
 
         case GROUP -> {
-          LOGGER.log(org.jboss.logging.Logger.Level.valueOf("INFO"), "import GROUP from file path : `"+ ioOptions.path);
+          utils.logMsg(LOGGER, Logger.Level.INFO, "import GROUP from file path : `"+ ioOptions.path);
           service.importResource(ioOptions.path, GROUP);
         }
       }
