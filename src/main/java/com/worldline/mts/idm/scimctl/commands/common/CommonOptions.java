@@ -39,7 +39,7 @@ public class CommonOptions {
   @CommandLine.Option(names = { "--dry-run" }, description = "Enable dry run")
   public void enableDryRun(boolean dryRun) {
     if (dryRun) {
-      outputUtils.toggleOutput(dryRun);
+      outputUtils.toggleDryRun(dryRun);
       outputUtils.logMsg(LOGGER, org.jboss.logging.Logger.Level.INFO, "dry run enabled");
     }
   }
@@ -47,7 +47,7 @@ public class CommonOptions {
   @CommandLine.Option(names = { "--verbose" }, description = "Enable verbose")
   public void enableVerbose(boolean verbose) {
     if (verbose) {
-      outputUtils.toggleOutput(verbose);
+      outputUtils.toggleVerbose(verbose);
       outputUtils.logMsg(LOGGER, org.jboss.logging.Logger.Level.INFO, "verbose enabled");
     }
   }

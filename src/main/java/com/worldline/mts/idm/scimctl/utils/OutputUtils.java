@@ -10,12 +10,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class OutputUtils {
 
-  private boolean enabled = false;
+  private boolean verbose = false;
+
+  private boolean dryRun = false;
 
   private static final Logger LOGGER = Logger.getLogger(OutputUtils.class);
 
   public void logMsg(Logger logger, Logger.Level lvl, String msg) {
-    if (enabled) {
+    if (verbose) {
       try {
         logger.log(lvl, msg);
       } catch (IllegalArgumentException e) {
@@ -26,8 +28,15 @@ public class OutputUtils {
     }
   }
 
-  public void toggleOutput(boolean enabled) {
-    this.enabled = enabled;
+  public void toggleVerbose(boolean verbose) {
+    this.verbose = verbose;
   }
 
+  public void toggleDryRun(boolean dryRun) {
+    this.dryRun = dryRun;
+  }
+
+  public boolean getDryRun() {
+    return this.dryRun;
+  }
 }

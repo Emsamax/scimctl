@@ -16,10 +16,8 @@ public class StrategyResolver {
 
   public Strategy resolveStrategyFromNode(String key, String record) throws NotFoundException {
     if (record.contains("{") || record.contains("[") || record.contains(":")) {
-      LOGGER.info("Strategy JsonNodeFormater");
       return this.jsonNodeFormater;
     } else if (key.contains("*")) {
-      LOGGER.info("Strategy CsvNodeFormater");
       return this.csvNodeFormater;
     } else
       return this.csvNodeFormater;

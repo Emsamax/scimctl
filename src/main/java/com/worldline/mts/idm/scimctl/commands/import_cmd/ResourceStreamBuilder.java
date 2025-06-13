@@ -1,8 +1,11 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
+import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeFormater;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeWrapper;
+
 import org.apache.commons.csv.CSVFormat;
+import org.jboss.logging.Logger;
 
 import java.io.*;
 import java.util.*;
@@ -21,13 +24,14 @@ public class ResourceStreamBuilder {
 
   private Map<String, Integer> header = new HashMap<>();
 
+  private static final Logger LOGGER = Logger.getLogger(ResourceStreamBuilder.class);
+
   public ResourceStreamBuilder(NodeFormater formater) {
     this.formater = formater;
   }
 
   public ResourceStreamBuilder fromFile(File file) {
     this.file = file;
-
     return this;
   }
 

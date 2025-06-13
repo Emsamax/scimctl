@@ -20,8 +20,7 @@ import com.worldline.mts.idm.scimctl.commands.update_cmd.UpdateCommand;
 @CommandLine.Command(name = "scim-ctl", mixinStandardHelpOptions = true, subcommands = { ScimSchema.class,
     GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class })
 public class ScimCtl implements QuarkusApplication {
-  // TODO : --verbose (1 lvl)
-  // TODO : dry run
+  
 
   @Inject
   CommandLine.IFactory factory;
