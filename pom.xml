@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.acme</groupId>
   <artifactId>scimctl</artifactId>
@@ -76,14 +78,35 @@
       <artifactId>quarkus-rest-client-jackson</artifactId>
     </dependency>
     <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-core-deployment</artifactId>
-        <version>3.23.2</version>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-core-deployment</artifactId>
+      <version>3.23.2</version>
+    </dependency>
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>5.3.0</version> <!-- ou une version récente compatible -->
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.wiremock</groupId>
+      <artifactId>wiremock</artifactId>
+      <version>3.13.1</version>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-test-keycloak-server</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
+      <version>3.24.0.CR1</version>
     </dependency>
     <dependency>
       <groupId>de.captaingoldfish</groupId>
@@ -100,7 +123,6 @@
       <artifactId>log4j2-jboss-logmanager</artifactId>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -144,6 +166,7 @@
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
+        <extensions>true</extensions>
         <executions>
           <execution>
             <goals>
@@ -154,9 +177,6 @@
         </executions>
         <configuration>
           <redirectTestOutputToFile>true</redirectTestOutputToFile>
-          <excludes>
-            <exclude>**/unit/**</exclude>
-          </excludes>
           <skipITs>false</skipITs>
           <systemPropertyVariables>
             <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>

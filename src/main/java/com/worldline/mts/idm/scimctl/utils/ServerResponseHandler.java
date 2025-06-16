@@ -12,8 +12,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 
-import org.antlr.v4.parse.ANTLRParser.elementEntry_return;
-import org.antlr.v4.parse.ANTLRParser.throwsSpec_return;
 import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
@@ -162,7 +160,7 @@ public class ServerResponseHandler {
     throw new BadRequestException("bulk error : cannot create resources, already created : " + idList.toString());
   }
 
-  private <T extends ResourceNode> void checkAlreadyCreatedResource(ServerResponse serverResponse) {
+  private <T extends ResourceNode> void checkAlreadyCreatedResource(ServerResponse<?> serverResponse) {
     if (serverResponse.getHttpStatus() == 409) {
       throw new BadRequestException("response error : cannot create resource, already created : "
           + serverResponse.getResource().get("id").asText());
