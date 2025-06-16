@@ -87,7 +87,7 @@ public class ServerResponseHandler {
   private void handleError(ServerResponse<?> ServerResponse) throws RuntimeException, BadRequestException {
     checkAlreadyCreatedResource(ServerResponse);
     if (ServerResponse.getResource().isEmpty()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "error response : " + EMPTY_MESSAGE);
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
     }
     if (ServerResponse.getErrorResponse() == null && ServerResponse.getResource() == null) {
       throw new RuntimeException("No response body, error not in RFC7644: " + ServerResponse.getResponseBody());
@@ -169,13 +169,4 @@ public class ServerResponseHandler {
           + serverResponse.getResource().get("id").asText());
     }
   }
-
-  private <T extends ResourceNode> boolean checkIfEmptyResponse(T resp) {
-    if (resp.get("totalResults").asInt() == 0) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
-      return true;
-    }
-    return false;
-  }
-
 }

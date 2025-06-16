@@ -59,9 +59,9 @@ public class GetCommand implements Runnable {
     String result;
     if (search.id != null) {
       result = service.getUserWithId(search.id).toString();
-      utils.logMsg(LOGGER, Logger.Level.INFO, "Get user : " + result);
+      utils.logMsg(LOGGER, Logger.Level.INFO, "Get user with id : " + result);
     } else {
-      utils.logMsg(LOGGER, Logger.Level.INFO, "Get user with filter");
+      utils.logMsg(LOGGER, Logger.Level.INFO, "Get user");
       service.getUsers().forEach(u -> LOGGER.log(Logger.Level.valueOf("INFO"), u.toPrettyString()));
     }
   }
@@ -73,10 +73,10 @@ public class GetCommand implements Runnable {
       utils.logMsg(LOGGER, Logger.Level.INFO, result);
     } else if (filter != null && !filter.isBlank()) {
       result = service.getUserWithName(filter).toString();
-      utils.logMsg(LOGGER, Logger.Level.INFO, "get user " + result);
+      utils.logMsg(LOGGER, Logger.Level.INFO, "user :" + result);
     } else {
       result = service.getUsers().toString();
-      utils.logMsg(LOGGER, Logger.Level.INFO, "get users " + result);
+      utils.logMsg(LOGGER, Logger.Level.INFO, "users :" + result);
     }
   }
 
