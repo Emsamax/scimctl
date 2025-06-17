@@ -12,6 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 
+import org.antlr.v4.parse.BlockSetTransformer.setAlt_return;
 import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
@@ -81,17 +82,18 @@ public class ServerResponseHandler {
    *
    * @param ServerResponse
    */
-  private void handleError(ServerResponse<?> ServerResponse) throws RuntimeException, BadRequestException {
-    checkAlreadyCreatedResource(ServerResponse);
-    if (ServerResponse.getResource().isEmpty()) {
+  private void handleError(ServerResponse<?> serverResponse){
+    checkAlreadyCreatedResource(serverResponse);
+     if (serverResponse.getResource() == null && serverResponse.getErrorResponse() == null){
       System.out.println(EMPTY_MESSAGE);
     }
-    if (ServerResponse.getErrorResponse() == null && ServerResponse.getResource() == null) {
-      throw new RuntimeException("No response body, error not in RFC7644: " + ServerResponse.getResponseBody());
+    if (serverResponse.getErrorResponse() == null && serverResponse.getResource() == null) {
+      throw new RuntimeException("No response body, error not in RFC7644: " + serverResponse.getResponseBody());
     } else {
-      checkAlreadyCreatedResource(ServerResponse);
-      throw new BadRequestException("Bad request: " + ServerResponse.getErrorResponse());
-    }
+      checkAlreadyCreatedResource(serverResponse);
+      System.err.println(serverResponse.getErrorResponse().get("detail").asText());
+    } 
+   
   }
 
   /**
