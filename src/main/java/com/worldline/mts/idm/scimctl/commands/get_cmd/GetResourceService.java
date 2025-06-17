@@ -18,15 +18,15 @@ public class GetResourceService {
   @Inject
   RequestUtils requestUtils;
 
-  public User getUserWithId(String id) throws BadRequestException, IllegalArgumentException {
-    return requestUtils.getResource(id, User.class);
+  public void getUserWithId(String id) {
+     requestUtils.getResource(id, User.class);
   }
 
-  public List<User> getUsers() throws BadRequestException {
-    return requestUtils.getResources(User.class);
+  public void getUsers() {
+     requestUtils.getResources(User.class);
   }
 
-  public List<User> getUserWithName(String name) throws BadRequestException {
-    return requestUtils.getFilteredResources(User.class, name);
+  public void getUserWithName(String name) {
+     requestUtils.getFilteredResources(User.class, name);
   }
 }

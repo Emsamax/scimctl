@@ -1,7 +1,9 @@
 package com.worldline.mts.idm.scimctl.commands.common;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine;
 
+@ApplicationScoped
 public class ResourceTypeConverter implements CommandLine.ITypeConverter<FilterCommonOptions.ResourceType> {
 
   @Override

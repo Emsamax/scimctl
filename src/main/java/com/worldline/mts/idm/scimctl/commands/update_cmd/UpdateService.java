@@ -18,7 +18,7 @@ public class UpdateService {
   RequestUtils requestUtils;
 
     public <T extends ResourceNode> void updateUser(String id, String resource, Class<T> clazz) throws IOException, BadRequestException {
-      //requestUtils.createResource();
+      //requestUtils.updateResource(id, clazz, resource);
     }
 
 }

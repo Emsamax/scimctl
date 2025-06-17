@@ -6,6 +6,7 @@ import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import de.captaingoldfish.scim.sdk.common.response.ListResponse;
+import de.captaingoldfish.scim.sdk.common.response.ScimResponse;
 import de.captaingoldfish.scim.sdk.common.schemas.Schema;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,6 +18,7 @@ import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 @Unremovable
@@ -40,41 +42,54 @@ public class ServerResponseHandler {
    * @param <T>      the response if returned by the server
    * @return null if server does not send a resource else return the resource
    */
-  @SuppressWarnings("unchecked")
-  public <T extends ResourceNode> T handleServerResponse(ServerResponse<T> response, String message) {
-    if (response.getResource() instanceof User resource) {
-      if (response.isSuccess()) {
-        if (response.getResource().isEmpty())
-          outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
-        return (T) resource;
-      } else
-        handleError(response);
+  /*
+   * @SuppressWarnings("unchecked")
+   * public <T extends ResourceNode> T handleServerResponse(ServerResponse<T>
+   * response, String message) {
+   * if (response.getResource() instanceof User resource) {
+   * if (response.isSuccess()) {
+   * if (response.getResource().isEmpty())
+   * outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+   * outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
+   * return (T) resource;
+   * } else
+   * handleError(response);
+   * 
+   * } else if (response.getResource() instanceof Group resource) {
+   * if (response.isSuccess()) {
+   * if (response.getResource().isEmpty())
+   * outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+   * outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
+   * return (T) resource;
+   * } else
+   * handleError(response);
+   * } else if (response.getResource() instanceof Schema) {
+   * if (response.getResource().isEmpty())
+   * outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+   * if (response.isSuccess()) {
+   * var resource = (Group) response.getResource();
+   * outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
+   * return (T) resource;
+   * } else
+   * handleError(response);
+   * }
+   * if (response.isSuccess()) {
+   * outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
+   * } else
+   * handleError(response);
+   * 
+   * return null;
+   * }
+   */
 
-    } else if (response.getResource() instanceof Group resource) {
-      if (response.isSuccess()) {
-        if (response.getResource().isEmpty())
-          outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
-        return (T) resource;
-      } else
-        handleError(response);
-    } else if (response.getResource() instanceof Schema) {
-      if (response.getResource().isEmpty())
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
-      if (response.isSuccess()) {
-        var resource = (Group) response.getResource();
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
-        return (T) resource;
-      } else
-        handleError(response);
-    }
+  public <T extends ResourceNode> Optional<T> handleServerResponse(ServerResponse<T> response, String message) {
     if (response.isSuccess()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, message);
-    } else
+      System.out.printf("%s ", message);
+      return Optional.of(response.getResource());
+    } else {
       handleError(response);
-
-    return null;
+      return Optional.empty();
+    }
   }
 
   /**
@@ -82,18 +97,17 @@ public class ServerResponseHandler {
    *
    * @param ServerResponse
    */
-  private void handleError(ServerResponse<?> serverResponse){
+  private void handleError(ServerResponse<?> serverResponse) {
     checkAlreadyCreatedResource(serverResponse);
-     if (serverResponse.getResource() == null && serverResponse.getErrorResponse() == null){
+    if (serverResponse.getResource() == null && serverResponse.getErrorResponse() == null) {
       System.out.println(EMPTY_MESSAGE);
     }
     if (serverResponse.getErrorResponse() == null && serverResponse.getResource() == null) {
-      throw new RuntimeException("No response body, error not in RFC7644: " + serverResponse.getResponseBody());
+      System.err.println("No response body, error not in RFC7644:" + serverResponse.getErrorResponse().get("detail").asText());
     } else {
       checkAlreadyCreatedResource(serverResponse);
       System.err.println(serverResponse.getErrorResponse().get("detail").asText());
-    } 
-   
+    }
   }
 
   /**

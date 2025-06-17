@@ -13,7 +13,8 @@ import com.worldline.mts.idm.scimctl.auth.TokenService;
 /**
  * used to instantiate a ScimClientConfig object
  */
-@RegisterRestClient
+
+
 @ApplicationScoped
 public class ClientConfig {
 

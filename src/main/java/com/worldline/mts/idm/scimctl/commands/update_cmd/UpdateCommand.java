@@ -6,11 +6,15 @@ import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
 import de.captaingoldfish.scim.sdk.common.resources.User;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import picocli.CommandLine;
 import org.jboss.logging.Logger;
 import java.io.IOException;
 
+@ApplicationScoped
+@Named("upDateCommand")
 @CommandLine.Command(name = "update")
 public class UpdateCommand implements Runnable {
 

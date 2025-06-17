@@ -26,6 +26,7 @@ import jakarta.ws.rs.BadRequestException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -62,22 +63,24 @@ public class RequestUtils {
     this.requestBuilder = new ScimRequestBuilder(baseUrl, this.config.getScimClientConfig());
   }
 
-  @SuppressWarnings("unchecked")
-  public <T extends ResourceNode> T getResource(String id, Class<T> clazz)
-      throws BadRequestException, IllegalArgumentException, ClassCastException {
+  public <T extends ResourceNode> void getResource(String id, Class<T> clazz) {
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request : " + baseUrl + path + "/" + id);
       var response = this.requestBuilder.get(User.class, path, id).sendRequest();
-      return (T) responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
+      var result = responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
+      if (result.isPresent()) {
+        System.out.println(result.get().toPrettyString());
+      } else {
+        System.out.println(ServerResponseHandler.EMPTY_MESSAGE);
+      }
     } else {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path + "/" + id);
-      return null;
     }
 
   }
 
-  public <T extends ResourceNode> List<T> getResources(Class<T> clazz) {
+  public <T extends ResourceNode> void getResources(Class<T> clazz) {
     if (!isUser(clazz) && !isGroup(clazz)) {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
@@ -89,15 +92,17 @@ public class RequestUtils {
           .count(batchSize)
           .get()
           .sendRequest();
-      return responseHandler.handleListResources(response);
+      responseHandler.handleListResources(response).forEach(resp -> {
+        System.out.println(resp.toPrettyString());
+      });
     } else {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path);
-      return new ArrayList<T>();
+
     }
 
   }
 
-  public <T extends ResourceNode> List<T> getFilteredResources(Class<T> clazz, String filter) {
+  public <T extends ResourceNode> void getFilteredResources(Class<T> clazz, String filter) {
     if (!isUser(clazz) && !isGroup(clazz)) {
       throw new ClassCastException("Class is not User or Group : " + clazz.getName());
     }
@@ -110,10 +115,11 @@ public class RequestUtils {
           .build()
           .post()
           .getAll();
-      return responseHandler.handleListResources(response);
+      responseHandler.handleListResources(response).forEach(resp -> {
+        System.out.println(resp.toPrettyString());
+      });
     } else {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path + "/" + filter);
-      return new ArrayList<T>();
     }
 
   }

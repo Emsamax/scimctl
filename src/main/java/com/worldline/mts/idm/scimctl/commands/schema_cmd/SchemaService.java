@@ -30,7 +30,7 @@ public class SchemaService {
   public Schema getSchema() throws BadRequestException {
     String endpointPath = EndpointPaths.SCHEMAS;
     ServerResponse<Schema> response = requestBuilder.get(Schema.class, endpointPath, config.getSchemaId()).sendRequest();
-    return responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
+    return responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE).get();
   }
 }
 

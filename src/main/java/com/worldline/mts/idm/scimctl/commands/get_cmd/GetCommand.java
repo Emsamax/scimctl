@@ -5,6 +5,8 @@ import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
+import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
+import de.captaingoldfish.scim.sdk.common.resources.base.ScimObjectNode;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 
@@ -38,46 +40,29 @@ public class GetCommand implements Runnable {
 
   @Override
   public void run() {
-    try {
-      handleRequest();
-    } catch (BadRequestException e) {
-      LOGGER.log(Logger.Level.valueOf("ERROR"), "bad request :" + e.getMessage());
-    } catch (IllegalArgumentException e) {
-      LOGGER.log(Logger.Level.valueOf("ERROR"), "id does not exist " + e.getMessage());
-    }
+    handleRequest();
   }
 
   public void handleRequest() {
-    if (filter == null) {
+    if (filter == null && search == null) {
       handleResource();
-    } else {
-      handleResource(filter.userName);
+    } else if (filter != null) {
+      getByName(filter.userName);
+    } else if (search != null) {
+      getById(search.id);
     }
   }
 
   public void handleResource() {
-    String result;
-    if (search.id != null) {
-      result = service.getUserWithId(search.id).toString();
-      utils.logMsg(LOGGER, Logger.Level.INFO, "Get user with id : " + result);
-    } else {
-      utils.logMsg(LOGGER, Logger.Level.INFO, "Get user");
-      service.getUsers().forEach(u -> LOGGER.log(Logger.Level.valueOf("INFO"), u.toPrettyString()));
-    }
+    utils.logMsg(LOGGER, Logger.Level.INFO, "Get user");
+    service.getUsers();
   }
 
-  private void handleResource(String filter) {
-    String result;
-    if (search.id != null) {
-      result = service.getUserWithId(search.id).toString();
-      utils.logMsg(LOGGER, Logger.Level.INFO, result);
-    } else if (filter != null && !filter.isBlank()) {
-      result = service.getUserWithName(filter).toString();
-      utils.logMsg(LOGGER, Logger.Level.INFO, "user :" + result);
-    } else {
-      result = service.getUsers().toString();
-      utils.logMsg(LOGGER, Logger.Level.INFO, "users :" + result);
-    }
+  private void getById(String id) {
+    service.getUserWithId(id);
   }
 
+  private void getByName(String name) {
+    service.getUserWithName(name);
+  }
 }
