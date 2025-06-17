@@ -1,14 +1,15 @@
 package com.worldline.mts.idm.scimctl.commands.create_cmd;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.jboss.logging.Logger;
-
 
 import java.io.IOException;
 
@@ -18,29 +19,28 @@ import java.io.IOException;
 public class CreateService {
 
   @Inject
-  ObjectMapper mapper;
-
-  @Inject
   Logger LOGGER;
 
-  @Named("requestUtils")
-  @Inject
   RequestUtils requestUtils;
 
-  /**
-   * @param data  contains the data you want to create. The data must be in JSON format.
-   * @param clazz is the Object.Class you want to create from the data. User.class or Group.Class for example.
-   */
-  public <T extends ResourceNode> void createResource(String data, Class<T> clazz) throws IOException, IllegalArgumentException {
-    LOGGER.infof("input data : %s", data);
-    //String reformattedData = reformate(data);
-    var myMapper = new ObjectMapper();
-    data = data.replaceAll("\\\\", "");
-    LOGGER.infof("cleaned data : %s", data);
+  @Inject
+  ScimCtlBeansConfig config;
 
-    var resource = myMapper.readValue(data, JsonNode.class);
-    LOGGER.info("JSON parsed : " + resource.toString());
-    LOGGER.info("pretty : " + resource.toPrettyString());
-    requestUtils.createResource(resource, clazz);
+  /**
+   * @param data  contains the data you want to create. The data must be in JSON
+   *              format.
+   * @param clazz is the Object.Class you want to create from the data. User.class
+   *              or Group.Class for example.
+   */
+  public <T extends ResourceNode> void createResource(String data, Class<T> clazz) {
+    try {
+      data = data.replaceAll("\\\\", "");
+      var resource = config.getObjectMapper().readValue(data, JsonNode.class);
+      requestUtils.createResource(resource, clazz);
+    } catch (JsonParseException e) {
+      System.err.println("error while parsing the string : " + data);
+    } catch (IOException e) {
+      System.err.println("error while data");
+    }
   }
 }

@@ -8,7 +8,6 @@ import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import de.captaingoldfish.scim.sdk.common.response.ListResponse;
 import de.captaingoldfish.scim.sdk.common.schemas.Schema;
 import io.quarkus.arc.Unremovable;
-import io.vertx.core.cli.Option;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
@@ -17,8 +16,6 @@ import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Unremovable
@@ -87,7 +84,7 @@ public class ServerResponseHandler {
   private void handleError(ServerResponse<?> ServerResponse) throws RuntimeException, BadRequestException {
     checkAlreadyCreatedResource(ServerResponse);
     if (ServerResponse.getResource().isEmpty()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+      System.out.println(EMPTY_MESSAGE);
     }
     if (ServerResponse.getErrorResponse() == null && ServerResponse.getResource() == null) {
       throw new RuntimeException("No response body, error not in RFC7644: " + ServerResponse.getResponseBody());
@@ -106,11 +103,10 @@ public class ServerResponseHandler {
     if (response.isSuccess()) {
       BulkResponse bulkResponse = response.getResource();
       if (bulkResponse.isEmpty()) {
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+        System.out.println(EMPTY_MESSAGE);
         outputUtils.logMsg(LOGGER, Logger.Level.INFO, "bulk response : " + bulkResponse);
         outputUtils.logMsg(LOGGER, Logger.Level.INFO, "Failed Operations : " + bulkResponse.getFailedOperations());
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO,
-            "Successful Operations : " + bulkResponse.getSuccessfulOperations());
+        System.out.println("Successful Operations : " + bulkResponse.getSuccessfulOperations());
         outputUtils.logMsg(LOGGER, Logger.Level.INFO, "HTTP Status : " + bulkResponse.getHttpStatus());
       } else if (response.getErrorResponse() == null && response.getResource() == null) {
         throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
@@ -127,7 +123,7 @@ public class ServerResponseHandler {
     if (response.isSuccess()) {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, GET_MESSAGE);
       if (response.getResource().getListedResources().isEmpty())
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, EMPTY_MESSAGE);
+        System.out.println(EMPTY_MESSAGE);
       return response.getResource().getListedResources();
     }
     if (response.getErrorResponse() == null) {

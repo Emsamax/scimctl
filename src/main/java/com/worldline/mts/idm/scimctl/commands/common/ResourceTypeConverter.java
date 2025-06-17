@@ -1,7 +1,5 @@
 package com.worldline.mts.idm.scimctl.commands.common;
 
-import org.antlr.v4.parse.ANTLRParser.throwsSpec_return;
-
 import picocli.CommandLine;
 
 public class ResourceTypeConverter implements CommandLine.ITypeConverter<FilterCommonOptions.ResourceType> {
@@ -11,7 +9,7 @@ public class ResourceTypeConverter implements CommandLine.ITypeConverter<FilterC
     try {
       return valueToResourceType(value);
     } catch (IllegalArgumentException e) {
-     throw new CommandLine.ParameterException(new CommandLine(this.getClass()), e.getMessage());
+      throw new CommandLine.ParameterException(new CommandLine(this.getClass()), e.getMessage());
     }
   }
 
