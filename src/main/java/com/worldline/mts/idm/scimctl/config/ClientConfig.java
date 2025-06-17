@@ -6,8 +6,6 @@ import jakarta.inject.Inject;
 
 import java.util.Map;
 
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
-
 import com.worldline.mts.idm.scimctl.auth.TokenService;
 
 /**

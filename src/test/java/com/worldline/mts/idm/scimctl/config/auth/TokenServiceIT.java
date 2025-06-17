@@ -2,11 +2,8 @@ package com.worldline.mts.idm.scimctl.config.auth;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.Set;
-
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.stringtemplate.v4.compiler.STParser.andConditional_return;
 
 import com.worldline.mts.idm.scimctl.auth.TokenService;
 
@@ -35,6 +32,6 @@ public class TokenServiceIT {
     this.currentAccessToken = tokenService.getCurrentToken().getAccessToken().toString();
     tokenService.fetchTokens();
     assertNotNull(currentAccessToken, tokenService.getCurrentToken().getAccessToken().toString());
-  } 
-    
+  }
+
 }

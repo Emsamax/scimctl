@@ -20,7 +20,6 @@ public class ScimSchema implements Runnable {
   @Override
   public void run() {
     try {
-
       LOGGER.log(Logger.Level.valueOf("INFO"), "get SCHEMA : " + schemaService.getSchema());
     } catch (BadRequestException e) {
       LOGGER.log(Logger.Level.valueOf("ERROR"), "bad request : " + e.getMessage());

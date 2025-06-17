@@ -6,9 +6,6 @@ import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.ws.rs.BadRequestException;
-
-import java.util.List;
 
 @ApplicationScoped
 @Named("GetResourceService")

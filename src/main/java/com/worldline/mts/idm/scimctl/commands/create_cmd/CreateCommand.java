@@ -1,17 +1,14 @@
 package com.worldline.mts.idm.scimctl.commands.create_cmd;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.IOCommonOptions;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
 import picocli.CommandLine;
 import com.worldline.mts.idm.scimctl.commands.common.ResourceTypeConverter;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
-import java.io.IOException;
 
 import org.jboss.logging.Logger;
 

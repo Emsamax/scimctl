@@ -2,13 +2,11 @@ package com.worldline.mts.idm.scimctl.commands.create_cmd;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;

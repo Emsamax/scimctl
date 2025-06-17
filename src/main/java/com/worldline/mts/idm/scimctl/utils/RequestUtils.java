@@ -1,7 +1,6 @@
 package com.worldline.mts.idm.scimctl.utils;
 
 import com.worldline.mts.idm.scimctl.config.ClientConfig;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.worldline.mts.idm.scimctl.utils.strategy.NodeWrapper;
 
@@ -21,12 +20,10 @@ import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.ws.rs.BadRequestException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -192,13 +189,13 @@ public class RequestUtils {
   public <T extends ResourceNode> void updateResource(String id, Class<T> clazz, JsonNode updatedData) {
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "patch request : " + baseUrl + path);
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "update request : " + baseUrl + path);
       var response = this.requestBuilder.update(clazz, path, id)
           .setResource(updatedData)
           .sendRequest();
       responseHandler.handleServerResponse(response, ServerResponseHandler.UPDATE_MESSAGE);
     } else
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "patch request would be sent at : " + baseUrl + path);
+      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "update request would be sent at : " + baseUrl + path);
 
   }
 

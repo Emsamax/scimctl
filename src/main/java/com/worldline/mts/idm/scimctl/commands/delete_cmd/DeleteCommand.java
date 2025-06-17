@@ -8,12 +8,8 @@ import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
-import org.jboss.logging.Logger;
 import picocli.CommandLine;
 
-import static org.jboss.logging.Logger.getLogger;
-
-import org.bouncycastle.jcajce.provider.asymmetric.dsa.DSASigner.stdDSA;
 
 @CommandLine.Command(name = "delete")
 public class DeleteCommand implements Runnable {
@@ -28,8 +24,6 @@ public class DeleteCommand implements Runnable {
 
   @Inject
   OutputUtils utils;
-
-  private static final Logger LOGGER = getLogger(DeleteCommand.class);
 
   private static final String ERR_MSG = "must specified an ID, ex : 393ab372-b5d8-478c-ac4c-6c100b5a66bc";
 

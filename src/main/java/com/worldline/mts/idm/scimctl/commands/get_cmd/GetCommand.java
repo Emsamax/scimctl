@@ -5,10 +5,7 @@ import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
-import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
-import de.captaingoldfish.scim.sdk.common.resources.base.ScimObjectNode;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
 
 import static org.jboss.logging.Logger.getLogger;
 

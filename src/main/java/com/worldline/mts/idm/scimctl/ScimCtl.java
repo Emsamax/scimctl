@@ -8,9 +8,7 @@ import com.worldline.mts.idm.scimctl.commands.import_cmd.ImportCommand;
 
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
-import io.quarkus.oidc.client.OidcClientException;
-import io.quarkus.oidc.common.runtime.OidcCommonUtils;
-import io.quarkus.runtime.Quarkus;
+
 import jakarta.inject.Inject;
 
 import picocli.CommandLine;
