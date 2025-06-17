@@ -19,7 +19,7 @@ import com.worldline.mts.idm.scimctl.commands.update_cmd.UpdateCommand;
 @QuarkusMain
 @CommandLine.Command(name = "scim-ctl", mixinStandardHelpOptions = true, subcommands = { ScimSchema.class,
     GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class })
-public class ScimCtl implements QuarkusApplication{
+public class ScimCtl implements QuarkusApplication {
   @Inject
   CommandLine.IFactory factory;
 
@@ -27,5 +27,5 @@ public class ScimCtl implements QuarkusApplication{
   public int run(String... args) {
     return new CommandLine(this, factory).execute(args);
   }
- 
+
 }

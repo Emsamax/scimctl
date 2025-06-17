@@ -14,18 +14,19 @@ public class OutputUtils {
 
   private boolean dryRun = false;
 
+  private boolean debug = false;
+
   private static final Logger LOGGER = Logger.getLogger(OutputUtils.class);
 
   public void logMsg(Logger logger, Logger.Level lvl, String msg) {
     if (verbose || dryRun) {
-      try {
-        logger.log(lvl, msg);
-      } catch (IllegalArgumentException e) {
-        LOGGER.info("lvl isn't in Enum Logger.Level jbossloging " + e.getMessage());
-      } catch (NullPointerException e) {
-        LOGGER.info("lvl can't be null" + e.getMessage());
-      }
+      logger.log(Logger.Level.INFO, msg);
     }
+    if (debug) {
+      logger.log(Logger.Level.DEBUG, msg);
+    }
+    if (!(debug || dryRun || verbose))
+      logger.log(Logger.Level.WARN, msg);
   }
 
   public void toggleVerbose(boolean verbose) {
@@ -38,5 +39,9 @@ public class OutputUtils {
 
   public boolean getDryRun() {
     return this.dryRun;
+  }
+
+  public void toggleDebug(boolean debug) {
+    this.debug = debug;
   }
 }

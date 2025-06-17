@@ -13,7 +13,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.ws.rs.BadRequestException;
 
-
 @ApplicationScoped
 @Named("schemaService")
 @Unremovable
@@ -29,8 +28,8 @@ public class SchemaService {
 
   public Schema getSchema() throws BadRequestException {
     String endpointPath = EndpointPaths.SCHEMAS;
-    ServerResponse<Schema> response = requestBuilder.get(Schema.class, endpointPath, config.getSchemaId()).sendRequest();
+    ServerResponse<Schema> response = requestBuilder.get(Schema.class, endpointPath, config.getSchemaId())
+        .sendRequest();
     return responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE).get();
   }
 }
-

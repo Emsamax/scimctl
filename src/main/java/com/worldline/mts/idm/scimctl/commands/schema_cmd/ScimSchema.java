@@ -7,7 +7,6 @@ import picocli.CommandLine;
 
 import org.jboss.logging.Logger;
 
-@ApplicationScoped
 @CommandLine.Command(name = "schema")
 public class ScimSchema implements Runnable {
 
@@ -20,10 +19,9 @@ public class ScimSchema implements Runnable {
   @Override
   public void run() {
     try {
-      LOGGER.log(Logger.Level.valueOf("INFO"), "get SCHEMA : " + schemaService.getSchema());
+      LOGGER.log(Logger.Level.INFO, "get SCHEMA : " + schemaService.getSchema());
     } catch (BadRequestException e) {
-      LOGGER.log(Logger.Level.valueOf("ERROR"), "bad request : " + e.getMessage());
+      System.err.println("bad request : " + e.getMessage());
     }
-
   }
 }
