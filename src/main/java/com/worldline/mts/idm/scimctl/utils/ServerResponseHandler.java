@@ -60,7 +60,6 @@ public class ServerResponseHandler {
     }
   }
 
-
   @Inject
   Reporting reporting;
 
@@ -76,12 +75,10 @@ public class ServerResponseHandler {
         System.out.println(EMPTY_MESSAGE);
       }
       reporting.report(bulkResponse);
-    }
-    if (response.getErrorResponse() == null && response.getResource() == null) {
+    } else if (response.getErrorResponse() == null && response.getResource() == null) {
       throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
-    }
-    if (response.getErrorResponse() == null) {
-      checkAlreadyCreatedResource(response.getResource());
+    } else if (response.getErrorResponse() == null) {
+
     } else {
       throw new BadRequestException("Bad request: " + response.getErrorResponse());
     }

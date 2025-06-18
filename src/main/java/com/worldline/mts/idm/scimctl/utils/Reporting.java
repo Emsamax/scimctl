@@ -28,11 +28,12 @@ public class Reporting {
     listResponse.stream()
         .forEach(op -> report.put(op.getBulkId().get(), getDetails(op)));
 
+    totalOperation = failedOperations + successfullOperations;
     utils.logMsg(LOGGER, Logger.Level.INFO,
         "Total operations : " + totalOperation + "\nSuccessfulOperations : " + successfullOperations
             + "\nFailed operations : " + failedOperations);
     for (var entry : report.entrySet()) {
-      utils.logMsg(LOGGER, Level.INFO, "operation n° " + entry.getKey() + " : " + entry.getValue());
+      utils.logMsg(LOGGER, Level.INFO, "operation n° " + entry.getKey() + " : resource " + entry.getValue() + " created");
     }
   }
 

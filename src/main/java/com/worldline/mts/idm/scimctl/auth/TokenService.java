@@ -40,7 +40,6 @@ public class TokenService {
   @PostConstruct
   private void init() {
     getInitialAccessToken();
-    System.out.println("==============" + currentTokens.getAccessToken());
     writeTokenToCache(currentTokens.getAccessToken(), this.expirationDate);
     fetchTokens();
 
@@ -109,7 +108,6 @@ public class TokenService {
    * -3000 pr eviter des 401
    */
   private boolean isExpired(String token) {
-    System.out.println("system " + System.currentTimeMillis() + " expiration " + expirationDate);
     return (System.currentTimeMillis() >= expirationDate * 1000L - 3000);
   }
 
