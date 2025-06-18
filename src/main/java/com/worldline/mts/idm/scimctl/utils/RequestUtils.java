@@ -68,11 +68,25 @@ public class RequestUtils {
       var result = responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
       if (result.isPresent()) {
         System.out.println(result.get().toPrettyString());
-      } 
+      }
     } else {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path + "/" + id);
     }
+  }
 
+  public void getSchemas() {
+    var path = EndpointPaths.SCHEMAS;
+    var response = this.requestBuilder
+        .list(User.class, path)
+        .count(batchSize)
+        .get()
+        .sendRequest();
+    var result = responseHandler.handleListResources(response);
+    if (result.isPresent()) {
+      result.get().forEach(resp -> {
+        System.out.println(resp.toPrettyString());
+      });
+    }
   }
 
   public <T extends ResourceNode> void getResources(Class<T> clazz) {
@@ -195,6 +209,7 @@ public class RequestUtils {
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "update request : " + baseUrl + path);
+      System.out.println(updatedData);
       var response = this.requestBuilder.update(clazz, path, id)
           .setResource(updatedData)
           .sendRequest();

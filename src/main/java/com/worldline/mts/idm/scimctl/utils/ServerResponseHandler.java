@@ -49,7 +49,7 @@ public class ServerResponseHandler {
    * @param ServerResponse
    */
   private void handleError(ServerResponse<?> serverResponse) {
-    checkAlreadyCreatedResource(serverResponse);
+    //checkAlreadyCreatedResource(serverResponse);
     if (serverResponse.getResource() == null && serverResponse.getErrorResponse() == null) {
       System.out.println(EMPTY_MESSAGE);
     }

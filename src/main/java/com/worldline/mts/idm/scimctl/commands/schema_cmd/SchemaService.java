@@ -1,6 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.schema_cmd;
 
 import com.worldline.mts.idm.scimctl.config.ClientConfig;
+import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 import com.worldline.mts.idm.scimctl.utils.ServerResponseHandler;
 
 import de.captaingoldfish.scim.sdk.client.ScimRequestBuilder;
@@ -22,14 +23,9 @@ public class SchemaService {
   ClientConfig config;
 
   @Inject
-  ServerResponseHandler responseHandler;
+  RequestUtils utils;
 
-  ScimRequestBuilder requestBuilder = new ScimRequestBuilder("http://localhost:8080/base/scim/v2", config.getScimClientConfig());
-
-  public Schema getSchema() throws BadRequestException {
-    String endpointPath = EndpointPaths.SCHEMAS;
-    ServerResponse<Schema> response = requestBuilder.get(Schema.class, endpointPath, config.getSchemaId())
-        .sendRequest();
-    return responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE).get();
+  public void getSchema(){
+    utils.getSchemas();
   }
 }
