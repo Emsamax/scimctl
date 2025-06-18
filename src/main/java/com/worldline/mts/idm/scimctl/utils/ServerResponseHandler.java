@@ -11,6 +11,8 @@ import jakarta.ws.rs.BadRequestException;
 
 import org.jboss.logging.Logger;
 
+import com.google.common.reflect.ClassPath.ResourceInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +34,8 @@ public class ServerResponseHandler {
 
   public <T extends ResourceNode> Optional<T> handleServerResponse(ServerResponse<T> response, String message) {
     if (response.isSuccess()) {
-      System.out.printf("%s ", message);
+      if (!isEmptyResponse(response))
+        System.out.printf("%s ", message);
       return Optional.of(response.getResource());
     } else {
       handleError(response);
@@ -83,25 +86,28 @@ public class ServerResponseHandler {
     }
   }
 
-  public <T extends ResourceNode> List<T> handleListResources(ServerResponse<ListResponse<T>> response)
-      throws BadRequestException {
+  public <T extends ResourceNode> Optional<List<T>> handleListResources(ServerResponse<ListResponse<T>> response) {
     if (response.isSuccess()) {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, GET_MESSAGE);
-      if (response.getResource().getListedResources().isEmpty())
+      if (response.getResource().get("totalResults").asInt() == 0) {
         System.out.println(EMPTY_MESSAGE);
-      return response.getResource().getListedResources();
+        return Optional.empty();
+      }
+      return Optional.of(response.getResource().getListedResources());
     }
     if (response.getErrorResponse() == null) {
       checkAlreadyCreatedResource(response.getResource());
-      throw new BadRequestException(
+      System.err.println(
           "Invalid response format: " + "\nbody :" + response.getResponseBody() + ",\nerror : "
               + response.getErrorResponse() + ",\nstatus: " + response.getHttpStatus() + ",\nheader : "
               + response.getHttpHeaders() + ",\ninfo : ");
+      return Optional.empty();
     }
-    throw new BadRequestException(response.getResponseBody());
+    System.err.println("Bad request : " + response.getErrorResponse().toPrettyString());
+    return Optional.empty();
   }
 
-  private <T extends ResourceNode> void checkAlreadyCreatedResource(ListResponse<T> serverResponse)
+  private <T extends ResourceNode> void checkAlreadyCreatedResource(ListResponse<?> serverResponse)
       throws BadRequestException {
     var idList = new ArrayList<String>();
     for (var resp : serverResponse.getListedResources()) {
@@ -131,4 +137,22 @@ public class ServerResponseHandler {
           + serverResponse.getResource().get("id").toPrettyString());
     }
   }
+
+  private <T extends ResourceNode> boolean isEmptyResponse(ServerResponse<T> response) {
+    var resource = response.getResource();
+    if (resource instanceof List) {
+      if (resource.get("totalResults").asInt() == 0) {
+        System.out.println(EMPTY_MESSAGE);
+        return true;
+      }
+      return false;
+    } else {
+      if (resource.get("id") == null) {
+        System.out.println(EMPTY_MESSAGE);
+        return true;
+      }
+      return false;
+    }
+  }
+
 }

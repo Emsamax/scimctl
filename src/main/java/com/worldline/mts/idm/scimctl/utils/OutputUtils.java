@@ -1,6 +1,7 @@
 package com.worldline.mts.idm.scimctl.utils;
 
 import org.jboss.logging.Logger;
+import org.stringtemplate.v4.compiler.CodeGenerator.includeExpr_return;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -19,14 +20,13 @@ public class OutputUtils {
   private static final Logger LOGGER = Logger.getLogger(OutputUtils.class);
 
   public void logMsg(Logger logger, Logger.Level lvl, String msg) {
-    if (verbose || dryRun) {
+    if (verbose) {
       logger.log(Logger.Level.INFO, msg);
-    }
-    if (debug) {
+    } else if (dryRun) {
+      logger.log(Logger.Level.INFO, msg);
+    } else if (debug) {
       logger.log(Logger.Level.DEBUG, msg);
     }
-    if (!(debug || dryRun || verbose))
-      logger.log(Logger.Level.WARN, msg);
   }
 
   public void toggleVerbose(boolean verbose) {

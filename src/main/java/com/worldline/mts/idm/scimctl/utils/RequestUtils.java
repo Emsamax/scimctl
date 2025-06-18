@@ -68,9 +68,7 @@ public class RequestUtils {
       var result = responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
       if (result.isPresent()) {
         System.out.println(result.get().toPrettyString());
-      } else {
-        System.out.println(ServerResponseHandler.EMPTY_MESSAGE);
-      }
+      } 
     } else {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path + "/" + id);
     }
@@ -89,9 +87,12 @@ public class RequestUtils {
           .count(batchSize)
           .get()
           .sendRequest();
-      responseHandler.handleListResources(response).forEach(resp -> {
-        System.out.println(resp.toPrettyString());
-      });
+      var result = responseHandler.handleListResources(response);
+      if (result.isPresent()) {
+        result.get().forEach(resp -> {
+          System.out.println(resp.toPrettyString());
+        });
+      }
     } else {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path);
 
@@ -112,9 +113,13 @@ public class RequestUtils {
           .build()
           .post()
           .getAll();
-      responseHandler.handleListResources(response).forEach(resp -> {
-        System.out.println(resp.toPrettyString());
-      });
+      var result = responseHandler.handleListResources(response);
+      if (result.isPresent()) {
+        result.get().forEach(resp -> {
+          System.out.println(resp.toPrettyString());
+        });
+      }
+
     } else {
       outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path + "/" + filter);
     }

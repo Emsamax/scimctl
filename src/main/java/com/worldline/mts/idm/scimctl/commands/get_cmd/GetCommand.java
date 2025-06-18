@@ -5,6 +5,7 @@ import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
+import io.vertx.core.spi.launcher.Command;
 import jakarta.inject.Inject;
 
 import static org.jboss.logging.Logger.getLogger;
@@ -29,7 +30,7 @@ public class GetCommand implements Runnable {
   @Inject
   OutputUtils utils;
 
-  @CommandLine.ArgGroup(heading = "User search options:%n", exclusive = false)
+  @CommandLine.Mixin
   FilterCommonOptions filter;
 
   @CommandLine.Mixin
@@ -41,11 +42,11 @@ public class GetCommand implements Runnable {
   }
 
   public void handleRequest() {
-    if (filter == null && search == null) {
+    if (filter.userName == null && search.id == null) {
       handleResource();
-    } else if (filter != null) {
-      getByName(filter.userName);
-    } else if (search != null) {
+    } else if (filter.userName != null) {
+      getByName(filter.userName); 
+    } else if (search.id != null) {
       getById(search.id);
     }
   }
