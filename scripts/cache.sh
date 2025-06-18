@@ -1,7 +1,9 @@
 #!/bin/bash
 cd /tmp
-if [ ! -e .token.txt ]; then
-  >.token.txt
-  chmod 700 /tmp/.token.txt
-  echo 'cache created at /tmp/.token.txt'
+fileName=".scim_ctl_token_cache.txt"
+if [ ! -e "$fileName" ]; then
+  >"$fileName"
+  chmod 700 "$fileName"
+  echo "create cache at /tmp/$fileName"
+  break
 fi
