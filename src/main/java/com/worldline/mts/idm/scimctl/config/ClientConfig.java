@@ -24,12 +24,11 @@ public class ClientConfig {
   }
 
   public ScimClientConfig getScimClientConfig() {
-    tokenService.fetchTokens();
     return ScimClientConfig.builder()
         .connectTimeout(5)
         .requestTimeout(5)
         .socketTimeout(5)
-        .httpHeaders(Map.of("Authorization", "Bearer " + tokenService.getCurrentToken().getAccessToken()))
+        .httpHeaders(Map.of("Authorization", "Bearer " + tokenService.getToken()))
         .hostnameVerifier((s, sslSession) -> true)
         .build();
   }
