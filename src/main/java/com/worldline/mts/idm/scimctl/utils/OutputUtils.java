@@ -1,7 +1,7 @@
 package com.worldline.mts.idm.scimctl.utils;
 
 import org.jboss.logging.Logger;
-import org.stringtemplate.v4.compiler.CodeGenerator.includeExpr_return;
+
 
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -17,7 +17,7 @@ public class OutputUtils {
 
   private boolean debug = false;
 
-  private static final Logger LOGGER = Logger.getLogger(OutputUtils.class);
+ 
 
   public void logMsg(Logger logger, Logger.Level lvl, String msg) {
     if (verbose) {

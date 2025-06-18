@@ -5,7 +5,6 @@ import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
-import io.vertx.core.spi.launcher.Command;
 import jakarta.inject.Inject;
 
 import static org.jboss.logging.Logger.getLogger;

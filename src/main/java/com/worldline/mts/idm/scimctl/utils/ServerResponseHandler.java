@@ -11,8 +11,6 @@ import jakarta.ws.rs.BadRequestException;
 
 import org.jboss.logging.Logger;
 
-import com.google.common.reflect.ClassPath.ResourceInfo;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +47,7 @@ public class ServerResponseHandler {
    * @param ServerResponse
    */
   private void handleError(ServerResponse<?> serverResponse) {
-    //checkAlreadyCreatedResource(serverResponse);
+    // checkAlreadyCreatedResource(serverResponse);
     if (serverResponse.getResource() == null && serverResponse.getErrorResponse() == null) {
       System.out.println(EMPTY_MESSAGE);
     }
@@ -62,6 +60,10 @@ public class ServerResponseHandler {
     }
   }
 
+
+  @Inject
+  Reporting reporting;
+
   /**
    * If bulk different handle
    *
@@ -69,21 +71,21 @@ public class ServerResponseHandler {
    */
   public void handleBulkResponse(ServerResponse<BulkResponse> response) {
     if (response.isSuccess()) {
-      BulkResponse bulkResponse = response.getResource();
+      var bulkResponse = response.getResource();
       if (bulkResponse.isEmpty()) {
         System.out.println(EMPTY_MESSAGE);
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, "bulk response : " + bulkResponse);
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, "Failed Operations : " + bulkResponse.getFailedOperations());
-        System.out.println("Successful Operations : " + bulkResponse.getSuccessfulOperations());
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, "HTTP Status : " + bulkResponse.getHttpStatus());
-      } else if (response.getErrorResponse() == null && response.getResource() == null) {
-        throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
-      } else if (response.getErrorResponse() == null) {
-        checkAlreadyCreatedResource(response.getResource());
-      } else {
-        throw new BadRequestException("Bad request: " + response.getErrorResponse());
       }
+      reporting.report(bulkResponse);
     }
+    if (response.getErrorResponse() == null && response.getResource() == null) {
+      throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
+    }
+    if (response.getErrorResponse() == null) {
+      checkAlreadyCreatedResource(response.getResource());
+    } else {
+      throw new BadRequestException("Bad request: " + response.getErrorResponse());
+    }
+
   }
 
   public <T extends ResourceNode> Optional<List<T>> handleListResources(ServerResponse<ListResponse<T>> response) {

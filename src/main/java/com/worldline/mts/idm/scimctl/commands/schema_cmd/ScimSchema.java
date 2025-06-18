@@ -1,6 +1,5 @@
 package com.worldline.mts.idm.scimctl.commands.schema_cmd;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import picocli.CommandLine;

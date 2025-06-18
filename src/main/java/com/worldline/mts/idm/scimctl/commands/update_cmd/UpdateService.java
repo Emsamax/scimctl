@@ -1,9 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.update_cmd;
 
-import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
-import com.worldline.mts.idm.scimctl.utils.strategy.NodeWrapper;
 
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import io.quarkus.arc.Unremovable;
