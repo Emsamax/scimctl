@@ -4,12 +4,12 @@ import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
+import de.captaingoldfish.scim.sdk.client.resources.ResourceType;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import picocli.CommandLine;
-
 
 @CommandLine.Command(name = "delete")
 public class DeleteCommand implements Runnable {
@@ -17,7 +17,7 @@ public class DeleteCommand implements Runnable {
   SearchCommonOption options;
 
   @CommandLine.Mixin
-  CommonOptions commonOptions;
+  CommonOptions common;
 
   @Inject
   DeletService service;
@@ -39,7 +39,11 @@ public class DeleteCommand implements Runnable {
   }
 
   private void handleRequest() {
-    switch (commonOptions.resourceType) {
+    if (common.resourceType == null) {
+      System.err.println("you must percise a resource type");
+      return;
+    }
+    switch (common.resourceType) {
       case USER -> {
         if (options.id == null) {
           System.err.println(ERR_MSG);

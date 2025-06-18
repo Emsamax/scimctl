@@ -1,14 +1,16 @@
 package com.worldline.mts.idm.scimctl.commands.create_cmd;
 
+import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.IOCommonOptions;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
+import picocli.CommandLine.Command;
+
 import com.worldline.mts.idm.scimctl.commands.common.ResourceTypeConverter;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
-
 
 import org.jboss.logging.Logger;
 
@@ -23,9 +25,8 @@ public class CreateCommand implements Runnable {
   @Inject
   OutputUtils utils;
 
-  @CommandLine.Option(names = { "--resource-type",
-      "-t" }, description = "Resource type (USER or GROUP)", converter = ResourceTypeConverter.class, required = true)
-  private FilterCommonOptions.ResourceType resourceType;
+  @CommandLine.Mixin
+  CommonOptions common;
 
   /**
    * Force the user to specify either the path to the JSON file or write the JSON
@@ -45,7 +46,11 @@ public class CreateCommand implements Runnable {
 
   @Override
   public void run() {
-    switch (resourceType) {
+    if (common.resourceType == null) {
+      System.err.println("you must percise a resource type");
+      return;
+    }
+    switch (common.resourceType) {
       case USER -> {
         utils.logMsg(LOGGER, Logger.Level.INFO, "create USER from text : " + ioOptions.text);
         service.createResource(ioOptions.text, User.class);

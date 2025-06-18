@@ -13,7 +13,6 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 
-
 @CommandLine.Command(name = "update")
 public class UpdateCommand implements Runnable {
 
@@ -36,14 +35,18 @@ public class UpdateCommand implements Runnable {
 
   @Override
   public void run() {
-
+    if (options.resourceType == null) {
+      System.err.println("you must percise a resource type ");
+      return;
+    }
     switch (options.resourceType) {
       case USER -> handleArgs(search, ioOptions, User.class);
       case GROUP -> handleArgs(search, ioOptions, Group.class);
     }
   }
 
-  private <T extends ResourceNode> void handleArgs(SearchCommonOption search, IOCommonOptions iOoptions, Class<T> clazz) {
+  private <T extends ResourceNode> void handleArgs(SearchCommonOption search, IOCommonOptions iOoptions,
+      Class<T> clazz) {
     if (search == null) {
       System.err.println("must precise an id");
     } else if (ioOptions == null) {

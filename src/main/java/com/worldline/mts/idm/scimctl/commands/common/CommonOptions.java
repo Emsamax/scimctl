@@ -26,7 +26,7 @@ public class CommonOptions {
   OutputUtils outputUtils;
 
   @CommandLine.Option(names = { "--resource-type",
-      "-t" }, description = "Resource type", converter = ResourceTypeConverter.class)
+      "-t" }, description = "Resource type, user or group", converter = ResourceTypeConverter.class)
   public FilterCommonOptions.ResourceType resourceType;
 
   @CommandLine.Option(names = { "--verbose" }, description = "Enable verbose")
@@ -34,6 +34,14 @@ public class CommonOptions {
     if (verbose) {
       outputUtils.toggleVerbose(verbose);
       outputUtils.logMsg(LOGGER, org.jboss.logging.Logger.Level.INFO, "verbose enabled");
+    }
+  }
+
+  @CommandLine.Option(names = { "--debug" }, description = "Enable debug")
+  public void enableDebug(boolean debug) {
+    if (debug) {
+      outputUtils.toggleDebug(debug);
+      outputUtils.logMsg(LOGGER, org.jboss.logging.Logger.Level.INFO, "debug enabled");
     }
   }
 }

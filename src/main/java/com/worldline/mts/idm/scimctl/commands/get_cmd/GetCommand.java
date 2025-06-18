@@ -41,10 +41,14 @@ public class GetCommand implements Runnable {
   }
 
   public void handleRequest() {
+    if (options.resourceType == null) {
+      System.err.println("you must percise a resource type ");
+      return;
+    }
     if (filter.userName == null && search.id == null) {
       handleResource();
     } else if (filter.userName != null) {
-      getByName(filter.userName); 
+      getByName(filter.userName);
     } else if (search.id != null) {
       getById(search.id);
     }

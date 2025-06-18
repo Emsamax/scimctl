@@ -9,7 +9,9 @@ import jakarta.inject.Inject;
 import picocli.CommandLine;
 
 import java.io.IOException;
+
 import org.jboss.logging.Logger;
+import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
 
 import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.GROUP;
 import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.USER;
@@ -46,7 +48,7 @@ public class ImportCommand implements Runnable {
   }
 
   @CommandLine.Option(names = {
-      "--batch-size" }, description = "Batch size for both bulk request form cli and list response from the server")
+      "--batch-size" }, description = "Batch size for both size of bulk request send by the cli and size of list request from the server")
   public void setBatchSize(Integer batchSize) {
     config.setBatchSize(batchSize);
     LOGGER.info("Batch changed to : " + batchSize);
@@ -54,6 +56,10 @@ public class ImportCommand implements Runnable {
 
   @Override
   public void run() {
+    if (options.resourceType == null) {
+      System.err.print("you must percise a resource type\n");
+      return;
+    }
     if (ioOptions == null) {
       System.err.println("must precise a file path");
     } else {
@@ -75,5 +81,4 @@ public class ImportCommand implements Runnable {
       }
     }
   }
-
 }
