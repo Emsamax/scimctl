@@ -1,14 +1,20 @@
 package com.worldline.mts.idm.scimctl.utils;
 
-import org.jboss.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
 /**
  * used when --verbose and / or --dry-run enabled
+ * log level info for info
+ * log level fine for dryRun
+ * log level finer for debug
  */
 @ApplicationScoped
 public class OutputUtils {
+
+  private static final Logger logger = Logger.getLogger("scim-ctl");
 
   private boolean verbose = false;
 
@@ -16,13 +22,29 @@ public class OutputUtils {
 
   private boolean debug = false;
 
-  public void logMsg(Logger logger, Logger.Level lvl, String msg) {
+  public void configLoggerLevel() {
     if (verbose) {
-      logger.log(Logger.Level.INFO, msg);
-    } else if (dryRun ) {
-      logger.log(Logger.Level.INFO, msg);
+      setLogLevel("scim-ctl", Level.INFO.getName());
+    } else if (dryRun) {
+      setLogLevel("scim-ctl", Level.FINE.getName());
     } else if (debug) {
-      logger.log(Logger.Level.DEBUG, msg);
+      setLogLevel("scim-ctl", Level.FINER.getName());
+    }
+  }
+
+  // use the same logger for the app
+  // check if lvl correspond to actual logger.level if yes print the message
+  public void logMsg(String msg) {
+    switch (getCurrentLogLevel(logger).getName()) {
+      case "INFO":
+        logger.info(msg);
+        break;
+      case "FINE":
+        logger.fine(msg);
+        break;
+      case "FINER":
+        logger.finer(msg);
+        break;
     }
   }
 
@@ -41,4 +63,27 @@ public class OutputUtils {
   public void toggleDebug(boolean debug) {
     this.debug = debug;
   }
+
+  private static Level getCurrentLogLevel(java.util.logging.Logger logger) {
+    for (java.util.logging.Logger current = logger; current != null;) {
+      Level level = current.getLevel();
+      if (level != null)
+        return level;
+      current = current.getParent();
+    }
+    return Level.INFO;
+  }
+
+  private static Level setLogLevel(String loggerName, String lvl) {
+    // get the logger instance
+    Logger logger = Logger.getLogger(loggerName);
+
+    // change the log-level if requested
+    if (lvl != null && lvl.length() > 0)
+      logger.setLevel(Level.parse(lvl));
+
+    // return the current log-level
+    return getCurrentLogLevel(logger);
+  }
+
 }

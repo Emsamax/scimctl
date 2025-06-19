@@ -33,7 +33,8 @@ public class CommonOptions {
   public void enableVerbose(boolean verbose) {
     if (verbose) {
       outputUtils.toggleVerbose(verbose);
-      outputUtils.logMsg(LOGGER, org.jboss.logging.Logger.Level.INFO, "verbose enabled");
+      outputUtils.configLoggerLevel();
+      outputUtils.logMsg("verbose enabled");
     }
   }
 
@@ -41,7 +42,8 @@ public class CommonOptions {
   public void enableDebug(boolean debug) {
     if (debug) {
       outputUtils.toggleDebug(debug);
-      outputUtils.logMsg(LOGGER, org.jboss.logging.Logger.Level.INFO, "debug enabled");
+      outputUtils.configLoggerLevel();
+      outputUtils.logMsg("debug enabled");
     }
   }
 }

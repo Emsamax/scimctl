@@ -63,14 +63,14 @@ public class RequestUtils {
   public <T extends ResourceNode> void getResource(String id, Class<T> clazz) {
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request : " + baseUrl + path + "/" + id);
+      outputUtils.logMsg("get request : " + baseUrl + path + "/" + id);
       var response = this.requestBuilder.get(User.class, path, id).sendRequest();
       var result = responseHandler.handleServerResponse(response, ServerResponseHandler.GET_MESSAGE);
       if (result.isPresent()) {
         System.out.println(result.get().toPrettyString());
       }
     } else {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path + "/" + id);
+      outputUtils.logMsg("get request would be sent at : " + baseUrl + path + "/" + id);
     }
   }
 
@@ -95,7 +95,7 @@ public class RequestUtils {
     }
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request : " + baseUrl + path);
+      outputUtils.logMsg("get request : " + baseUrl + path);
       var response = this.requestBuilder
           .list(clazz, path)
           .count(batchSize)
@@ -108,7 +108,7 @@ public class RequestUtils {
         });
       }
     } else {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path);
+      outputUtils.logMsg("get request would be sent at : " + baseUrl + path);
 
     }
 
@@ -120,7 +120,7 @@ public class RequestUtils {
     }
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request : " + baseUrl + path + "/" + filter);
+      outputUtils.logMsg("get request : " + baseUrl + path + "/" + filter);
       ServerResponse<ListResponse<T>> response = this.requestBuilder
           .list(clazz, path)
           .filter("userName", Comparator.CO, filter)
@@ -135,7 +135,7 @@ public class RequestUtils {
       }
 
     } else {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "get request would be sent at : " + baseUrl + path + "/" + filter);
+      outputUtils.logMsg("get request would be sent at : " + baseUrl + path + "/" + filter);
     }
 
   }
@@ -146,12 +146,12 @@ public class RequestUtils {
       if (!node.has("userName") || node.get("userName").asText().isEmpty()) {
         throw new RuntimeException("Resource must have a userName : " + node);
       }
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "create request : " + baseUrl + path);
+      outputUtils.logMsg("create request : " + baseUrl + path);
       if (!outputUtils.getDryRun()) {
         var response = requestBuilder.create(clazz, path).setResource(node).sendRequest();
         responseHandler.handleServerResponse(response, ServerResponseHandler.CREATE_MESSAGE);
       } else
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, "create request would be sent at : " + baseUrl + path);
+        outputUtils.logMsg("create request would be sent at : " + baseUrl + path);
     }
   }
 
@@ -194,10 +194,10 @@ public class RequestUtils {
             .bulkId(UUID.randomUUID().toString())
             .data(finalGroup)
             .sendRequest();
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO, "bulk request : " + baseUrl + path + EndpointPaths.GROUPS);
+        outputUtils.logMsg("bulk request : " + baseUrl + path + EndpointPaths.GROUPS);
         responseHandler.handleBulkResponse(response);
       } else
-        outputUtils.logMsg(LOGGER, Logger.Level.INFO,
+        outputUtils.logMsg(
             "bulk request would be sent at: " + baseUrl + path + EndpointPaths.GROUPS);
     } catch (NoSuchElementException e) {
       e.getMessage();
@@ -208,26 +208,26 @@ public class RequestUtils {
   public <T extends ResourceNode> void updateResource(String id, Class<T> clazz, JsonNode updatedData) {
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "update request : " + baseUrl + path);
+      outputUtils.logMsg("update request : " + baseUrl + path);
       System.out.println(updatedData);
       var response = this.requestBuilder.update(clazz, path, id)
           .setResource(updatedData)
           .sendRequest();
       responseHandler.handleServerResponse(response, ServerResponseHandler.UPDATE_MESSAGE);
     } else
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "update request would be sent at : " + baseUrl + path);
+      outputUtils.logMsg("update request would be sent at : " + baseUrl + path);
 
   }
 
   public <T extends ResourceNode> void deleteResource(String id, Class<T> clazz) {
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "delete request : " + baseUrl + path + "/" + id);
+      outputUtils.logMsg("delete request : " + baseUrl + path + "/" + id);
       ServerResponse<User> response = this.requestBuilder.delete(User.class, path, id)
           .sendRequest();
       responseHandler.handleServerResponse(response, ServerResponseHandler.DELETE_MESSAGE);
     } else
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, "delete request would be sent at : " + baseUrl + path + "/" + id);
+      outputUtils.logMsg("delete request would be sent at : " + baseUrl + path + "/" + id);
   }
 
   /**

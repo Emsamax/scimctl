@@ -52,11 +52,11 @@ public class CreateCommand implements Runnable {
     }
     switch (common.resourceType) {
       case USER -> {
-        utils.logMsg(LOGGER, Logger.Level.INFO, "create USER from text : " + ioOptions.text);
+        utils.logMsg("create USER from text : " + ioOptions.text);
         service.createResource(ioOptions.text, User.class);
       }
       case GROUP -> {
-        utils.logMsg(LOGGER, Logger.Level.INFO, "create GROUP from text " + ioOptions.text);
+        utils.logMsg("create GROUP from text " + ioOptions.text);
         service.createResource(ioOptions.text, Group.class);
       }
     }

@@ -86,7 +86,7 @@ public class ServerResponseHandler {
 
   public <T extends ResourceNode> Optional<List<T>> handleListResources(ServerResponse<ListResponse<T>> response) {
     if (response.isSuccess()) {
-      outputUtils.logMsg(LOGGER, Logger.Level.INFO, GET_MESSAGE);
+      outputUtils.logMsg(GET_MESSAGE);
       if (response.getResource().get("totalResults").asInt() == 0) {
         System.out.println(EMPTY_MESSAGE);
         return Optional.empty();
@@ -123,6 +123,7 @@ public class ServerResponseHandler {
 
   private <T extends ResourceNode> boolean isEmptyResponse(ServerResponse<T> response) {
     var resource = response.getResource();
+    System.out.println(resource);
     if (resource instanceof List) {
       if (resource.get("totalResults").asInt() == 0) {
         System.out.println(EMPTY_MESSAGE);

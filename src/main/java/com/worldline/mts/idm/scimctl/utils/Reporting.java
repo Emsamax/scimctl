@@ -29,11 +29,12 @@ public class Reporting {
         .forEach(op -> report.put(op.getBulkId().get(), getDetails(op)));
 
     totalOperation = failedOperations + successfullOperations;
-    utils.logMsg(LOGGER, Logger.Level.INFO,
+    utils.logMsg(
         "Total operations : " + totalOperation + "\nSuccessfulOperations : " + successfullOperations
             + "\nFailed operations : " + failedOperations);
     for (var entry : report.entrySet()) {
-      utils.logMsg(LOGGER, Level.INFO, "operation n° " + entry.getKey() + " : resource " + entry.getValue() + " created");
+      utils.logMsg(
+          "operation n° " + entry.getKey() + " : resource " + entry.getValue() + " created");
     }
   }
 

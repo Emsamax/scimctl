@@ -66,7 +66,7 @@ public class TokenService {
 
   private void getInitialAccessToken() {
     try {
-      utils.logMsg(LOGGER, Logger.Level.INFO, "get access token");
+      utils.logMsg("get access token");
       currentTokens = oidcClient.getTokens().await().indefinitely();
       expirationDate = currentTokens.getAccessTokenExpiresAt();
     } catch (CompletionException e) {
@@ -82,10 +82,10 @@ public class TokenService {
    * token
    */
   private void fetchTokens() {
-    utils.logMsg(LOGGER, Logger.Level.INFO, "retrieve token from cache : " + CACHE);
+    utils.logMsg("retrieve token from cache : " + CACHE);
     readTokenFromChache();
     if (isExpired(this.token)) {
-      utils.logMsg(LOGGER, Logger.Level.INFO, "get new access token");
+      utils.logMsg("get new access token");
       getInitialAccessToken();
     }
   }

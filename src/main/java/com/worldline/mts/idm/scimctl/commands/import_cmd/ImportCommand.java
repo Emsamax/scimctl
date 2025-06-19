@@ -43,7 +43,7 @@ public class ImportCommand implements Runnable {
   public void enableDryRun(boolean dryRun) {
     if (dryRun) {
       utils.toggleDryRun(dryRun);
-      utils.logMsg(LOGGER, org.jboss.logging.Logger.Level.INFO, "dry run enabled");
+      utils.logMsg( "dry run enabled");
     }
   }
 
@@ -66,12 +66,12 @@ public class ImportCommand implements Runnable {
       try {
         switch (options.resourceType) {
           case USER -> {
-            utils.logMsg(LOGGER, Logger.Level.INFO, "import USER from file path : " + ioOptions.path);
+            utils.logMsg("import USER from file path : " + ioOptions.path);
             service.importResource(ioOptions.path, USER);
           }
 
           case GROUP -> {
-            utils.logMsg(LOGGER, Logger.Level.INFO, "import GROUP from file path : `" + ioOptions.path);
+            utils.logMsg("import GROUP from file path : `" + ioOptions.path);
             service.importResource(ioOptions.path, GROUP);
           }
         }

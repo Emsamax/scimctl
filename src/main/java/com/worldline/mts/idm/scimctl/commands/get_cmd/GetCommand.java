@@ -55,7 +55,7 @@ public class GetCommand implements Runnable {
   }
 
   public void handleResource() {
-    utils.logMsg(LOGGER, Logger.Level.INFO, "Get user");
+    utils.logMsg("Get user");
     service.getUsers();
   }
 
