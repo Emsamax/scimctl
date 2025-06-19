@@ -71,7 +71,7 @@ public class TokenService {
       expirationDate = currentTokens.getAccessTokenExpiresAt();
     } catch (CompletionException e) {
       LOGGER.info(e.getMessage());
-    } catch (Exception e ){
+    } catch (OidcClientException e ){
       System.err.println(e.getMessage() + " at " + this.authServerUrl);
       System.exit(-1);
     }
