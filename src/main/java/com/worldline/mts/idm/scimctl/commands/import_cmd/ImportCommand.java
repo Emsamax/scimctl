@@ -11,7 +11,6 @@ import picocli.CommandLine;
 import java.io.IOException;
 
 import org.jboss.logging.Logger;
-import org.stringtemplate.v4.compiler.CodeGenerator.region_return;
 
 import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.GROUP;
 import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.USER;

@@ -7,9 +7,6 @@ import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
 import jakarta.inject.Inject;
 
-import static org.jboss.logging.Logger.getLogger;
-
-import org.jboss.logging.Logger;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "get")
@@ -18,7 +15,7 @@ public class GetCommand implements Runnable {
   @Inject
   GetResourceService service;
 
-  private static final Logger LOGGER = getLogger(GetCommand.class);
+ 
 
   /**
    * Force the user to specify either the id or the username of the user to get.

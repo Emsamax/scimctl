@@ -1,7 +1,5 @@
 package com.worldline.mts.idm.scimctl.commands.common;
 
-import org.jboss.logging.Logger;
-
 import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
@@ -16,8 +14,6 @@ import picocli.CommandLine;
 @Unremovable
 @Name("commonOption")
 public class CommonOptions {
-
-  private static final Logger LOGGER = Logger.getLogger(CommonOptions.class);
 
   @Inject
   ScimCtlBeansConfig config;

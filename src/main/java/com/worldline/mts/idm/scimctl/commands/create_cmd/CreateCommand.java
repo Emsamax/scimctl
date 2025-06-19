@@ -1,15 +1,15 @@
 package com.worldline.mts.idm.scimctl.commands.create_cmd;
 
 import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
-import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
+
 import com.worldline.mts.idm.scimctl.commands.common.IOCommonOptions;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
 
-import com.worldline.mts.idm.scimctl.commands.common.ResourceTypeConverter;
+
+
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
 import org.jboss.logging.Logger;

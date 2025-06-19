@@ -27,7 +27,6 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jboss.logging.Logger;
 
 @Named("requestUtils")
 @Unremovable
@@ -45,8 +44,6 @@ public class RequestUtils {
 
   @Inject
   OutputUtils outputUtils;
-
-  private static final Logger LOGGER = Logger.getLogger(RequestUtils.class);
 
   String baseUrl;
 

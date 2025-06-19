@@ -9,8 +9,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 
-import org.jboss.logging.Logger;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +19,6 @@ public class ServerResponseHandler {
 
   @Inject
   OutputUtils outputUtils;
-
-  private static final Logger LOGGER = Logger.getLogger(ServerResponseHandler.class);
 
   public static final String DELETE_MESSAGE = "Resource deleted successfully";
   public static final String UPDATE_MESSAGE = "Resource updated successfully";

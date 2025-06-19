@@ -4,7 +4,6 @@ import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
-import de.captaingoldfish.scim.sdk.client.resources.ResourceType;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;

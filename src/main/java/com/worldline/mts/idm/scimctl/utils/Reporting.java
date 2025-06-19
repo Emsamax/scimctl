@@ -2,9 +2,6 @@ package com.worldline.mts.idm.scimctl.utils;
 
 import java.util.HashMap;
 
-import org.jboss.logging.Logger;
-import org.jboss.logging.Logger.Level;
-
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponseOperation;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,8 +12,6 @@ public class Reporting {
 
   @Inject
   OutputUtils utils;
-
-  private static final Logger LOGGER = Logger.getLogger(Reporting.class);
 
   private int totalOperation = 0;
   private int successfullOperations = 0;

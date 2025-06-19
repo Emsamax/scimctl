@@ -1,7 +1,5 @@
 package com.worldline.mts.idm.scimctl.commands.common;
 
-import org.antlr.v4.parse.ANTLRParser.throwsSpec_return;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine;
 
