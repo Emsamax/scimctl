@@ -65,7 +65,6 @@ public class ServerResponseHandler {
 
   /**
    * If bulk different handle
-   *
    * @param response
    */
   public void handleBulkResponse(ServerResponse<BulkResponse> response) {
@@ -113,21 +112,6 @@ public class ServerResponseHandler {
       idList.add(resp.get("id").asText());
     }
     System.err.println("cannot create resources, already created : " + idList.toString());
-  }
-
-  private <T extends ResourceNode> void checkAlreadyCreatedResource(BulkResponse serverResponse)
-      throws BadRequestException {
-    var detailList = new ArrayList<String>();
-
-    var operations = serverResponse.get("Operations");
-    if (operations.isArray() && !operations.isNull()) {
-      for (var item : operations) {
-        detailList.add(item.get("response").get("detail").toString());
-      }
-    }
-    detailList.forEach(detail -> {
-      System.err.println(detail.toString());
-    });
   }
 
   private <T extends ResourceNode> void checkAlreadyCreatedResource(ServerResponse<?> serverResponse) {

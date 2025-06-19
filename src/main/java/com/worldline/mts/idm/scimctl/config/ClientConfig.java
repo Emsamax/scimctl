@@ -19,10 +19,6 @@ public class ClientConfig {
   @Inject
   TokenService tokenService;
 
-  public String getSchemaId() {
-    return "urn:ietf:params:scim:schemas:core:2.0:Group";
-  }
-
   public ScimClientConfig getScimClientConfig() {
     return ScimClientConfig.builder()
         .connectTimeout(5)

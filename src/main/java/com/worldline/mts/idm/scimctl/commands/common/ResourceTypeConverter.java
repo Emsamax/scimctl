@@ -1,5 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.common;
 
+import org.antlr.v4.parse.ANTLRParser.throwsSpec_return;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine;
 
@@ -17,10 +19,13 @@ public class ResourceTypeConverter implements CommandLine.ITypeConverter<FilterC
 
   private FilterCommonOptions.ResourceType valueToResourceType(String value) throws IllegalArgumentException {
     value = value.toLowerCase();
-    if (value.equals("user"))
+    if (value.equals("user")) {
       return FilterCommonOptions.ResourceType.USER;
-    if (value.equals("group"))
+    }
+    if (value.equals("group")) {
       return FilterCommonOptions.ResourceType.GROUP;
-    throw new IllegalArgumentException("Invalid resource type must be 'user' or 'group' (case insensitive) : " + value);
+    }
+    System.err.println(value + "is not a type (user or group)");
+    throw new IllegalArgumentException(value + "is not a type (user or group)");
   }
 }
