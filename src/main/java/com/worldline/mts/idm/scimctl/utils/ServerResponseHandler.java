@@ -28,8 +28,11 @@ public class ServerResponseHandler {
 
   public <T extends ResourceNode> Optional<T> handleServerResponse(ServerResponse<T> response, String message) {
     if (response.isSuccess()) {
-      if (!isEmptyResponse(response))
-        System.out.printf("%s ", message);
+      if (isEmptyResponse(response)) {
+        System.out.println(message);
+        return Optional.empty();
+      }
+
       return Optional.of(response.getResource());
     } else {
       handleError(response);
@@ -43,11 +46,10 @@ public class ServerResponseHandler {
    * @param ServerResponse
    */
   private void handleError(ServerResponse<?> serverResponse) {
-    // checkAlreadyCreatedResource(serverResponse);
+    // checkNotFound(serverResponse);
     if (serverResponse.getResource() == null && serverResponse.getErrorResponse() == null) {
       System.out.println(EMPTY_MESSAGE);
-    }
-    if (serverResponse.getErrorResponse() == null && serverResponse.getResource() == null) {
+    } else if (serverResponse.getErrorResponse() == null && serverResponse.getResource() == null) {
       System.err.println(
           "No response body, error not in RFC7644:" + serverResponse.getErrorResponse().get("detail").asText());
     } else {
@@ -61,11 +63,13 @@ public class ServerResponseHandler {
 
   /**
    * If bulk different handle
+   * 
    * @param response
    */
   public void handleBulkResponse(ServerResponse<BulkResponse> response) {
     if (response.isSuccess()) {
       var bulkResponse = response.getResource();
+      reporting.report(bulkResponse);
       if (bulkResponse.isEmpty()) {
         System.out.println(EMPTY_MESSAGE);
       }
@@ -73,7 +77,7 @@ public class ServerResponseHandler {
     } else if (response.getErrorResponse() == null && response.getResource() == null) {
       throw new RuntimeException("No response body, error not in RFC7644: " + response.getResponseBody());
     } else if (response.getErrorResponse() == null) {
-
+      reporting.report(response.getResource());
     } else {
       throw new BadRequestException("Bad request: " + response.getErrorResponse());
     }
@@ -119,7 +123,6 @@ public class ServerResponseHandler {
 
   private <T extends ResourceNode> boolean isEmptyResponse(ServerResponse<T> response) {
     var resource = response.getResource();
-    System.out.println(resource);
     if (resource instanceof List) {
       if (resource.get("totalResults").asInt() == 0) {
         System.out.println(EMPTY_MESSAGE);
@@ -127,12 +130,10 @@ public class ServerResponseHandler {
       }
       return false;
     } else {
-      if (resource.get("id") == null) {
-        System.out.println(EMPTY_MESSAGE);
+      if (resource == null) {
         return true;
       }
       return false;
     }
   }
-
 }

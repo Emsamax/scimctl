@@ -43,7 +43,7 @@ public class TokenService {
 
   private volatile Tokens currentTokens;
 
-  private static final String CACHE = "/tmp/.token.txt";
+  private static final String CACHE = "/tmp/.scim_ctl_token_cache.txt";
 
   @PostConstruct
   private void init() {
@@ -82,7 +82,6 @@ public class TokenService {
    * token
    */
   private void fetchTokens() {
-    utils.logMsg("retrieve token from cache : " + CACHE);
     readTokenFromChache();
     if (isExpired(this.token)) {
       utils.logMsg("get new access token");

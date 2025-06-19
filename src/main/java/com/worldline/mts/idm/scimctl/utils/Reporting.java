@@ -1,6 +1,10 @@
 package com.worldline.mts.idm.scimctl.utils;
 
+import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.valueOf;
+
 import java.util.HashMap;
+
+import org.antlr.v4.parse.ANTLRParser.throwsSpec_return;
 
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponseOperation;
@@ -31,6 +35,9 @@ public class Reporting {
       utils.logMsg(
           "operation n° " + entry.getKey() + " : resource " + entry.getValue() + " created");
     }
+    this.failedOperations = 0;
+    this.totalOperation = 0;
+    this.successfullOperations = 0;
   }
 
   private String getDetails(BulkResponseOperation op) {

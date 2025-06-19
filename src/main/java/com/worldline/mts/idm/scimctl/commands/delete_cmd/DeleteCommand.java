@@ -48,7 +48,7 @@ public class DeleteCommand implements Runnable {
           System.err.println(ERR_MSG);
         } else {
           service.deletUser(options.id, User.class);
-          System.out.printf("user %s deleted", options.id);
+          //System.out.printf("user %s deleted", options.id);
         }
 
       }
