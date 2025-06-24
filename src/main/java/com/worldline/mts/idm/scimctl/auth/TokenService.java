@@ -14,11 +14,6 @@ import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
 import static org.jboss.logging.Logger.getLogger;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.concurrent.CompletionException;
 
 @ApplicationScoped
@@ -37,20 +32,17 @@ public class TokenService {
   @Inject
   OidcClient oidcClient;
 
-  private String token = "";
+  @Inject
+  CacheTokenService cache;
 
-  private Long expirationDate;
+  private String token = "";
 
   private volatile Tokens currentTokens;
 
-  private static final String CACHE = "/tmp/.scim_ctl_token_cache.txt";
 
   @PostConstruct
   private void init() {
     getInitialAccessToken();
-    writeTokenToCache(currentTokens.getAccessToken(), this.expirationDate);
-    fetchTokens();
-
   }
 
   /**
@@ -60,18 +52,17 @@ public class TokenService {
    * @return valid Access/Refresh token
    */
   public String getToken() {
-    fetchTokens();
-    return this.token;
+    return fetchTokens();
   }
 
   private void getInitialAccessToken() {
     try {
       utils.logMsg("get access token");
       currentTokens = oidcClient.getTokens().await().indefinitely();
-      expirationDate = currentTokens.getAccessTokenExpiresAt();
+      cache.writeTokenToCache(currentTokens.getAccessToken(), currentTokens.getAccessTokenExpiresAt());
     } catch (CompletionException e) {
       LOGGER.info(e.getMessage());
-    } catch (OidcClientException e ){
+    } catch (OidcClientException e) {
       System.err.println(e.getMessage() + " at " + this.authServerUrl);
       System.exit(-1);
     }
@@ -81,44 +72,14 @@ public class TokenService {
    * retrieve access/refresh token from cache, check if expired if yes get refresh
    * token
    */
-  private void fetchTokens() {
-    readTokenFromChache();
-    if (isExpired(this.token)) {
+  private String fetchTokens() {
+    var currentAccessToken = cache.readTokenFromChache();
+    if (cache.isExpired(currentAccessToken)) {
       utils.logMsg("get new access token");
       getInitialAccessToken();
+      currentAccessToken = cache.readTokenFromChache();
     }
+    System.out.println(currentAccessToken.get("access_token").asText());
+    return currentAccessToken.get("access_token").asText();
   }
-
-  private void readTokenFromChache() {
-
-    try (var fileReader = new FileReader(CACHE)) {
-      BufferedReader bufferedReader = new BufferedReader(fileReader);
-      this.token = bufferedReader.readLine();
-      this.expirationDate = Long.valueOf(bufferedReader.readLine());
-      bufferedReader.close();
-    } catch (IOException e) {
-      System.err.println("Error while reading token form cache at " + CACHE);
-    }
-  }
-
-  private void writeTokenToCache(String token, long expirationDate) {
-    try {
-      BufferedWriter writer = new BufferedWriter(new FileWriter(CACHE));
-      writer.write(token);
-      writer.newLine();
-      writer.write(String.valueOf(expirationDate));
-      writer.close();
-    } catch (IOException e) {
-      System.err.println(e.getMessage());
-    }
-  }
-
-  /*
-   * *100l -> expiration date token en s, timesMili en ms
-   * -3000 pr eviter des 401
-   */
-  private boolean isExpired(String token) {
-    return (System.currentTimeMillis() >= expirationDate * 1000L - 3000);
-  }
-
 }

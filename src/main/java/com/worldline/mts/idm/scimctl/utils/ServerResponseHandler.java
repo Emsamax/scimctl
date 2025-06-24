@@ -27,17 +27,16 @@ public class ServerResponseHandler {
   public static final String EMPTY_MESSAGE = "Empty []";
 
   public <T extends ResourceNode> Optional<T> handleServerResponse(ServerResponse<T> response, String message) {
+    // TODO: inverser la logique pour avoir un seul return Optional.Empty
     if (response.isSuccess()) {
       if (isEmptyResponse(response)) {
-        System.out.println(message);
+        System.out.println(EMPTY_MESSAGE);
         return Optional.empty();
       }
-
       return Optional.of(response.getResource());
-    } else {
-      handleError(response);
-      return Optional.empty();
     }
+    handleError(response);
+    return Optional.empty();
   }
 
   /**
@@ -105,8 +104,7 @@ public class ServerResponseHandler {
     return Optional.empty();
   }
 
-  private <T extends ResourceNode> void checkAlreadyCreatedResource(ListResponse<?> serverResponse)
-      throws BadRequestException {
+  private <T extends ResourceNode> void checkAlreadyCreatedResource(ListResponse<?> serverResponse) {
     var idList = new ArrayList<String>();
     for (var resp : serverResponse.getListedResources()) {
       idList.add(resp.get("id").asText());
@@ -124,16 +122,8 @@ public class ServerResponseHandler {
   private <T extends ResourceNode> boolean isEmptyResponse(ServerResponse<T> response) {
     var resource = response.getResource();
     if (resource instanceof List) {
-      if (resource.get("totalResults").asInt() == 0) {
-        System.out.println(EMPTY_MESSAGE);
-        return true;
-      }
-      return false;
-    } else {
-      if (resource == null) {
-        return true;
-      }
-      return false;
+      return resource.get("totalResults").asInt() == 0;
     }
+    return resource == null;
   }
 }

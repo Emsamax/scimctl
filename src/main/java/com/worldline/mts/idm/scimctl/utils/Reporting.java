@@ -1,10 +1,6 @@
 package com.worldline.mts.idm.scimctl.utils;
 
-import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.valueOf;
-
 import java.util.HashMap;
-
-import org.antlr.v4.parse.ANTLRParser.throwsSpec_return;
 
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponseOperation;
