@@ -1,10 +1,15 @@
 package com.worldline.mts.idm.scimctl.commands.get_cmd;
 
+import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.USER;
+
 import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
+import de.captaingoldfish.scim.sdk.common.resources.Group;
+import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
+import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
 
 import picocli.CommandLine;
@@ -53,14 +58,24 @@ public class GetCommand implements Runnable {
 
   public void handleResource() {
     utils.logMsg("Get user");
-    service.getUsers();
+    service.getResources(resolveResourceType());
   }
 
   private void getById(String id) {
-    service.getUserWithId(id);
+    service.getWithId(id, resolveResourceType());
   }
 
   private void getByName(String name) {
-    service.getUserWithName(name);
+    service.getWithName(name, resolveResourceType());
   }
+
+  private <T extends ResourceNode> Class<T> resolveResourceType(){
+    switch (options.resourceType) {
+      case USER:
+        return (Class<T>) User.class;
+      case GROUP:
+        return (Class<T>) Group.class;
+    }
+    return null;
+  } 
 }

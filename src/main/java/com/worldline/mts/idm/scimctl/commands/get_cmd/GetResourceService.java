@@ -1,6 +1,8 @@
 package com.worldline.mts.idm.scimctl.commands.get_cmd;
 
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
+
+import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,15 +17,15 @@ public class GetResourceService {
   @Inject
   RequestUtils requestUtils;
 
-  public void getUserWithId(String id) {
-     requestUtils.getResource(id, User.class);
+  public <T extends ResourceNode> void getWithId(String id, Class<T> clazz) {
+    requestUtils.getResource(id, clazz);
   }
 
-  public void getUsers() {
-     requestUtils.getResources(User.class);
+  public <T extends ResourceNode> void getResources(Class<T> clazz) {
+    requestUtils.getResources(clazz);
   }
 
-  public void getUserWithName(String name) {
-     requestUtils.getFilteredResources(User.class, name);
+  public <T extends ResourceNode> void getWithName(String name, Class<T> clazz) {
+    requestUtils.getFilteredResources(clazz, name);
   }
 }

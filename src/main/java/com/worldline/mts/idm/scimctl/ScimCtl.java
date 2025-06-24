@@ -3,10 +3,6 @@ package com.worldline.mts.idm.scimctl;
 import com.worldline.mts.idm.scimctl.commands.delete_cmd.DeleteCommand;
 import com.worldline.mts.idm.scimctl.commands.get_cmd.GetCommand;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import com.worldline.mts.idm.scimctl.commands.create_cmd.CreateCommand;
 import com.worldline.mts.idm.scimctl.commands.import_cmd.ImportCommand;
 

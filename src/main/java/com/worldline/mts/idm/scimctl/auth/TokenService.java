@@ -39,7 +39,6 @@ public class TokenService {
 
   private volatile Tokens currentTokens;
 
-
   @PostConstruct
   private void init() {
     getInitialAccessToken();

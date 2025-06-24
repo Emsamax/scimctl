@@ -84,6 +84,5 @@ public class CacheTokenService {
     var expirationDate = Date.from(Instant.ofEpochMilli(expirationTime * 1000L - SAFETY_MARGIN_MS));
     var now = new Date();
     return (now.after(expirationDate));
-
   }
 }

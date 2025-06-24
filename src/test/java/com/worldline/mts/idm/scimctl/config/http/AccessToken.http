@@ -1,0 +1,29 @@
+@issuer=http://localhost:8081/realms/scim
+@realm = scim
+@authority = http://localhost:8081
+@client_id = scim-ctl
+@client_secret = 8naJ78ay1to1xGjEnyhc9VxPpTgxyBqh
+@scope = email
+
+GET {{issuer}}/.well-known/openid-configuration
+
+?? status == 200
+?? header content-type == application/json;charset=UTF-8
+
+### get oidc token 
+POST {{authority}}/realms/{{realm}}/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials&client_id={{client_id}}&client_secret={{client_secret}}&scope=openid {{scope}}
+
+?? status == 200
+?? header content-type == application/json
+
+{{
+   const { ok } = require('assert');
+   test("query response is valid", () => {
+    const body = response.parsedBody
+    ok(body.hasOwnProperty("access_token"))
+    $global.token = body.access_token
+  })
+}}

@@ -1,0 +1,3 @@
+POST {{$global.base_url}}/Users
+Authorization: Bearer {{$global.token}}
+Content-Type: application/scim+json
