@@ -35,7 +35,6 @@ public class TokenService {
   @Inject
   CacheTokenService cache;
 
-  private String token = "";
 
   private volatile Tokens currentTokens;
 
@@ -78,7 +77,6 @@ public class TokenService {
       getInitialAccessToken();
       currentAccessToken = cache.readTokenFromChache();
     }
-    System.out.println(currentAccessToken.get("access_token").asText());
     return currentAccessToken.get("access_token").asText();
   }
 }

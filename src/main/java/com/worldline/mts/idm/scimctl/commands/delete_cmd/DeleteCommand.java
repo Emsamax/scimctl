@@ -47,8 +47,8 @@ public class DeleteCommand implements Runnable {
         if (options.id == null) {
           System.err.println(ERR_MSG);
         } else {
-          service.deletUser(options.id, User.class);
-          //System.out.printf("user %s deleted", options.id);
+          service.deleteResource(options.id, User.class);
+          System.out.println("user " +  options.id + " deleted");
         }
 
       }
@@ -56,8 +56,8 @@ public class DeleteCommand implements Runnable {
         if (options.id == null) {
           System.err.println(ERR_MSG);
         } else {
-          System.out.printf("group %s deleted" + options.id);
-          service.deletUser(options.id, Group.class);
+          System.out.println("group " +  options.id + " deleted");
+          service.deleteResource(options.id, Group.class);
         }
       }
     }

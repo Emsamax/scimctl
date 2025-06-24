@@ -18,13 +18,21 @@ import com.worldline.mts.idm.scimctl.commands.update_cmd.UpdateCommand;
 
 @QuarkusMain
 @CommandLine.Command(name = "scim-ctl", mixinStandardHelpOptions = true, subcommands = { ScimSchema.class,
-    GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class })
+    GetCommand.class, CreateCommand.class, ImportCommand.class, UpdateCommand.class, DeleteCommand.class }, 
+    header = {
+     "@|green    _______________  ___    _____________ |@",
+     "@|green   / __/ ___/  _/  |/  /___/ ___/_  __/ / |@",
+     "@|green  _\\ \\/ /___/ // /|_/ /___/ /__  / / / /__|@",
+     "@|green /___/\\___/___/_/  /_/    \\___/ /_/ /____/|@"
+    })
 public class ScimCtl implements QuarkusApplication {
   @Inject
   CommandLine.IFactory factory;
 
   @Override
   public int run(String... args) {
-    return new CommandLine(this, factory).execute(args);
+
+    var cmd = new CommandLine(this, factory);
+    return cmd.execute(args);
   }
 }

@@ -69,6 +69,7 @@ public class GetCommand implements Runnable {
     service.getWithName(name, resolveResourceType());
   }
 
+  @SuppressWarnings("unchecked")
   private <T extends ResourceNode> Class<T> resolveResourceType(){
     switch (options.resourceType) {
       case USER:

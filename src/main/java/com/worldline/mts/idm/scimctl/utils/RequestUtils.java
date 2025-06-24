@@ -24,8 +24,10 @@ import jakarta.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.antlr.v4.parse.ANTLRParser.channelsSpec_return;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Named("requestUtils")
@@ -106,9 +108,7 @@ public class RequestUtils {
       }
     } else {
       outputUtils.logMsg("get request would be sent at : " + baseUrl + path);
-
     }
-
   }
 
   public <T extends ResourceNode> void getFilteredResources(Class<T> clazz, String filter) {
@@ -130,11 +130,9 @@ public class RequestUtils {
           System.out.println(resp.toPrettyString());
         });
       }
-
     } else {
       outputUtils.logMsg("get request would be sent at : " + baseUrl + path + "/" + filter);
     }
-
   }
 
   public <T extends ResourceNode> void createResource(JsonNode node, Class<T> clazz) {
@@ -220,11 +218,12 @@ public class RequestUtils {
     var path = getEndPointPath(clazz);
     if (!outputUtils.getDryRun()) {
       outputUtils.logMsg("delete request : " + baseUrl + path + "/" + id);
-      ServerResponse<User> response = this.requestBuilder.delete(User.class, path, id)
+      ServerResponse<T> response = this.requestBuilder.delete(clazz, path, id)
           .sendRequest();
       responseHandler.handleServerResponse(response, ServerResponseHandler.DELETE_MESSAGE);
     } else
       outputUtils.logMsg("delete request would be sent at : " + baseUrl + path + "/" + id);
+
   }
 
   /**

@@ -27,10 +27,8 @@ public class ServerResponseHandler {
   public static final String EMPTY_MESSAGE = "Empty []";
 
   public <T extends ResourceNode> Optional<T> handleServerResponse(ServerResponse<T> response, String message) {
-    // TODO: inverser la logique pour avoir un seul return Optional.Empty
     if (response.isSuccess()) {
       if (isEmptyResponse(response)) {
-        System.out.println(EMPTY_MESSAGE);
         return Optional.empty();
       }
       return Optional.of(response.getResource());
@@ -41,11 +39,10 @@ public class ServerResponseHandler {
 
   /**
    * If response is not succes
-   *
+   * 
    * @param ServerResponse
    */
   private void handleError(ServerResponse<?> serverResponse) {
-    // checkNotFound(serverResponse);
     if (serverResponse.getResource() == null && serverResponse.getErrorResponse() == null) {
       System.out.println(EMPTY_MESSAGE);
     } else if (serverResponse.getErrorResponse() == null && serverResponse.getResource() == null) {
@@ -70,7 +67,7 @@ public class ServerResponseHandler {
       var bulkResponse = response.getResource();
       reporting.report(bulkResponse);
       if (bulkResponse.isEmpty()) {
-        System.out.println(EMPTY_MESSAGE);
+        System.out.println("No resource found");
       }
       reporting.report(bulkResponse);
     } else if (response.getErrorResponse() == null && response.getResource() == null) {
@@ -87,7 +84,7 @@ public class ServerResponseHandler {
     if (response.isSuccess()) {
       outputUtils.logMsg(GET_MESSAGE);
       if (response.getResource().get("totalResults").asInt() == 0) {
-        System.out.println(EMPTY_MESSAGE);
+        System.out.println("No resources");
         return Optional.empty();
       }
       return Optional.of(response.getResource().getListedResources());
