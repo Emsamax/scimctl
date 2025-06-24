@@ -9,6 +9,7 @@ import org.eclipse.microprofile.jwt.Claims;
 
 import io.smallrye.jwt.build.Jwt;
 
+
 public class FakeToken {
 
   static final String ISSUER = "https://example.com/issuer";
@@ -19,14 +20,15 @@ public class FakeToken {
     var resource_access = Map.of(
         "client_name_1", Map.of(
             "roles", List.of(roles)));
-    var expiresAt = Instant.now().plus(5, ChronoUnit.SECONDS);
+    var expiresAt = Instant.now().plus(1, ChronoUnit.DAYS);
     return Jwt.issuer(ISSUER)
-        .claim("resource_access", resource_access)
-        .claim(Claims.preferred_username.name(), userName)
-        .claim(Claims.sub.name(), uid)
-        .issuedAt(Instant.now())
-        .expiresAt(expiresAt)
-        .sign(SIGN_KEY_LOCATION);
-
+    .claim("resource_access", resource_access)
+    .claim(Claims.preferred_username.name(), userName)
+    .claim(Claims.sub.name(), uid)
+    .issuedAt(Instant.now())
+    .expiresAt(expiresAt)
+    .sign(SIGN_KEY_LOCATION);
+    
   }
+
 }

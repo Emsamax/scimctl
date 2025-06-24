@@ -49,6 +49,10 @@ public class CacheTokenService {
 
   }
 
+  /**
+   * @return a json node composed by 2 keys acces_token and expiredAt
+   * @return null if empty
+   */
   public JsonNode readTokenFromChache() {
     JsonNode token = null;
     try {
