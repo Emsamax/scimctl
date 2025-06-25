@@ -1,4 +1,4 @@
-package com.worldline.mts.idm.scimctl.commands.common;
+package com.worldline.mts.idm.scimctl.options;
 
 import picocli.CommandLine;
 
@@ -7,7 +7,7 @@ import picocli.CommandLine;
  * one option required)
  * can't search by id if username is specified
  */
-public class IOCommonOptions {
+public class IOOptions {
   @CommandLine.Option(names = { "--file", "-f" }, description = "path to the CSV file to import")
   public String path;
 

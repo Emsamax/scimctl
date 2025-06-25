@@ -1,10 +1,7 @@
 package com.worldline.mts.idm.scimctl.commands.get_cmd;
-
-import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.USER;
-
-import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
-import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
-import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
+import com.worldline.mts.idm.scimctl.options.CommonOptions;
+import com.worldline.mts.idm.scimctl.options.FilterOptions;
+import com.worldline.mts.idm.scimctl.options.SearchOptions;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
 import de.captaingoldfish.scim.sdk.common.resources.Group;
@@ -20,44 +17,43 @@ public class GetCommand implements Runnable {
   @Inject
   GetResourceService service;
 
- 
-
   /**
    * Force the user to specify either the id or the username of the user to get.
    */
   @CommandLine.Mixin
-  SearchCommonOption search;
+  SearchOptions search;
 
   @Inject
   OutputUtils utils;
 
   @CommandLine.Mixin
-  FilterCommonOptions filter;
+  FilterOptions filter;
 
   @CommandLine.Mixin
   CommonOptions options;
 
   @Override
   public void run() {
-    handleRequest();
-  }
-
-  public void handleRequest() {
     if (options.resourceType == null) {
       System.err.println("you must percise a resource type ");
       return;
     }
     if (filter.userName == null && search.id == null) {
       handleResource();
-    } else if (filter.userName != null) {
+      return;
+    }
+    if (filter.userName != null) {
       getByName(filter.userName);
-    } else if (search.id != null) {
+      return;
+    }
+    if (search.id != null) {
       getById(search.id);
+      return;
     }
   }
 
   public void handleResource() {
-    utils.logMsg("Get user");
+    utils.logMsg("Get resource");
     service.getResources(resolveResourceType());
   }
 
@@ -70,7 +66,7 @@ public class GetCommand implements Runnable {
   }
 
   @SuppressWarnings("unchecked")
-  private <T extends ResourceNode> Class<T> resolveResourceType(){
+  private <T extends ResourceNode> Class<T> resolveResourceType() {
     switch (options.resourceType) {
       case USER:
         return (Class<T>) User.class;
@@ -78,5 +74,5 @@ public class GetCommand implements Runnable {
         return (Class<T>) Group.class;
     }
     return null;
-  } 
+  }
 }

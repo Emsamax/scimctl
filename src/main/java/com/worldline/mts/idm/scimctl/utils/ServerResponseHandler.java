@@ -9,6 +9,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.recordSpec;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +30,7 @@ public class ServerResponseHandler {
 
   public <T extends ResourceNode> Optional<T> handleServerResponse(ServerResponse<T> response, String message) {
     if (response.isSuccess()) {
+      System.out.println(message);
       if (isEmptyResponse(response)) {
         return Optional.empty();
       }
@@ -49,7 +52,10 @@ public class ServerResponseHandler {
       System.err.println(
           "No response body, error not in RFC7644:" + serverResponse.getErrorResponse().get("detail").asText());
     } else {
-      checkAlreadyCreatedResource(serverResponse);
+      if (serverResponse.getHttpStatus() == 409) {
+        checkAlreadyCreatedResource(serverResponse);
+        return;
+      }
       System.err.println(serverResponse.getErrorResponse().get("detail").asText());
     }
   }
@@ -111,8 +117,7 @@ public class ServerResponseHandler {
 
   private <T extends ResourceNode> void checkAlreadyCreatedResource(ServerResponse<?> serverResponse) {
     if (serverResponse.getHttpStatus() == 409) {
-      throw new BadRequestException("response error : cannot create resource, already created : "
-          + serverResponse.getResource().get("id").toPrettyString());
+      System.err.println(serverResponse.getErrorResponse().get("detail").asText());
     }
   }
 

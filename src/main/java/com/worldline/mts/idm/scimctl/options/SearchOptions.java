@@ -1,8 +1,8 @@
-package com.worldline.mts.idm.scimctl.commands.common;
+package com.worldline.mts.idm.scimctl.options;
 
 import picocli.CommandLine;
 
-public class SearchCommonOption {
+public class SearchOptions {
   @CommandLine.Option(names = { "--id" }, description = "User or Group id")
   public String id;
 }

@@ -11,14 +11,13 @@ import org.jboss.logging.Logger;
 
 import java.io.IOException;
 
-//TO NOT DO : manages duplicate user pas à moi de le faire
-
 @ApplicationScoped
 public class CreateService {
 
   @Inject
   Logger LOGGER;
 
+  @Inject
   RequestUtils requestUtils;
 
   @Inject

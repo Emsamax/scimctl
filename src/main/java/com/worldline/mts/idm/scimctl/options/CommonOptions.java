@@ -1,4 +1,4 @@
-package com.worldline.mts.idm.scimctl.commands.common;
+package com.worldline.mts.idm.scimctl.options;
 
 import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
@@ -23,7 +23,7 @@ public class CommonOptions {
 
   @CommandLine.Option(names = { "--resource-type",
       "-t" }, description = "Resource type, user or group", converter = ResourceTypeConverter.class)
-  public FilterCommonOptions.ResourceType resourceType;
+  public ResourceType resourceType;
 
   @CommandLine.Option(names = { "--verbose" }, description = "Enable verbose")
   public void enableVerbose(boolean verbose) {

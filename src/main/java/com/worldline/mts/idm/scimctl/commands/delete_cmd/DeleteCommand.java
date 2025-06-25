@@ -1,19 +1,18 @@
 package com.worldline.mts.idm.scimctl.commands.delete_cmd;
 
-import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
-import com.worldline.mts.idm.scimctl.commands.common.SearchCommonOption;
+import com.worldline.mts.idm.scimctl.options.CommonOptions;
+import com.worldline.mts.idm.scimctl.options.SearchOptions;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
 import picocli.CommandLine;
 
 @CommandLine.Command(name = "delete")
 public class DeleteCommand implements Runnable {
   @CommandLine.Mixin
-  SearchCommonOption options;
+  SearchOptions options;
 
   @CommandLine.Mixin
   CommonOptions common;
@@ -28,37 +27,20 @@ public class DeleteCommand implements Runnable {
 
   @Override
   public void run() {
-    try {
-      handleRequest();
-    } catch (BadRequestException e) {
-      System.err.println();
-    } catch (IllegalArgumentException e) {
-      System.err.println("id does not exist" + e.getMessage());
-    }
-  }
-
-  private void handleRequest() {
     if (common.resourceType == null) {
       System.err.println("you must percise a resource type");
       return;
     }
+    if (options.id == null) {
+      System.err.println(ERR_MSG);
+      return;
+    }
     switch (common.resourceType) {
       case USER -> {
-        if (options.id == null) {
-          System.err.println(ERR_MSG);
-        } else {
-          service.deleteResource(options.id, User.class);
-          System.out.println("user " +  options.id + " deleted");
-        }
-
+        service.deleteResource(options.id, User.class);
       }
       case GROUP -> {
-        if (options.id == null) {
-          System.err.println(ERR_MSG);
-        } else {
-          System.out.println("group " +  options.id + " deleted");
-          service.deleteResource(options.id, Group.class);
-        }
+        service.deleteResource(options.id, Group.class);
       }
     }
   }

@@ -1,8 +1,8 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
 
-import com.worldline.mts.idm.scimctl.commands.common.CommonOptions;
-import com.worldline.mts.idm.scimctl.commands.common.IOCommonOptions;
 import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
+import com.worldline.mts.idm.scimctl.options.CommonOptions;
+import com.worldline.mts.idm.scimctl.options.IOOptions;
 import com.worldline.mts.idm.scimctl.utils.OutputUtils;
 
 import jakarta.inject.Inject;
@@ -11,9 +11,6 @@ import picocli.CommandLine;
 import java.io.IOException;
 
 import org.jboss.logging.Logger;
-
-import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.GROUP;
-import static com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions.ResourceType.USER;
 
 @CommandLine.Command(name = "import")
 public class ImportCommand implements Runnable {
@@ -36,13 +33,13 @@ public class ImportCommand implements Runnable {
    * data directly into the console.
    */
   @CommandLine.ArgGroup(heading = "Resource creation options:%n")
-  IOCommonOptions ioOptions;
+  IOOptions ioOptions;
 
   @CommandLine.Option(names = { "--dry-run" }, description = "Enable dry run")
   public void enableDryRun(boolean dryRun) {
     if (dryRun) {
       utils.toggleDryRun(dryRun);
-      utils.logMsg( "dry run enabled");
+      utils.logMsg("dry run enabled");
     }
   }
 
@@ -61,23 +58,16 @@ public class ImportCommand implements Runnable {
     }
     if (ioOptions == null) {
       System.err.println("must precise a file path");
-    } else {
-      try {
-        switch (options.resourceType) {
-          case USER -> {
-            utils.logMsg("import USER from file path : " + ioOptions.path);
-            service.importResource(ioOptions.path, USER);
-          }
-
-          case GROUP -> {
-            utils.logMsg("import GROUP from file path : `" + ioOptions.path);
-            service.importResource(ioOptions.path, GROUP);
-          }
-        }
-
-      } catch (IOException e) {
-        System.err.println(e.getMessage());
+      return;
+    }
+    try {
+      switch (options.resourceType) {
+        case USER -> utils.logMsg("import USER from file path : " + ioOptions.path);
+        case GROUP -> utils.logMsg("import GROUP from file path : `" + ioOptions.path);
       }
+      service.importResource(ioOptions.path, options.resourceType);
+    } catch (IOException e) {
+      System.err.println(e.getMessage());
     }
   }
 }

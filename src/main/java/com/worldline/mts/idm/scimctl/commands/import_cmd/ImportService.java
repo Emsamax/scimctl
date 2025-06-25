@@ -1,7 +1,6 @@
 package com.worldline.mts.idm.scimctl.commands.import_cmd;
-
-import com.worldline.mts.idm.scimctl.commands.common.FilterCommonOptions;
 import com.worldline.mts.idm.scimctl.config.ScimCtlBeansConfig;
+import com.worldline.mts.idm.scimctl.options.ResourceType;
 
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.User;
@@ -37,7 +36,7 @@ public class ImportService {
    * @throws RuntimeException if error isn't specified in norm RFC7644
    * @throws IOException      if error while reading the file
    */
-  public void importResource(String path, FilterCommonOptions.ResourceType type) throws RuntimeException, IOException {
+  public void importResource(String path, ResourceType type) throws RuntimeException, IOException {
     // 1. convert file to stream of ressource
     // 2. Map the stream resource
     // for each item convert to User object
@@ -57,10 +56,10 @@ public class ImportService {
         .forEach(creator);
   }
 
-  private Consumer<List<NodeWrapper>> resolveResourceCreator(FilterCommonOptions.ResourceType type) {
+  private Consumer<List<NodeWrapper>> resolveResourceCreator(ResourceType type) {
     return switch (type) {
-      case FilterCommonOptions.ResourceType.USER -> (node) -> requestUtils.createResources(node, User.class);
-      case FilterCommonOptions.ResourceType.GROUP -> (node) -> requestUtils.createResources(node, Group.class);
+      case USER -> (node) -> requestUtils.createResources(node, User.class);
+      case GROUP -> (node) -> requestUtils.createResources(node, Group.class);
     };
   }
 }

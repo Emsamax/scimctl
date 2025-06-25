@@ -13,7 +13,6 @@ import jakarta.ws.rs.BadRequestException;
 import java.io.File;
 import java.io.IOException;
 
-
 @ApplicationScoped
 @Named("UpdateService")
 @Unremovable

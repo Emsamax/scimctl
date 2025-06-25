@@ -3,7 +3,6 @@ package com.worldline.mts.idm.scimctl.commands.get_cmd;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
-import de.captaingoldfish.scim.sdk.common.resources.User;
 import io.quarkus.arc.Unremovable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

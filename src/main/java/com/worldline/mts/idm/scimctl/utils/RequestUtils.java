@@ -138,15 +138,13 @@ public class RequestUtils {
   public <T extends ResourceNode> void createResource(JsonNode node, Class<T> clazz) {
     var path = getEndPointPath(clazz);
     try (var requestBuilder = this.requestBuilder) {
-      if (!node.has("userName") || node.get("userName").asText().isEmpty()) {
-        throw new RuntimeException("Resource must have a userName : " + node);
-      }
       outputUtils.logMsg("create request : " + baseUrl + path);
-      if (!outputUtils.getDryRun()) {
-        var response = requestBuilder.create(clazz, path).setResource(node).sendRequest();
-        responseHandler.handleServerResponse(response, ServerResponseHandler.CREATE_MESSAGE);
-      } else
+      if (outputUtils.getDryRun()) {
         outputUtils.logMsg("create request would be sent at : " + baseUrl + path);
+        return;
+      }
+      var response = requestBuilder.create(clazz, path).setResource(node).sendRequest();
+      responseHandler.handleServerResponse(response, ServerResponseHandler.CREATE_MESSAGE);
     }
   }
 
@@ -175,9 +173,6 @@ public class RequestUtils {
     try {
       for (NodeWrapper wrapper : chunk) {
         var node = wrapper.getJsonNode().get();
-        if (!node.has("userName") || node.get("userName").asText().isEmpty()) {
-          throw new RuntimeException("Resource must have a userName for bulk request: " + node);
-        }
         String bulkId = UUID.randomUUID().toString();
         builder.bulkRequestOperation(path).method(HttpMethod.POST).data(node).bulkId(bulkId).next();
         groupMembers.add(Member.builder().value("bulkId:" + bulkId).type(resourceType).build());
@@ -223,7 +218,6 @@ public class RequestUtils {
       responseHandler.handleServerResponse(response, ServerResponseHandler.DELETE_MESSAGE);
     } else
       outputUtils.logMsg("delete request would be sent at : " + baseUrl + path + "/" + id);
-
   }
 
   /**
