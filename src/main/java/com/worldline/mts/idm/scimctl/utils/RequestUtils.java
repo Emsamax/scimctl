@@ -24,10 +24,9 @@ import jakarta.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+
 import java.util.UUID;
 
-import org.antlr.v4.parse.ANTLRParser.channelsSpec_return;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Named("requestUtils")

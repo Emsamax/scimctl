@@ -1,10 +1,5 @@
 package com.worldline.mts.idm.scimctl.options;
 
-import org.eclipse.jetty.security.UserDataConstraint;
-
-import de.captaingoldfish.scim.sdk.common.resources.Group;
-import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;
-import io.vertx.ext.auth.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import picocli.CommandLine;
 

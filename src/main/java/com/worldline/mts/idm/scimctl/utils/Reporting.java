@@ -1,12 +1,6 @@
 package com.worldline.mts.idm.scimctl.utils;
 
-import static org.hamcrest.CoreMatchers.startsWithIgnoringCase;
-
 import java.util.HashMap;
-
-import org.antlr.v4.parse.ANTLRParser.ruleReturns_return;
-import org.bouncycastle.jcajce.provider.asymmetric.ec.GMSignatureSpi.sm3WithSM2;
-
 import de.captaingoldfish.scim.sdk.common.response.BulkResponse;
 import de.captaingoldfish.scim.sdk.common.response.BulkResponseOperation;
 import jakarta.enterprise.context.ApplicationScoped;

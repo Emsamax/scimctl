@@ -1,7 +1,5 @@
 package com.worldline.mts.idm.scimctl.commands.delete_cmd;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.requestMadeFor;
-
 import com.worldline.mts.idm.scimctl.config.ClientConfig;
 import com.worldline.mts.idm.scimctl.utils.RequestUtils;
 import de.captaingoldfish.scim.sdk.common.resources.ResourceNode;

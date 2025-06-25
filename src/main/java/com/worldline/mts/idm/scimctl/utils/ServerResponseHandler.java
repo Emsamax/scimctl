@@ -9,8 +9,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.recordSpec;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

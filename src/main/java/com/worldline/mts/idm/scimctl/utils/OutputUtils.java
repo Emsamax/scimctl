@@ -77,11 +77,9 @@ public class OutputUtils {
   private static Level setLogLevel(String loggerName, String lvl) {
     // get the logger instance
     Logger logger = Logger.getLogger(loggerName);
-
     // change the log-level if requested
     if (lvl != null && lvl.length() > 0)
       logger.setLevel(Level.parse(lvl));
-
     // return the current log-level
     return getCurrentLogLevel(logger);
   }

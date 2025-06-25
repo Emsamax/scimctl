@@ -19,18 +19,18 @@ public class CsvNodeFormater implements Strategy {
     if (isArray(key)) {
       handleArray(curentNode, key, value);
     } else if (key.split("\\.").length == 1) {
-      //if key is not a composite
+      // if key is not a composite
       var composite = key.split("\\.");
-      var jsonNode = mapper.readTree( "\"" + value + "\"");
+      var jsonNode = mapper.readTree("\"" + value + "\"");
       curentNode.set(composite[0], jsonNode);
     } else {
       var composite = key.split("\\.");
-      //value is the last element of the composite
-      //iterate on all the part of the key to create if not exist then set the value
+      // value is the last element of the composite
+      // iterate on all the part of the key to create if not exist then set the value
       for (int i = 0; i < composite.length; i++) {
         var part = composite[i];
         if (i == composite.length - 1) {
-          var jsonNode = mapper.readTree( "\"" + value + "\"");
+          var jsonNode = mapper.readTree("\"" + value + "\"");
           curentNode.set(part, jsonNode);
         } else if (!curentNode.has(part) || !curentNode.get(part).isObject()) {
           var child = mapper.createObjectNode();
@@ -51,10 +51,10 @@ public class CsvNodeFormater implements Strategy {
     for (String item : items) {
       var objNode = mapper.createObjectNode();
       String[] fields = item.trim().split(",");
-      //split("=") -> 2 elements
+      // split("=") -> 2 elements
       for (String s : fields) {
         var content = s.split("=");
-        //check if value in array is bool to not have "true" but true
+        // check if value in array is bool to not have "true" but true
         if (Boolean.parseBoolean(content[1])) {
           handleBool(objNode, content[0], content[1]);
         }
@@ -76,5 +76,4 @@ public class CsvNodeFormater implements Strategy {
       currentNode.set(key, boolNode);
     }
   }
-
 }
